@@ -2,13 +2,30 @@
 	import favicon from '#lib/assets/favicon.svg';
 	import Logo from '#lib/Logo.svelte';
 	import Scene from '#lib/Scene.svelte';
-	import { page } from '$app/state';
+	import { page, updated } from '$app/state';
+	import { beforeNavigate } from '$app/navigation';
+	import { onMount } from 'svelte';
 	import type { LayoutProps } from './$types';
 	import '@fontsource-variable/fredoka';
 	import '@fontsource-variable/nunito';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	let { children }: LayoutProps = $props();
 	let home = $derived(page.url.pathname === '/');
+
+	// Each deploy replaces the hashed JS files, so a tab opened before a deploy can't load the
+	// next page's code. Once a new version is out, make the next click a full page load, and
+	// reload if a code chunk fails to load anyway.
+	beforeNavigate(({ willUnload, to }) => {
+		if (updated.current && !willUnload && to?.url) location.href = to.url.href;
+	});
+	onMount(() => {
+		const reload = (e: Event) => {
+			e.preventDefault();
+			location.reload();
+		};
+		window.addEventListener('vite:preloadError', reload);
+		return () => window.removeEventListener('vite:preloadError', reload);
+	});
 </script>
 
 <svelte:head>
