@@ -3,26 +3,20 @@ cloud-native mirror on Source Cooperative. Used to separate tree canopy from tur
 both are green in NDVI, only turf is irrigated lawn we can convert."""
 from __future__ import annotations
 
-import os
-import urllib.request
-
 import geopandas as gpd
 import numpy as np
 import rasterio
 from rasterio.enums import Resampling
 from rasterio.warp import reproject, transform_bounds
 
-from .common import Imagery, raw_path
+from .common import Imagery, download, raw_path
 from .imagery import _gdal_proxy_env
 
 CHM_BASE = "https://s3.us-west-2.amazonaws.com/us-west-2.opendata.source.coop/tge-labs/meta-chm-v2/"
 
 
 def _tile_index() -> gpd.GeoDataFrame:
-    p = raw_path("meta_chm_v2_tiles.parquet")
-    if not os.path.exists(p):
-        urllib.request.urlretrieve(CHM_BASE + "tiles.parquet", p)
-    return gpd.read_parquet(p)
+    return gpd.read_parquet(download(CHM_BASE + "tiles.parquet", raw_path("meta_chm_v2_tiles.parquet")))
 
 
 def canopy_height_on_grid(img: Imagery) -> np.ndarray:

@@ -1,7 +1,7 @@
 """Phase 0 spike runner.
 
-Example (Utah, NAIP via Planetary Computer):
-  python -m pipeline.run_spike --bbox -111.875 40.565 -111.865 40.573 --parcels sandy --imagery pc --out data/out/sandy
+Example (Utah, 2024 NAIP via USDA):
+  python -m pipeline.run_spike --bbox -111.875 40.565 -111.865 40.573 --parcels sandy --imagery usda --out data/out/sandy
 
 Example (Utah, coarse Sentinel-2 fallback):
   python -m pipeline.run_spike --bbox -111.875 40.565 -111.865 40.573 --parcels sandy --imagery sentinel2 --out data/out/sandy_s2
@@ -18,8 +18,10 @@ import os
 import sys
 import time
 
+import geopandas as gpd
 import numpy as np
 import rasterio
+from shapely.geometry import box
 
 from . import buildings as bld
 from . import export_app
@@ -36,7 +38,8 @@ def main(argv=None):
     ap.add_argument("--radius-m", type=float, default=350)
     ap.add_argument("--parcels", default="sandy", help="'sandy', 'ugrc' (SLCo LIR feature service), or path to a parcel file")
     ap.add_argument("--buildings", default="overture", help="'overture' or path to a footprint file")
-    ap.add_argument("--imagery", default="pc", help="'pc' (NAIP via Planetary Computer), 'sentinel2', or path to a 4-band GeoTIFF")
+    ap.add_argument("--imagery", default="usda", help="'usda' (latest NAIP via USDA ImageServer), 'pc' (NAIP via Planetary Computer), 'sentinel2', or path to a 4-band GeoTIFF")
+    ap.add_argument("--naip-year", type=int, help="with --imagery pc, use this NAIP year only")
     ap.add_argument("--imagery-date", default="unknown", help="capture date for a local file")
     ap.add_argument("--s2-tile", default="12TVL")
     ap.add_argument("--s2-year", type=int, default=2026)
@@ -66,7 +69,12 @@ def main(argv=None):
 
     log("parcels:", a.parcels)
     parcels = pcl.load_parcels(a.parcels, bbox, area_crs, residential_only=not a.all_parcels)
-    log(f"  {len(parcels)} parcels (schema={parcels.attrs.get('schema')}), area CRS {area_crs}")
+    # Keep parcels wholly inside the AOI: a parcel cut by the image edge gets its lawn fraction
+    # from a sliver, which is then scaled to the full parcel area and inflates totals.
+    aoi = gpd.GeoSeries([box(*bbox)], crs=4326).to_crs(area_crs).iloc[0].buffer(-1.0)
+    n_all = len(parcels)
+    parcels = parcels[parcels.within(aoi)].reset_index(drop=True)
+    log(f"  {len(parcels)} parcels inside AOI ({n_all - len(parcels)} on the edge dropped) (schema={parcels.attrs.get('schema')}), area CRS {area_crs}")
     if len(parcels) == 0:
         sys.exit("No parcels in bbox")
 
@@ -75,7 +83,8 @@ def main(argv=None):
     log(f"  {len(buildings)} footprints")
 
     log("imagery:", a.imagery)
-    img = imgmod.get_imagery(a.imagery, bbox, capture_date=a.imagery_date, tile=a.s2_tile, year=a.s2_year)
+    img = imgmod.get_imagery(a.imagery, bbox, capture_date=a.imagery_date, tile=a.s2_tile, year=a.s2_year,
+                              years=(a.naip_year,) if a.naip_year else None)
     log(f"  {img.source} {img.capture_date} {img.width}x{img.height} px @ {img.gsd_m:.2f} m, CRS {img.crs}", img.extra)
 
     chm = None

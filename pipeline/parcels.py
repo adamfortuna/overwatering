@@ -16,12 +16,12 @@ import urllib.request
 import geopandas as gpd
 import pandas as pd
 
-from .common import SQFT_PER_SQM, bbox_key, raw_path
+from .common import SQFT_PER_SQM, bbox_key, download, raw_path
 
 # UGRC SGID feature services (ArcGIS Online). LIR = tax-roll attributes joined.
 UGRC_SLCO_LIR_LAYER = (
     "https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services/"
-    "Utah_Salt_Lake_County_Parcels_LIR/FeatureServer/0"
+    "Parcels_SaltLake_LIR/FeatureServer/0"
 )
 
 SANDY_PARCELS_URL = (
@@ -75,12 +75,6 @@ def _detect_schema(df: pd.DataFrame) -> str:
     raise ValueError(f"Unrecognised parcel schema: {sorted(cols)[:20]}")
 
 
-def _download(url: str, dest: str) -> str:
-    if not os.path.exists(dest):
-        urllib.request.urlretrieve(url, dest)
-    return dest
-
-
 def _fetch_ugrc(layer_url: str, bbox_wgs84, cache: str) -> gpd.GeoDataFrame:
     """Page through an ArcGIS FeatureServer layer query for a bbox and cache as GeoParquet."""
     import json
@@ -119,7 +113,7 @@ def load_parcels(source: str, bbox_wgs84, area_crs: str, residential_only: bool 
 
     source: "sandy", "ugrc" (Salt Lake County Parcels LIR feature service), or a file path."""
     if source == "sandy":
-        path = _download(SANDY_PARCELS_URL, raw_path("sandy_parcels.parquet"))
+        path = download(SANDY_PARCELS_URL, raw_path("sandy_parcels.parquet"))
     elif source == "ugrc":
         path = None
     else:

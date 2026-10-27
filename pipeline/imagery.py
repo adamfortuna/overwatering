@@ -1,7 +1,11 @@
 """4-band imagery access.
 
 Sources (all return an Imagery with bands R, G, B, NIR):
+  * "usda"      - NAIP via USDA FPAC's conus_naip ImageServer (60 cm, 4-band, most
+                  recent year per state; Utah = 2024, flown July 2024). Default.
   * "pc"        - NAIP via Microsoft Planetary Computer STAC (60 cm, 4-band COGs).
+                  Utah stops at 2021, which was flown in November (leaf-off, dormant
+                  lawns): prefer "usda", or pin --naip-year 2018 for a summer PC scene.
   * "sentinel2" - Sentinel-2 L2A on AWS (10 m). Coarse fallback; parcel-level
                   numbers from this are indicative only.
   * <path.tif>  - any local 4-band GeoTIFF (e.g. a NAIP tile from UGRC/USGS).
@@ -20,6 +24,7 @@ from rasterio.windows import from_bounds
 from .common import Imagery
 
 PC_STAC = "https://planetarycomputer.microsoft.com/api/stac/v1"
+USDA_NAIP = "https://apps.geo.fpac.usda.gov/geo-imagery/rest/services/naip/conus_naip/ImageServer"
 
 
 def _gdal_proxy_env():
@@ -42,7 +47,7 @@ def _read_window(src, bbox_wgs84):
     return data, src.window_transform(w)
 
 
-def fetch_naip_pc(bbox_wgs84, years=(2024, 2023, 2022, 2021)) -> Imagery:
+def fetch_naip_pc(bbox_wgs84, years=(2024, 2023, 2022, 2021, 2018)) -> Imagery:
     import planetary_computer
     import pystac_client
 
@@ -65,6 +70,51 @@ def fetch_naip_pc(bbox_wgs84, years=(2024, 2023, 2022, 2021)) -> Imagery:
     for s in srcs:
         s.close()
     return Imagery(data[:4], tr, crs.to_string(), "naip-pc", dates[0] if len(dates) == 1 else f"{dates[0]}..{dates[-1]}", gsd, {"year": year, "items": [it.id for it in chosen]})
+
+
+def fetch_naip_usda(bbox_wgs84, crs: str = "EPSG:26912", gsd: float = 0.6) -> Imagery:
+    """Export a 4-band window from USDA's NAIP ImageServer, resampled to `gsd` in `crs`."""
+    import json
+    import urllib.parse
+    import urllib.request
+
+    from rasterio.io import MemoryFile
+
+    xmin, ymin, xmax, ymax = transform_bounds("EPSG:4326", crs, *bbox_wgs84)
+    w, h = int(round((xmax - xmin) / gsd)), int(round((ymax - ymin) / gsd))
+    xmax, ymin = xmin + w * gsd, ymax - h * gsd
+    epsg = int(crs.split(":")[1])
+    q = {
+        "bbox": f"{xmin},{ymin},{xmax},{ymax}",
+        "bboxSR": epsg,
+        "imageSR": epsg,
+        "size": f"{w},{h}",
+        "format": "tiff",
+        "pixelType": "U8",
+        "interpolation": "RSP_BilinearInterpolation",
+        "f": "image",
+    }
+    with urllib.request.urlopen(f"{USDA_NAIP}/exportImage?{urllib.parse.urlencode(q)}", timeout=300) as r:
+        blob = r.read()
+    with MemoryFile(blob) as mf, mf.open() as src:
+        data = src.read()
+        tr = src.transform
+    # Which quarter-quads (and flight dates) went into the mosaic.
+    cx, cy = (bbox_wgs84[0] + bbox_wgs84[2]) / 2, (bbox_wgs84[1] + bbox_wgs84[3]) / 2
+    ident = {
+        "geometry": json.dumps({"xmin": bbox_wgs84[0], "ymin": bbox_wgs84[1], "xmax": bbox_wgs84[2], "ymax": bbox_wgs84[3], "spatialReference": {"wkid": 4326}}),
+        "geometryType": "esriGeometryEnvelope",
+        "returnCatalogItems": "true",
+        "returnGeometry": "false",
+        "f": "json",
+    }
+    with urllib.request.urlopen(f"{USDA_NAIP}/identify?{urllib.parse.urlencode(ident)}", timeout=120) as r:
+        cat = json.load(r)
+    qq = [f["attributes"] for f in (cat.get("catalogItems") or {}).get("features", []) if f["attributes"].get("QQDATE")]
+    dates = sorted({dt.datetime.utcfromtimestamp(a["QQDATE"] / 1000).date().isoformat() for a in qq}) or ["unknown"]
+    years = sorted({a["year_ts"] for a in qq})
+    return Imagery(data[:4], tr, crs, "naip-usda", dates[0] if len(dates) == 1 else f"{dates[0]}..{dates[-1]}", gsd,
+                   {"year": years[-1] if years else None, "items": [a["Name"] for a in qq], "center": [round(cx, 5), round(cy, 5)]})
 
 
 def load_local(path: str, bbox_wgs84=None, capture_date: str = "unknown", source: str = "naip-local") -> Imagery:
@@ -134,8 +184,10 @@ def fetch_sentinel2(bbox_wgs84, tile="12TVL", year=2026, months=(7, 8, 6), max_c
 
 
 def get_imagery(spec: str, bbox_wgs84, **kw) -> Imagery:
+    if spec == "usda":
+        return fetch_naip_usda(bbox_wgs84)
     if spec == "pc":
-        return fetch_naip_pc(bbox_wgs84, **{k: v for k, v in kw.items() if k == "years"})
+        return fetch_naip_pc(bbox_wgs84, **{k: v for k, v in kw.items() if k == "years" and v})
     if spec == "sentinel2":
         return fetch_sentinel2(bbox_wgs84, **{k: v for k, v in kw.items() if k in ("tile", "year", "months")})
     return load_local(spec, bbox_wgs84, capture_date=kw.get("capture_date", "unknown"), source=kw.get("source", "naip-local"))
