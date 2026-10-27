@@ -138,3 +138,23 @@ outside the Sandy fabric, pass `--parcels <path to UGRC Salt Lake County Parcels
 1. Adam: address + hand-measured lawn sq ft, and either allow the NAIP hosts or run locally.
 2. Re-run the Sandy bbox at 60 cm (`--imagery pc`), compare, record error in this file.
 3. Phase 2 app once the 60 cm numbers are in.
+
+## Phase 2: demo app (SvelteKit on Cloudflare Workers)
+
+`app/`. Runs against static exports from the pipeline (`data/out/<run>/app/` copied to
+`app/static/data/<dataset>/`). No external tile server: the parcel view uses the pipeline's own
+imagery crop as the base, so it works offline and never leaks the address to a map provider.
+
+* `/` address search over the neighborhood, headline totals.
+* `/p/<dataset>/<parcel>` tap-to-cycle correction map (lawn → not lawn → converted → trees;
+  buildings fixed), live sq ft, three-layer savings card, rebate warning, water bill upload
+  (vision model via `/api/bill`, falls back to manual 12-month entry) with units taken from the
+  bill.
+* `/district/<dataset>` lawn-share heat map aggregated by parcel, acre-feet totals.
+* Corrections POST to `/api/labels` (D1 when bound, `schema.sql`), mirrored in localStorage so
+  the demo works without a database.
+* Rebate numbers come from the saved `rebate_programs.json` (no live lookups), resolved by city.
+
+Run locally: `cd app && npm install && npm run dev`. Deploy: `npm run build && npx wrangler deploy`
+after creating the D1 database named in `wrangler.jsonc` and setting `ANTHROPIC_API_KEY` as a
+Worker secret.
