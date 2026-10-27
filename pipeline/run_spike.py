@@ -33,7 +33,7 @@ def main(argv=None):
     ap.add_argument("--bbox", nargs=4, type=float, metavar=("XMIN", "YMIN", "XMAX", "YMAX"), help="WGS84 lon/lat")
     ap.add_argument("--center", nargs=2, type=float, metavar=("LON", "LAT"))
     ap.add_argument("--radius-m", type=float, default=350)
-    ap.add_argument("--parcels", default="sandy", help="'sandy' or path to a parcel file")
+    ap.add_argument("--parcels", default="sandy", help="'sandy', 'ugrc' (SLCo LIR feature service), or path to a parcel file")
     ap.add_argument("--buildings", default="overture", help="'overture' or path to a footprint file")
     ap.add_argument("--imagery", default="pc", help="'pc' (NAIP via Planetary Computer), 'sentinel2', or path to a 4-band GeoTIFF")
     ap.add_argument("--imagery-date", default="unknown", help="capture date for a local file")

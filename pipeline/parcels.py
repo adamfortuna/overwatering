@@ -16,7 +16,13 @@ import urllib.request
 import geopandas as gpd
 import pandas as pd
 
-from .common import SQFT_PER_SQM, raw_path
+from .common import SQFT_PER_SQM, bbox_key, raw_path
+
+# UGRC SGID feature services (ArcGIS Online). LIR = tax-roll attributes joined.
+UGRC_SLCO_LIR_LAYER = (
+    "https://services1.arcgis.com/99lidPhWCzftIe9K/arcgis/rest/services/"
+    "Utah_Salt_Lake_County_Parcels_LIR/FeatureServer/0"
+)
 
 SANDY_PARCELS_URL = (
     "https://s3.us-west-2.amazonaws.com/us-west-2.opendata.source.coop/"
@@ -75,13 +81,53 @@ def _download(url: str, dest: str) -> str:
     return dest
 
 
+def _fetch_ugrc(layer_url: str, bbox_wgs84, cache: str) -> gpd.GeoDataFrame:
+    """Page through an ArcGIS FeatureServer layer query for a bbox and cache as GeoParquet."""
+    import json
+    import urllib.parse
+
+    if os.path.exists(cache):
+        return gpd.read_parquet(cache)
+    xmin, ymin, xmax, ymax = bbox_wgs84
+    feats, offset = [], 0
+    while True:
+        q = {
+            "where": "1=1",
+            "geometry": f"{xmin},{ymin},{xmax},{ymax}",
+            "geometryType": "esriGeometryEnvelope",
+            "inSR": 4326,
+            "spatialRel": "esriSpatialRelIntersects",
+            "outFields": "*",
+            "outSR": 4326,
+            "f": "geojson",
+            "resultOffset": offset,
+            "resultRecordCount": 1000,
+        }
+        with urllib.request.urlopen(f"{layer_url}/query?{urllib.parse.urlencode(q)}", timeout=120) as r:
+            fc = json.load(r)
+        feats += fc.get("features", [])
+        if not fc.get("properties", {}).get("exceededTransferLimit") and len(fc.get("features", [])) < 1000:
+            break
+        offset += 1000
+    g = gpd.GeoDataFrame.from_features(feats, crs=4326)
+    g.to_parquet(cache)
+    return g
+
+
 def load_parcels(source: str, bbox_wgs84, area_crs: str, residential_only: bool = True) -> gpd.GeoDataFrame:
-    """Return parcels intersecting bbox (xmin, ymin, xmax, ymax in lon/lat), in area_crs."""
+    """Return parcels intersecting bbox (xmin, ymin, xmax, ymax in lon/lat), in area_crs.
+
+    source: "sandy", "ugrc" (Salt Lake County Parcels LIR feature service), or a file path."""
     if source == "sandy":
         path = _download(SANDY_PARCELS_URL, raw_path("sandy_parcels.parquet"))
+    elif source == "ugrc":
+        path = None
     else:
         path = source
-    g = gpd.read_parquet(path) if path.endswith(".parquet") else gpd.read_file(path)
+    if path is None:
+        g = _fetch_ugrc(UGRC_SLCO_LIR_LAYER, bbox_wgs84, raw_path(f"ugrc_slco_lir_{bbox_key(bbox_wgs84)}.parquet"))
+    else:
+        g = gpd.read_parquet(path) if path.endswith(".parquet") else gpd.read_file(path)
     if g.crs is None:
         g = g.set_crs(4326)  # Philadelphia DOR mirror ships lon/lat without CRS metadata
     schema = _detect_schema(g)
