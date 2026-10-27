@@ -21,6 +21,8 @@ UV=$(command -v uv || echo "$HOME/.local/bin/uv")
 "$UV" pip install -q -p .venv -r pipeline/requirements.txt
 
 (cd app && npm ci)
+# Local D1 for corrections in dev (production D1 is in wrangler.jsonc). Idempotent, offline.
+(cd app && npx wrangler d1 execute lawn-labels --local --file=schema.sql >/dev/null)
 
 # app/static/data is generated and gitignored. Build the first dataset here (~2 min, needs
 # network); the rest via the "data" run action or scripts/build-data.sh.

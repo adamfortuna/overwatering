@@ -45,7 +45,7 @@ read D1/R2, then installs deps and builds any missing datasets (~10 min). Then:
    Check unit = ccf and all 12 months; then try a real bill photo if Adam has one.
 2. **Local demo with Adam** (he wants to see it run before any deploy). Confirm his Mac
    workspace's setup script and dev action work.
-3. **Deploy** only after Adam says go: Step 2 below. The old token could list Workers scripts
+3. **Deploy**: done, live at https://overwater.ing (Step 2). The old token could list Workers scripts
    but got "Authentication error" on D1, R2 and billing; `resume.sh` reports what the new one
    can do. overwater.ing is an active zone on the same account (Free Website plan).
 4. **Validation** when Adam has the tape numbers: `docs/validation/worksheet_816_s_600_e.png`
@@ -83,7 +83,7 @@ Env gotchas learned 2026-10-27:
 | App | Rebranded; cross-neighborhood search; `/how`; check clean; build OK | `app/` |
 | Bill reading | Route reads `EXTERNAL_ANTHROPIC_API_KEY` (`app/src/env.ts`), `claude-opus-5-5` via `beta.messages.parse` with `fallbacks: 'default'`; typed errors fall back to manual entry | `app/src/routes/api/bill/+server.ts` |
 | Bill reading tested? | **Yes** with the real key (cloud): all 12 months + unit from the sample bill in 6.5 s | `scripts/fixtures/sample_slc_bill.png` |
-| Cloudflare deploy | **Not started on purpose**: Adam wants a local demo first. `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` are present | Step 2 |
+| Cloudflare deploy | **Live at https://overwater.ing** | Step 2, `scripts/deploy.sh` |
 
 ## Step 1: Adam's lot validation (the number the pitch needs)
 
@@ -105,37 +105,28 @@ Record it in `RESULTS.md` plainly, including a miss of the ±20% target:
 * Park strip: **outside** the parcel (right-of-way), visibly green. Counting it needs a strip
   polygon between the parcel front line and the curb. Not built.
 
-## Step 2: deploy
+## Step 2: deploy (done 2026-10-27)
 
-**2026-10-27 attempt:** Adam said go; `wrangler deploy` failed at
-`/workers/scripts/overwater/deployments`: "No access to the specified resource". The token can
-list scripts and read DNS but can't edit Workers, D1, R2, account settings or Workers domains.
-Needs a new token (Account: Workers Scripts Edit, D1 Edit, Account Settings Read, optionally
-R2 Edit; Zone overwater.ing: Workers Routes Edit, DNS Edit). `wrangler.jsonc` now has the
-overwater.ing custom domain and no D1 binding. Build with the key **unset**
-(`env -u EXTERNAL_ANTHROPIC_API_KEY npm run build`) and grep the bundle for it before deploying;
-then `printenv EXTERNAL_ANTHROPIC_API_KEY | npx wrangler secret put EXTERNAL_ANTHROPIC_API_KEY`.
-If the account is on Workers Free, 25.8k asset files exceed the 20k limit: pack the per-parcel
-regions into shards (cuts ~12.8k files) or move data to R2.
+**Live at https://overwater.ing** (Worker `overwater`, custom domain; also
+`overwater.patient-thunder-b4e3.workers.dev` if workers.dev is enabled). Redeploy with
+`scripts/deploy.sh` (`--secret` re-stores the Anthropic key). Verified live: all pages, all six
+datasets, bill reading (sample bill, 5 s), corrections into D1 `lawn-labels`
+(`ac728bc5-89c3-4317-9a8a-c8066185f68e`; test row deleted).
 
-
-Credentials are in the workspace env. Rough plan:
-
-```bash
-cd app && npm run build
-npx wrangler d1 create lawn-labels        # paste database_id into wrangler.jsonc
-npx wrangler d1 execute lawn-labels --remote --file=schema.sql
-npx wrangler secret put EXTERNAL_ANTHROPIC_API_KEY
-npx wrangler deploy                       # worker name is "overwater"
-```
-
-Then the custom domain overwater.ing (is the zone on this Cloudflare account?).
-
-**Asset limits:** the six datasets are ~305 MB in ~25.8k files (a crop PNG + regions GeoJSON
-per parcel). Workers static assets allow 100,000 files per version on the **paid** plan but
-20,000 on free; 25 MiB per file either way. If the account is on free, or for headroom, put
-`app/static/data/` in R2 and serve it from the worker (or pack regions per dataset).
-Without D1 the labels route returns 501 and corrections stay in localStorage.
+Things that broke on first deploy (adapter-cloudflare 8 / SvelteKit 3):
+* **Server-side fetches of `/data/*` static assets fail** on Workers, so SSR loads threw
+  (parcel/district 500) or silently shipped empty data (home). Fixed with `ssr = false` in
+  `src/routes/+layout.ts`; the app is client-rendered and reads `/data` straight from assets.
+* **`platform` is not passed** to requests any more; bindings come from
+  `import { env } from 'cloudflare:workers'` (the adapter emulates it in dev with a local D1;
+  `scripts/setup.sh` applies `schema.sql` locally). Minimal types in `src/cloudflare.d.ts`.
+* Secrets: `$app/env/private` reads the Worker secret at runtime. Build with the key unset;
+  `deploy.sh` refuses to deploy if the key shows up in the bundle.
+* Cross-site POSTs are rejected by SvelteKit's CSRF check; curl tests need `-H "Origin: https://overwater.ing"`.
+* The account is on Workers Paid (25.8k asset files accepted). Upload of everything took ~45 s;
+  redeploys only upload changed files.
+* `/api/labels` is a public, unauthenticated write. Inputs are validated (class enum, lengths),
+  but there is no rate limit. Add Cloudflare rate limiting if it gets abused.
 
 ## Step 3: rebate follow-ups (table itself is verified)
 
