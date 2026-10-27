@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "utah-lawn-water-lens",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": ".svelte-kit/cloudflare/_worker.js",
+  "assets": { "directory": ".svelte-kit/cloudflare", "binding": "ASSETS" },
+  // Create with: npx wrangler d1 create lawn-labels ; then paste the id and run
+  // npx wrangler d1 execute lawn-labels --file=schema.sql
+  "d1_databases": [{ "binding": "DB", "database_name": "lawn-labels", "database_id": "REPLACE_ME" }]
+}

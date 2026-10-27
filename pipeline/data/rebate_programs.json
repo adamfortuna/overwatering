@@ -1,0 +1,75 @@
+{
+  "_about": "Utah lawn-conversion incentives. One saved table, not live lookups. Rates and caps change; each row carries last_checked and verified. Rates in USD per sq ft of lawn removed. 'estimated up to' uses rate_high. Sources are the Utah Water Savers portal and provider pages where reachable; rows marked verified=false were compiled from secondary summaries and must be confirmed on utahwatersavers.com before the pitch.",
+  "statewide_rules": {
+    "program": "Utah Water Savers Landscape Incentive Program (Utah Division of Water Resources + local providers)",
+    "portal": "https://www.utahwatersavers.com/landscapeincentiveprogram",
+    "min_project_sqft": 200,
+    "pre_approval_required": true,
+    "site_visit_required": true,
+    "virtual_inspection_allowed": "Utah Admin Code R653-11-7 allows completion inspections to be physical or virtual",
+    "disqualifiers": ["Removing or killing lawn before approval", "Lawn not living and maintained at application", "Account not in good standing with water provider", "City without a qualifying water-efficient landscape ordinance"],
+    "legal": "Utah Code 73-10-34 (2022 H.B. 121 turf removal incentive); Utah Admin Code R653-11"
+  },
+  "providers": [
+    {
+      "id": "jvwcd",
+      "name": "Jordan Valley Water Conservancy District (member cities)",
+      "cities": ["Sandy", "West Jordan", "South Jordan", "Herriman", "Riverton", "Bluffdale", "Draper", "Midvale", "Taylorsville", "West Valley City", "Kearns", "Magna", "Millcreek", "Holladay", "Cottonwood Heights", "Murray", "South Salt Lake"],
+      "rate_low": 1.50,
+      "rate_high": 3.00,
+      "min_sqft": 200,
+      "max_sqft": null,
+      "max_dollars": null,
+      "notes": "Rate depends on the member city's own match; $3.00 reported for JVWCD-direct customers. Localscapes plan required.",
+      "apply_url": "https://www.utahwatersavers.com/landscapeincentiveprogram",
+      "source": "https://www.thepollinatorpatchgarden.com/rebates/utah; https://slowtheflow.org/rebates/department-of-water-resources/",
+      "last_checked": "2026-10-26",
+      "verified": false
+    },
+    {
+      "id": "slcdpu",
+      "name": "Salt Lake City Department of Public Utilities",
+      "cities": ["Salt Lake City"],
+      "rate_low": 1.00,
+      "rate_high": 3.00,
+      "min_sqft": 200,
+      "max_sqft": null,
+      "max_dollars": null,
+      "notes": "Salt Lake City adopted a qualifying landscape ordinance (listed among eligible municipalities in 2023). SLCDPU has also run its own Landscape Leadership Grant. Exact 2026 rate for SLCDPU customers not confirmed from a primary source.",
+      "apply_url": "https://www.utahwatersavers.com/landscapeincentiveprogram",
+      "source": "https://www.axios.com/local/salt-lake-city/2023/05/25/utah-water-rebate-grass-lawn-incentive-money; https://millcreekut.gov/488/Landscaping-Rebates",
+      "last_checked": "2026-10-26",
+      "verified": false
+    },
+    {
+      "id": "cuwcd",
+      "name": "Central Utah Water Conservancy District (member cities)",
+      "cities": ["Provo", "Orem", "Lehi", "American Fork", "Pleasant Grove", "Spanish Fork", "Springville", "Payson", "Saratoga Springs", "Eagle Mountain", "Heber City", "Park City"],
+      "rate_low": 1.50,
+      "rate_high": 3.00,
+      "min_sqft": 200,
+      "max_sqft": null,
+      "max_dollars": null,
+      "notes": "Varies by city.",
+      "apply_url": "https://www.utahwatersavers.com/landscapeincentiveprogram",
+      "source": "https://www.thepollinatorpatchgarden.com/rebates/utah",
+      "last_checked": "2026-10-26",
+      "verified": false
+    },
+    {
+      "id": "state",
+      "name": "Utah Division of Water Resources statewide track",
+      "cities": [],
+      "rate_low": 1.00,
+      "rate_high": 1.00,
+      "min_sqft": 200,
+      "max_sqft": null,
+      "max_dollars": null,
+      "notes": "Fallback for addresses in a city with a qualifying ordinance but no local program. Rate reported at $1/sq ft; confirm.",
+      "apply_url": "https://www.utahwatersavers.com/landscapeincentiveprogram",
+      "source": "https://slowtheflow.org/rebates/department-of-water-resources/",
+      "last_checked": "2026-10-26",
+      "verified": false
+    }
+  ]
+}

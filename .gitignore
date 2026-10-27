@@ -1,0 +1,15 @@
+# data
+data/raw/
+data/out/
+*.parquet
+*.tif
+*.jp2
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+.svelte-kit/
+.wrangler/
+.env
+.DS_Store
+app/static/data/
