@@ -72,7 +72,7 @@
 
 	<div class="search">
 		<label for="q" class="sr">Your address</label>
-		<input id="q" type="search" placeholder="Your street address, e.g. 603 E South Temple" bind:value={q} autocomplete="street-address" />
+		<input id="q" type="search" placeholder="e.g. 603 E South Temple" bind:value={q} autocomplete="street-address" />
 		{#if hits.length || remote.length}
 			<ul class="hits">
 				{#each hits as [address, ds, id, lawn]}
@@ -141,6 +141,7 @@
 	.search { margin-top: 20px; position: relative; z-index: 2; }
 	.search input { width: 100%; box-sizing: border-box; font-size: 1.25rem; padding: 16px 20px; border-radius: 999px; border: 3px solid var(--water-2); box-shadow: 0 6px 0 #bfe6f8; }
 	.search input:focus { outline: none; border-color: var(--water); }
+	@media (max-width: 560px) { .search input { font-size: 1.1rem; padding: 14px 18px; } }
 	.hits { list-style: none; padding: 6px; margin: 10px 0 0; background: #fff; border: 2px solid var(--line); border-radius: 20px; box-shadow: 0 6px 0 #d6ecf9; }
 	.hits a { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 10px 14px; border-radius: 14px; text-decoration: none; color: var(--ink); }
 	.hits a:hover, .hits a:focus-visible { background: var(--aqua); }

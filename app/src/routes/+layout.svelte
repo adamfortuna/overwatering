@@ -12,7 +12,8 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<link rel="icon" href={favicon} type="image/svg+xml" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 	<title>Overwater.ing? · Utah lawns and the water they really need</title>
 	<meta name="description" content="For any Utah home: how much lawn is on the lot, how much water it actually needs, and what Utah pays you to replace it." />
 </svelte:head>
@@ -80,7 +81,8 @@
 	.links { display: flex; gap: 8px; }
 	.links a { color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 600; padding: 6px 14px; border-radius: 999px; white-space: nowrap; }
 	.links a:hover { background: #fff; box-shadow: 0 3px 0 #d6ecf9; }
-	@media (max-width: 560px) { nav { padding: 10px 12px; } .links { gap: 2px; font-size: 0.9rem; } .links a { padding: 6px 8px; } nav :global(.word) { font-size: 1.2rem; } }
+	@media (max-width: 560px) { nav { padding: 10px 12px; } .links { gap: 0; font-size: 0.9rem; } .links a { padding: 6px 8px; } nav :global(.word) { font-size: 1.15rem; } nav :global(.logo svg) { width: 34px; height: 34px; } }
+	@media (max-width: 430px) { .links a:first-child { display: none; } }
 
 	main { max-width: 1100px; margin: 0 auto; padding: 18px 20px 40px; }
 	main.home { padding-top: 0; }

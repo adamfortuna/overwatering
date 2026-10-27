@@ -7,12 +7,16 @@
 	import Sun from './art/Sun.svelte';
 	import Arch from './art/Arch.svelte';
 	let { variant = 'hero' }: { variant?: 'hero' | 'strip' | 'footer' } = $props();
+	// Narrow screens see the left half of the hero (sprinkler + lawn + Gramma) instead of a middle slice.
+	let width = $state(1200);
 	// Utah's outline (the notch is the NE corner), in a 60 x 70 box.
 	const UTAH = '0,0 38,0 38,16 60,16 60,70 0,70';
 </script>
 
+<svelte:window bind:innerWidth={width} />
+
 {#if variant === 'hero'}
-	<svg class="scene hero" viewBox="0 0 1200 290" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+	<svg class="scene hero" viewBox="0 0 1200 290" preserveAspectRatio={width < 700 ? 'xMinYMax slice' : 'xMidYMax slice'} aria-hidden="true">
 		<g class="drift" fill="#fff">
 			<ellipse cx="160" cy="46" rx="56" ry="18" /><ellipse cx="196" cy="34" rx="34" ry="20" /><ellipse cx="128" cy="38" rx="26" ry="14" />
 			<ellipse cx="560" cy="28" rx="44" ry="14" /><ellipse cx="588" cy="20" rx="26" ry="14" />
