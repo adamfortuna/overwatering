@@ -35,7 +35,7 @@
 		[-1, -0.5, 0, 0.5, 1].map((d, i) => `M${x + d * 2} ${y} Q${x + d * 5} ${y - h * 0.55} ${x + d * 12} ${y - h * (i % 2 ? 0.8 : 1)}`).join(' ');
 </script>
 
-<svg viewBox="0 0 520 320" role="img" aria-label={mode === 'lawn' ? 'A house with a front lawn and a sprinkler spraying the sidewalk' : 'The same house with a native pollinator garden: a flowering tree, shrubs, grasses and wildflowers, with butterflies and a bee'}>
+<svg viewBox="0 0 520 320" role="img" aria-label={mode === 'lawn' ? 'A house with a front lawn and a sprinkler spraying the sidewalk' : 'The same house with a native pollinator garden: a serviceberry and a redbud in bloom, shrubs, grasses and wildflowers, with butterflies and a bee'}>
 	<!-- mountains + house -->
 	<path d="M0 150 L70 96 L120 124 L190 70 L250 110 L300 86 L380 132 L440 100 L520 140 V210 H0 Z" fill="#dcefff" />
 	<path d="M190 70 L178 80 L188 80 L194 88 L202 79 Z M440 100 L432 108 L440 108 L446 114 L450 108 Z" fill="#fff" />
@@ -63,6 +63,11 @@
 		<g fill="#6aa84f"><circle cx="50" cy="176" r="22" /><circle cx="82" cy="172" r="22" /><circle cx="66" cy="156" r="24" /></g>
 		<g fill="#8cc474"><circle cx="58" cy="160" r="10" /><circle cx="80" cy="166" r="8" /></g>
 		<g fill="#fff">{#each [[44, 168], [62, 148], [86, 160], [74, 178], [52, 184], [92, 176]] as [x, y]}<circle cx={x} cy={y} r="3" />{/each}</g>
+		<!-- a western redbud on the right: multi-trunk, magenta spring blossoms -->
+		<path d="M466 228 Q464 204 452 186 M468 228 Q470 200 482 182 M467 228 V190" stroke="#7a4a35" stroke-width="5" stroke-linecap="round" fill="none" />
+		<g fill="#7cae5a"><circle cx="446" cy="172" r="18" /><circle cx="490" cy="170" r="19" /><circle cx="468" cy="152" r="23" /><circle cx="470" cy="178" r="17" /></g>
+		<g fill="#d1559b"><circle cx="452" cy="160" r="14" /><circle cx="484" cy="158" r="13" /><circle cx="468" cy="140" r="12" /><circle cx="462" cy="176" r="10" /><circle cx="490" cy="176" r="10" /></g>
+		<g fill="#f08ac0">{#each [[446, 154], [458, 166], [472, 134], [480, 150], [492, 164], [466, 180], [438, 170], [478, 172], [456, 142]] as [x, y]}<circle cx={x} cy={y} r="3.4" />{/each}</g>
 		<!-- shrubs against the house -->
 		<g fill="#5b9a45"><circle cx="160" cy="216" r="16" /><circle cx="214" cy="218" r="14" /><circle cx="312" cy="214" r="14" /><circle cx="448" cy="212" r="14" /><circle cx="500" cy="218" r="16" /></g>
 		<g fill="#7fb86a"><circle cx="182" cy="220" r="15" /><circle cx="334" cy="216" r="12" /><circle cx="426" cy="214" r="12" /></g>
