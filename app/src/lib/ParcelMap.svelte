@@ -16,7 +16,7 @@
 		maplibregl.setWorkerUrl('/ml/maplibre-gl-worker.mjs'); // bundler-safe worker (copied from node_modules)
 		map = new maplibregl.Map({
 			container: el,
-			style: { version: 8, sources: {}, layers: [{ id: 'bg', type: 'background', paint: { 'background-color': '#080c18' } }] },
+			style: { version: 8, sources: {}, layers: [{ id: 'bg', type: 'background', paint: { 'background-color': '#dbeefa' } }] },
 			attributionControl: false,
 			dragRotate: false,
 			pitchWithRotate: false
@@ -35,7 +35,7 @@
 					'fill-opacity': ['match', ['get', 'cls'], ...Object.entries(OPACITY).flat(), 0.2] as unknown as import('maplibre-gl').ExpressionSpecification
 				}
 			});
-			map!.addLayer({ id: 'regions-line', type: 'line', source: 'regions', paint: { 'line-color': '#ffffff', 'line-opacity': 0.35, 'line-width': 1 } });
+			map!.addLayer({ id: 'regions-line', type: 'line', source: 'regions', paint: { 'line-color': '#ffffff', 'line-opacity': 0.6, 'line-width': 1 } });
 			map!.addLayer({ id: 'changed', type: 'line', source: 'regions', filter: ['!=', ['get', 'cls'], ['get', 'original']], paint: { 'line-color': '#fff', 'line-width': 2.5 } });
 			map!.on('click', 'regions-fill', (e) => {
 				const f = e.features?.[0];
@@ -60,5 +60,5 @@
 <div class="map" bind:this={el}></div>
 
 <style>
-	.map { width: 100%; aspect-ratio: 4 / 3; max-height: 70vh; border-radius: 12px; overflow: hidden; background: #080c18; }
+	.map { width: 100%; aspect-ratio: 4 / 3; max-height: 70vh; border-radius: 12px; overflow: hidden; background: #dbeefa; }
 </style>

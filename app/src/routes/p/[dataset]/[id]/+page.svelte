@@ -6,6 +6,10 @@
 	import { loadLabels, saveLabel } from '#lib/labels.ts';
 	import { etoFor, type RegionCls } from '#lib/data.ts';
 	import CountUp from '#lib/CountUp.svelte';
+	import Sprinkler from '#lib/art/Sprinkler.svelte';
+	import Coin from '#lib/art/Coin.svelte';
+	import Grass from '#lib/art/Grass.svelte';
+	import Drop from '#lib/art/Drop.svelte';
 	import { onMount } from 'svelte';
 
 	let { data }: PageProps = $props();
@@ -94,22 +98,23 @@
 
 	<section class="cards">
 		<div class="card reveal">
-			<p class="kicker">The reveal</p>
+			<svg class="corner" viewBox="0 0 60 70" aria-hidden="true"><Drop x={8} y={4} scale={1} /></svg>
+			<p class="kicker">Your lawn</p>
 			<div class="huge"><CountUp value={lawn} /> <span class="unit">sq ft of lawn</span></div>
 			<p class="muted">{canopy ? `Plus ${fmt(canopy)} sq ft under trees we didn't count. ` : ''}{converted ? `${fmt(converted)} sq ft already converted. ` : ''}It needs about <b class="ink">{need.inches.toFixed(0)} inches</b> of water a season, or <b class="ink">{fmt(need.gal)} gallons</b> a year.</p>
 			<p class="muted small">Range before your edits: {fmt(data.parcel.lawn_lo_sqft)}–{fmt(data.parcel.lawn_hi_sqft)} sq ft.</p>
 		</div>
 
 		<div class="card door">
-			<span class="num" aria-hidden="true">1</span>
-			<p class="kicker">Door 1 · free, today</p>
+			<svg class="corner" viewBox="0 0 130 130" aria-hidden="true"><Sprinkler x={20} y={-26} scale={0.92} spray={false} /></svg>
+			<p class="kicker">1 · Free, today</p>
 			<h3>Water what it needs</h3>
 			{#if bill}
 				{#if bill.gap > 0}
 					<div class="big over"><CountUp value={bill.gap} suffix=" gal/yr" /></div>
 					<p class="muted small">Overwatering. Your bill shows {fmt(bill.total)} gal of outdoor use a year ({bill.appliedIn.toFixed(0)} inches on this lawn) against a need of {fmt(need.gal)}. Indoor baseline {fmt(bill.baseline)} gal/month.</p>
 				{:else}
-					<div class="big ok">Right on the money</div>
+					<div class="big ok">Right on target</div>
 					<p class="muted small">Your outdoor use ({fmt(bill.total)} gal/yr) is at or under what this lawn needs ({fmt(need.gal)}). Nice.</p>
 				{/if}
 			{:else}
@@ -128,8 +133,8 @@
 		</div>
 
 		<div class="card door">
-			<span class="num" aria-hidden="true">2</span>
-			<p class="kicker">Door 2 · one time</p>
+			<svg class="corner" viewBox="0 0 130 130" aria-hidden="true"><Coin x={65} y={68} scale={1.5} /></svg>
+			<p class="kicker">2 · One time</p>
 			<h3>Take the rebate</h3>
 			{#if !data.ds.utah}
 				<p class="muted">No Utah program applies here.</p>
@@ -143,41 +148,43 @@
 		</div>
 
 		<div class="card door">
-			<span class="num" aria-hidden="true">3</span>
-			<p class="kicker">Door 3 · every year</p>
-			<h3>Convert it</h3>
+			<svg class="corner" viewBox="0 0 130 130" aria-hidden="true"><Grass x={6} y={-6} scale={1.05} /></svg>
+			<p class="kicker">3 · Every year</p>
+			<h3>Go native</h3>
 			<div class="big save"><CountUp value={conv} suffix=" gal/yr" /></div>
-			<p class="muted small">Water left in the system if this lawn becomes water-wise landscape (plant water use 0.8 → 0.3 of reference ET; {eto.annual_eto_in} in/yr here). {converted ? `The area you marked converted already saves about ${fmt(convertedSavings)} gal/yr.` : ''}</p>
+			<p class="muted small">Water saved if this lawn becomes water-wise Utah landscape (plant water use 0.8 → 0.3 of reference ET; {eto.annual_eto_in} in/yr here). {converted ? `The area you marked converted already saves about ${fmt(convertedSavings)} gal/yr.` : ''}</p>
 		</div>
 	</section>
 </div>
 
 <style>
-	.back { display: inline-block; margin: 8px 0 14px; text-decoration: none; font-weight: 600; }
+	.back { display: inline-block; margin: 4px 0 12px; text-decoration: none; font-family: var(--display); font-weight: 600; background: #fff; border: 2px solid var(--line); border-radius: 999px; padding: 4px 14px; box-shadow: 0 3px 0 #d6ecf9; }
 	.meta { margin-top: 4px; }
 	.ink { color: var(--ink); }
-	.layout { display: grid; grid-template-columns: 1fr; gap: 18px; margin-top: 18px; }
+	.layout { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 18px; }
 	@media (min-width: 900px) { .layout { grid-template-columns: 1.1fr 1fr; } .layout > section:first-child { position: sticky; top: 12px; align-self: start; } }
-	.mapwrap { padding: 6px; }
-	.cards { display: flex; flex-direction: column; gap: 14px; }
-	.reveal { border-color: rgba(255, 201, 64, 0.45); box-shadow: 0 0 0 1px rgba(255, 201, 64, 0.12), 0 10px 40px -20px rgba(255, 201, 64, 0.5); }
-	.huge { font-family: var(--display); font-weight: 800; font-size: clamp(2.6rem, 6vw, 3.6rem); line-height: 1; letter-spacing: -0.03em; margin: 4px 0 10px; }
-	.unit { font-size: 1.1rem; font-weight: 650; color: var(--muted); letter-spacing: 0; }
-	.door { position: relative; overflow: hidden; }
-	.door .num { position: absolute; right: 12px; top: -16px; font-family: var(--display); font-weight: 800; font-size: 6rem; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px rgba(255, 201, 64, 0.3); pointer-events: none; }
-	.door h3 { font-size: 1.2rem; }
+	.mapwrap { padding: 8px; }
+	.cards { display: flex; flex-direction: column; gap: 16px; }
+	.reveal { background: linear-gradient(160deg, #ffffff 40%, #e3f5fe); border-color: #a9e1f8; }
+	.huge { font-family: var(--display); font-weight: 700; font-size: clamp(2.8rem, 6vw, 3.8rem); line-height: 1; color: var(--water); margin: 4px 0 10px; }
+	.unit { font-size: 1.15rem; font-weight: 600; color: var(--muted); }
+	.door, .reveal { position: relative; }
+	.corner { position: absolute; right: 12px; top: 10px; width: 64px; height: 64px; }
+	.reveal .corner { width: 46px; height: 54px; }
+	.door h3, .door .kicker, .reveal .kicker { padding-right: 70px; }
+	.door h3 { font-size: 1.3rem; }
 	.over { color: var(--coral); }
 	.ok, .save { color: var(--lawn); }
 	.gold { color: var(--gold); }
-	.hint { color: var(--muted); font-size: 0.92rem; margin: 10px 2px 8px; }
-	.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; list-style: none; padding: 0; margin: 0 2px; font-size: 0.85rem; color: var(--muted); }
-	.sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
-	.warn { background: rgba(255, 201, 64, 0.1); border: 1px solid rgba(255, 201, 64, 0.35); color: var(--gold); border-radius: 10px; padding: 10px 12px; font-size: 0.92rem; margin-bottom: 0; }
-	.warn a { color: var(--gold); font-weight: 650; }
+	.hint { color: var(--muted); font-size: 0.92rem; margin: 10px 4px 8px; }
+	.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; list-style: none; padding: 0; margin: 0 4px; font-size: 0.88rem; color: var(--muted); }
+	.sw { display: inline-block; width: 13px; height: 13px; border-radius: 4px; margin-right: 6px; vertical-align: -1px; }
+	.warn { background: #fff6dc; border: 2px solid #ffe08a; color: #6b4b00; border-radius: 14px; padding: 10px 12px; font-size: 0.92rem; margin-bottom: 0; }
+	.warn a { color: #8a5d00; font-weight: 700; }
 	details { margin-top: 10px; }
-	summary { cursor: pointer; color: var(--water); font-weight: 600; }
+	summary { cursor: pointer; color: var(--water); font-family: var(--display); font-weight: 600; }
 	.months { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 8px; }
 	.months label { font-size: 0.8rem; color: var(--muted); }
-	.months input, select { width: 100%; box-sizing: border-box; padding: 6px 8px; }
+	.months input, select { width: 100%; box-sizing: border-box; padding: 6px 8px; border-radius: 10px; }
 	.file { display: block; margin: 10px 0; font-size: 0.92rem; }
 </style>

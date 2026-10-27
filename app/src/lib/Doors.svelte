@@ -1,30 +1,39 @@
 <script lang="ts">
-	// The three savings layers, framed as doors. Values are optional (home page shows the teaser).
-	type Door = { kicker: string; title: string; body: string; value?: string };
-	let { doors }: { doors?: Door[] } = $props();
-	const DEFAULT: Door[] = [
-		{ kicker: 'Door 1 · free, today', title: 'Water what it needs', body: 'Most Utah lawns get 6–12 inches more a year than they use. Add your bill and we show your gap.' },
-		{ kicker: 'Door 2 · one time', title: 'Take the rebate', body: 'Salt Lake City and Sandy pay $3 per square foot of lawn you replace, up to $50,000. Get approved first.' },
-		{ kicker: 'Door 3 · every year', title: 'Convert it', body: 'Water-wise landscape needs roughly a third of what turf does, every summer after.' }
+	// The three ways to save, each with its character. Values are optional (home shows a teaser).
+	import Sprinkler from './art/Sprinkler.svelte';
+	import Coin from './art/Coin.svelte';
+	import Grass from './art/Grass.svelte';
+	type Way = { kicker: string; title: string; body: string };
+	let { ways }: { ways?: Way[] } = $props();
+	const DEFAULT: Way[] = [
+		{ kicker: '1 · Free, today', title: 'Water what it needs', body: 'Most Utah lawns get 6–12 inches more water a year than they use. Add your bill and we show your gap.' },
+		{ kicker: '2 · One time', title: 'Take the rebate', body: "Utah Water Savers pays $1.50–$3 per square foot of lawn you replace in most Wasatch Front cities. Get approved first." },
+		{ kicker: '3 · Every year', title: 'Go native', body: 'Water-wise Utah landscape needs roughly a third of the water turf does, every summer after.' }
 	];
-	let list = $derived(doors ?? DEFAULT);
+	let list = $derived(ways ?? DEFAULT);
 </script>
 
-<section class="doors">
-	{#each list as d, i}
-		<article class="door card">
-			<span class="num" aria-hidden="true">{i + 1}</span>
-			<p class="kicker">{d.kicker}</p>
-			<h3>{d.title}</h3>
-			{#if d.value}<div class="big">{d.value}</div>{/if}
-			<p class="muted small">{d.body}</p>
+<section class="ways">
+	{#each list as w, i}
+		<article class="card way">
+			<svg class="icon" viewBox="0 0 130 130" aria-hidden="true">
+				{#if i === 0}<Sprinkler x={20} y={-26} scale={0.92} spray={false} />
+				{:else if i === 1}<Coin x={65} y={68} scale={1.5} />
+				{:else}<Grass x={6} y={-6} scale={1.05} />{/if}
+			</svg>
+			<div>
+				<p class="kicker">{w.kicker}</p>
+				<h3>{w.title}</h3>
+				<p class="muted small">{w.body}</p>
+			</div>
 		</article>
 	{/each}
 </section>
 
 <style>
-	.doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 34px; }
-	.door { position: relative; overflow: hidden; padding-top: 22px; }
-	.num { position: absolute; right: 12px; top: -14px; font-family: var(--display); font-weight: 800; font-size: 6rem; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px rgba(255, 201, 64, 0.35); pointer-events: none; }
-	h3 { font-size: 1.25rem; }
+	.ways { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 26px; }
+	.way { display: grid; grid-template-columns: 84px 1fr; gap: 12px; align-items: start; }
+	.icon { width: 84px; height: 84px; background: var(--aqua); border-radius: 20px; }
+	h3 { font-size: 1.3rem; margin-bottom: 2px; }
+	.way p:last-child { margin: 4px 0 0; }
 </style>

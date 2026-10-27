@@ -3,6 +3,7 @@
 	import { DATASETS, etoFor } from '#lib/data.ts';
 	import { acreFeet, annualTurfNeedGal, conversionSavingsGal, fmt } from '#lib/water.ts';
 	import Doors from '#lib/Doors.svelte';
+	import Scene from '#lib/Scene.svelte';
 	let { data }: PageProps = $props();
 
 	let q = $state('');
@@ -34,9 +35,9 @@
 </script>
 
 <section class="hero">
-	<p class="kicker">Salt Lake City · today's contestant: your lawn</p>
+	<p class="kicker">Utah · 2024 aerial imagery · free</p>
 	<h1>Is your lawn getting more water than it needs?</h1>
-	<p class="lede">Enter your address. We find the grass on your lot from 2024 aerial imagery, you fix anything we got wrong, and then we open three doors: water less, take the rebate, or convert.</p>
+	<p class="lede">Type your address. We find the grass on your lot from 2024 aerial imagery, you fix anything we got wrong, and we show three ways to save: water what it needs, take Utah's rebate, or go native.</p>
 
 	<div class="search">
 		<label for="q" class="sr">Your address</label>
@@ -54,27 +55,29 @@
 				{/each}
 			</ul>
 		{:else if norm(q).length >= 3}
-			<p class="muted miss">No match. We cover {board.map((b) => b.meta.short).join(', ')} so far, and residential lots only.</p>
+			<p class="muted miss">No match in {board.map((b) => b.meta.short).join(', ')} yet (residential lots only).</p>
 		{/if}
 	</div>
 </section>
 
+<div class="bleed"><Scene variant="hero" /></div>
+
 <Doors />
 
-<section id="scoreboard">
+<section id="neighborhoods">
 	<div class="head">
-		<h2>Scoreboard</h2>
-		<p class="muted small">Neighborhood totals only. We never rank households.</p>
+		<h2>Neighborhoods</h2>
+		<p class="muted small">Totals only. We never rank households.</p>
 	</div>
 	<div class="board card">
 		<table>
 			<thead>
-				<tr><th>Neighborhood</th><th class="n">Homes</th><th class="n">Lawn</th><th class="n">Water it needs</th><th class="n">Saved if converted</th><th></th></tr>
+				<tr><th>Neighborhood</th><th class="n">Homes</th><th class="n">Lawn</th><th class="n">Water it needs</th><th class="n">Saved if all went native</th><th></th></tr>
 			</thead>
 			<tbody>
-				{#each board as b, i}
+				{#each board as b}
 					<tr>
-						<td><span class="rank">{i + 1}</span>{b.meta.name}</td>
+						<td><span class="dot" aria-hidden="true"></span>{b.meta.name}</td>
 						<td class="n">{fmt(b.parcels)}</td>
 						<td class="n"><b>{b.acres.toFixed(1)}</b> ac</td>
 						<td class="n">{b.need.toFixed(0)} af/yr</td>
@@ -84,32 +87,33 @@
 				{/each}
 			</tbody>
 		</table>
-		<p class="muted small foot">af/yr = acre-feet a year; one acre-foot is about 326,000 gallons, roughly what two to three Utah households use in a year. "Saved if converted" assumes every detected lawn becomes water-wise landscape.</p>
+		<p class="muted small foot">af/yr = acre-feet a year. One acre-foot is about 326,000 gallons, roughly what two to three Utah households use in a year.</p>
 	</div>
 </section>
 
 <style>
-	.hero { padding: 28px 0 8px; max-width: 820px; }
-	.lede { font-size: 1.15rem; color: var(--muted); max-width: 680px; }
+	.hero { padding: 26px 0 0; max-width: 820px; }
+	.lede { font-size: 1.15rem; color: var(--muted); max-width: 700px; }
 	.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-	.search { margin-top: 22px; position: relative; }
-	.search input { width: 100%; box-sizing: border-box; font-size: 1.25rem; padding: 16px 18px; border-radius: 14px; border: 2px solid var(--line); background: #080c18; }
-	.search input:focus { border-color: var(--gold); outline: none; box-shadow: 0 0 0 4px rgba(255, 201, 64, 0.15); }
-	.hits { list-style: none; padding: 6px; margin: 8px 0 0; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
-	.hits a { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 10px 12px; border-radius: 10px; text-decoration: none; color: var(--ink); }
-	.hits a:hover, .hits a:focus-visible { background: var(--panel-2); }
-	.addr { font-weight: 650; }
+	.search { margin-top: 20px; position: relative; z-index: 2; }
+	.search input { width: 100%; box-sizing: border-box; font-size: 1.25rem; padding: 16px 20px; border-radius: 999px; border: 3px solid var(--water-2); box-shadow: 0 6px 0 #bfe6f8; }
+	.search input:focus { outline: none; border-color: var(--water); }
+	.hits { list-style: none; padding: 6px; margin: 10px 0 0; background: #fff; border: 2px solid var(--line); border-radius: 20px; box-shadow: 0 6px 0 #d6ecf9; }
+	.hits a { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 10px 14px; border-radius: 14px; text-decoration: none; color: var(--ink); }
+	.hits a:hover, .hits a:focus-visible { background: var(--aqua); }
+	.addr { font-weight: 700; }
 	.lawn { grid-column: 1; font-size: 0.9rem; }
-	.chip { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-size: 0.78rem; font-weight: 700; color: var(--bg); background: var(--water); border-radius: 999px; padding: 3px 10px; }
+	.chip { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-size: 0.8rem; font-weight: 700; color: #fff; background: var(--water); border-radius: 999px; padding: 3px 12px; }
 	.miss { margin-top: 10px; }
-	#scoreboard { margin-top: 40px; }
+	.bleed { width: 100vw; margin-left: calc(50% - 50vw); margin-top: -10px; }
+	#neighborhoods { margin-top: 44px; }
 	.head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-	.board { padding: 6px 6px 12px; overflow-x: auto; }
+	.board { padding: 8px 8px 14px; overflow-x: auto; }
 	table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-	th { text-align: left; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 650; padding: 10px 12px; }
-	td { padding: 12px; border-top: 1px solid var(--line); white-space: nowrap; }
+	th { text-align: left; font-family: var(--display); font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 10px 12px; }
+	td { padding: 12px; border-top: 2px solid #eaf4fb; white-space: nowrap; }
 	.n { text-align: right; }
-	.rank { display: inline-grid; place-items: center; width: 24px; height: 24px; margin-right: 10px; border-radius: 50%; border: 1.5px solid var(--gold); color: var(--gold); font-family: var(--display); font-weight: 800; font-size: 0.8rem; }
-	.save { color: var(--lawn); }
-	.foot { padding: 4px 12px 0; white-space: normal; }
+	.dot { display: inline-block; width: 12px; height: 15px; margin-right: 10px; background: var(--water-2); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; vertical-align: -1px; }
+	.save { color: var(--lawn); font-weight: 700; }
+	.foot { padding: 6px 12px 0; white-space: normal; }
 </style>

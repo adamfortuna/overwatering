@@ -1,82 +1,91 @@
 <script lang="ts">
 	import favicon from '#lib/assets/favicon.svg';
-	import Brand from '#lib/Brand.svelte';
+	import Logo from '#lib/Logo.svelte';
+	import Scene from '#lib/Scene.svelte';
+	import { page } from '$app/state';
 	import type { LayoutProps } from './$types';
-	import '@fontsource-variable/bricolage-grotesque';
+	import '@fontsource-variable/fredoka';
+	import '@fontsource-variable/nunito';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	let { children }: LayoutProps = $props();
+	let home = $derived(page.url.pathname === '/');
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<title>Overwater.ing?</title>
-	<meta name="description" content="How much lawn is on your lot, how much water it actually needs, and what it's worth to stop overwatering it." />
+	<title>Overwater.ing? · Utah lawns and the water they really need</title>
+	<meta name="description" content="For any Utah home: how much lawn is on the lot, how much water it actually needs, and what Utah pays you to replace it." />
 </svelte:head>
 
-<nav>
-	<a href="/" class="home" aria-label="Overwater.ing? home"><Brand /></a>
-	<div class="links">
-		<a href="/#scoreboard">Scoreboard</a>
-		<a href="/how">How it works</a>
-	</div>
-</nav>
-<div class="marquee" aria-hidden="true">{#each Array(48) as _, i}<i style="--i:{i}"></i>{/each}</div>
-<main>{@render children()}</main>
+<header>
+	<nav>
+		<a href="/" class="home" aria-label="Overwater.ing? home"><Logo /></a>
+		<div class="links">
+			<a href="/#neighborhoods">Neighborhoods</a>
+			<a href="/how">How it works</a>
+		</div>
+	</nav>
+	{#if !home}<Scene variant="strip" />{/if}
+</header>
+<main class:home>{@render children()}</main>
 <footer>
-	<p>Overwater.ing? estimates lawn from 2024 aerial imagery. Your address never leaves this site: there is no map provider, and the imagery is our own crop.</p>
+	<Scene variant="footer" />
+	<div class="foot">
+		<p><b>Made in Utah, for Utah yards.</b> Utah is the second-driest state, and most of what a Utah home uses outdoors goes on grass. Overwater.ing? shows how much lawn is on a lot, what it really needs, and what the state will pay you to replace it.</p>
+		<p class="small">Lawn from 2024 USDA aerial imagery; parcels from Utah's UGRC and the Salt Lake County Recorder; rebates from Utah Water Savers. We don't keep the addresses you look up.</p>
+	</div>
 </footer>
 
 <style>
 	:global(:root) {
-		--bg: #0b1020;
-		--panel: #141b33;
-		--panel-2: #1b2443;
-		--line: #27315a;
-		--ink: #f5f1e6;
-		--muted: #a4acc8;
-		--water: #4cc9f0;
-		--lawn: #4ade80;
-		--gold: #ffc940;
-		--coral: #ff7a6b;
-		--warn: #ffc940;
-		--danger: #ff7a6b;
+		--bg: #f3faff;
+		--panel: #ffffff;
+		--panel-2: #f7fbff;
+		--line: #cfe6f5;
+		--ink: #12324a;
+		--muted: #4f6b80;
+		--water: #1f86d6;
+		--water-2: #4cc3f0;
+		--aqua: #dff3fd;
+		--lawn: #2c9a4b;
+		--sun: #ffc93c;
+		--gold: #b97700;
+		--coral: #e5533f;
 		--accent: var(--water);
-		--display: 'Bricolage Grotesque Variable', system-ui, sans-serif;
-		color-scheme: dark;
+		--display: 'Fredoka Variable', 'Fredoka', system-ui, sans-serif;
+		--body: 'Nunito Variable', 'Nunito', system-ui, sans-serif;
+		color-scheme: light;
 	}
 	:global(body) {
 		margin: 0;
-		background: radial-gradient(1200px 500px at 50% -200px, #1a2550 0%, transparent 70%), var(--bg);
-		background-attachment: fixed;
+		background: linear-gradient(180deg, #dff3fd 0, #eef8ff 340px, var(--bg) 700px);
 		color: var(--ink);
-		font: 16px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif;
+		font: 17px/1.55 var(--body);
 	}
 	:global(a) { color: var(--water); }
-	:global(h1, h2, h3) { font-family: var(--display); line-height: 1.1; margin: 0 0 0.5rem; letter-spacing: -0.01em; }
-	:global(h1) { font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 800; }
-	:global(h2) { font-size: 1.5rem; font-weight: 750; }
+	:global(h1, h2, h3) { font-family: var(--display); line-height: 1.12; margin: 0 0 0.5rem; letter-spacing: -0.005em; font-weight: 650; }
+	:global(h1) { font-size: clamp(2.1rem, 4.6vw, 3.3rem); font-weight: 700; }
+	:global(h2) { font-size: 1.6rem; }
 	:global(button) { font: inherit; cursor: pointer; }
-	:global(.card) { background: linear-gradient(180deg, var(--panel-2), var(--panel)); border: 1px solid var(--line); border-radius: 16px; padding: 18px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04); }
+	:global(.card) { background: var(--panel); border: 2px solid var(--line); border-radius: 22px; padding: 20px; box-shadow: 0 6px 0 #d6ecf9; }
 	:global(.muted) { color: var(--muted); }
-	:global(.big) { font-family: var(--display); font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1.05; }
-	:global(.kicker) { font-family: var(--display); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+	:global(.big) { font-family: var(--display); font-size: 2.2rem; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.05; }
+	:global(.kicker) { font-family: var(--display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--water); margin: 0 0 4px; }
 	:global(.small) { font-size: 0.9rem; }
-	:global(input, select) { font: inherit; color: var(--ink); background: #0a0f1e; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
-	:global(input:focus-visible, select:focus-visible, a:focus-visible, button:focus-visible) { outline: 2px solid var(--gold); outline-offset: 2px; }
+	:global(input, select) { font: inherit; color: var(--ink); background: #fff; border: 2px solid var(--line); border-radius: 14px; padding: 10px 12px; }
+	:global(input:focus-visible, select:focus-visible, a:focus-visible, button:focus-visible) { outline: 3px solid var(--water-2); outline-offset: 2px; }
 
-	nav { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 14px 20px 10px; max-width: 1140px; margin: 0 auto; }
+	nav { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 14px 20px; max-width: 1140px; margin: 0 auto; }
 	.home { text-decoration: none; color: var(--ink); }
-	.links { display: flex; gap: 18px; }
-	@media (max-width: 520px) { nav { padding: 12px 14px 8px; } .links { gap: 12px; font-size: 0.9rem; } }
-	.links a { color: var(--muted); text-decoration: none; font-weight: 600; white-space: nowrap; }
-	.links a:hover { color: var(--ink); }
+	.links { display: flex; gap: 8px; }
+	.links a { color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 600; padding: 6px 14px; border-radius: 999px; white-space: nowrap; }
+	.links a:hover { background: #fff; box-shadow: 0 3px 0 #d6ecf9; }
+	@media (max-width: 560px) { nav { padding: 10px 12px; } .links { gap: 2px; font-size: 0.9rem; } .links a { padding: 6px 8px; } nav :global(.word) { font-size: 1.2rem; } }
 
-	/* A row of marquee bulbs: a slow chase, gone for reduced motion. */
-	.marquee { display: flex; justify-content: space-between; max-width: 1100px; margin: 0 auto 8px; padding: 0 20px; height: 6px; overflow: hidden; }
-	.marquee i { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); opacity: 0.18; animation: chase 4.8s linear infinite; animation-delay: calc(var(--i) * 0.1s); }
-	@keyframes chase { 0%, 88%, 100% { opacity: 0.18; } 92% { opacity: 0.9; box-shadow: 0 0 6px var(--gold); } }
-	@media (prefers-reduced-motion: reduce) { .marquee i { animation: none; } }
-
-	main { max-width: 1100px; margin: 0 auto; padding: 16px 20px 40px; }
-	footer { max-width: 1100px; margin: 0 auto; padding: 18px 20px 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+	main { max-width: 1100px; margin: 0 auto; padding: 18px 20px 40px; }
+	main.home { padding-top: 0; }
+	footer { margin-top: 30px; }
+	.foot { background: #f7dcae; padding: 4px 20px 36px; }
+	.foot p { max-width: 1060px; margin: 10px auto; color: #5b4630; }
+	.foot b { color: #3d2c1a; }
 </style>

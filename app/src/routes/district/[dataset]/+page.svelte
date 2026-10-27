@@ -12,19 +12,19 @@
 	const over = depthToGallons(9, lawnTotal); // DWR: Utahns overwater 0.5–1 ft/yr; 9 in midpoint
 	const conv = conversionSavingsGal(lawnTotal, eto);
 	const bins = [0, 0.15, 0.3, 0.45, 0.6];
-	const colors = ['#1e2540', '#365314', '#4d7c0f', '#65a30d', '#a3e635'];
+	const colors = ['#e9eef3', '#cde8b0', '#93cf76', '#4fae4c', '#1f7a35'];
 
 	onMount(async () => {
 		const _ml = await import('maplibre-gl');
 		const maplibregl = ((_ml as { default?: typeof _ml }).default ?? _ml) as typeof _ml;
 		maplibregl.setWorkerUrl('/ml/maplibre-gl-worker.mjs'); // bundler-safe worker (copied from node_modules)
-		const map = new maplibregl.Map({ container: el, style: { version: 8, sources: {}, layers: [{ id: 'bg', type: 'background', paint: { 'background-color': '#080c18' } }] }, attributionControl: false, dragRotate: false });
+		const map = new maplibregl.Map({ container: el, style: { version: 8, sources: {}, layers: [{ id: 'bg', type: 'background', paint: { 'background-color': '#dbeefa' } }] }, attributionControl: false, dragRotate: false });
 		map.on('load', () => {
 			map.addSource('nb', { type: 'image', url: `/data/${data.ds.id}/neighborhood.png`, coordinates: data.nb.corners });
 			map.addLayer({ id: 'nb', type: 'raster', source: 'nb', paint: { 'raster-opacity': 0.55 } });
 			map.addSource('parcels', { type: 'geojson', data: data.geo });
-			map.addLayer({ id: 'heat', type: 'fill', source: 'parcels', paint: { 'fill-color': ['step', ['get', 'lawn_frac'], colors[0], bins[1], colors[1], bins[2], colors[2], bins[3], colors[3], bins[4], colors[4]], 'fill-opacity': 0.55 } });
-			map.addLayer({ id: 'outline', type: 'line', source: 'parcels', paint: { 'line-color': '#000', 'line-opacity': 0.4, 'line-width': 0.5 } });
+			map.addLayer({ id: 'heat', type: 'fill', source: 'parcels', paint: { 'fill-color': ['step', ['get', 'lawn_frac'], colors[0], bins[1], colors[1], bins[2], colors[2], bins[3], colors[3], bins[4], colors[4]], 'fill-opacity': 0.6 } });
+			map.addLayer({ id: 'outline', type: 'line', source: 'parcels', paint: { 'line-color': '#12324a', 'line-opacity': 0.35, 'line-width': 0.5 } });
 			map.on('click', 'heat', (e) => {
 				const f = e.features?.[0];
 				if (f) location.href = `/p/${data.ds.id}/${f.properties.parcel_id}`;
@@ -56,12 +56,12 @@
 
 <style>
 	.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 12px 0; }
-	.map { width: 100%; height: 70vh; padding: 0; overflow: hidden; }
+	.map { width: 100%; height: 70vh; padding: 0; overflow: hidden; box-sizing: border-box; }
 	.over { color: var(--coral); }
 	.save { color: var(--lawn); }
 	.switch { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 12px; }
-	.switch a { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
-	.switch a.on { background: var(--gold); border-color: var(--gold); color: var(--bg); }
+	.switch a { padding: 6px 14px; border-radius: 999px; border: 2px solid var(--line); background: #fff; color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 600; font-size: 0.95rem; }
+	.switch a.on { background: var(--water); border-color: var(--water); color: #fff; }
 	.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.85rem; }
 	.legend i { display: inline-block; width: 12px; height: 12px; margin-right: 5px; vertical-align: -1px; border-radius: 2px; }
 </style>
