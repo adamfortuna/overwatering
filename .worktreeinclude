@@ -1,0 +1,3 @@
+# Gitignored files Conductor copies into new local workspaces.
+.env*
+app/.env

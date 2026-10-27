@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import { EXTERNAL_ANTHROPIC_API_KEY } from '$app/env/private';
 import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
@@ -13,8 +14,9 @@ const BillSchema = z.object({
 	notes: z.string().describe('Anything ambiguous: unreadable bars, estimated reads, unit uncertainty')
 });
 
-export const POST: RequestHandler = async ({ request, platform }) => {
-	const apiKey = platform?.env?.EXTERNAL_ANTHROPIC_API_KEY ?? process.env.EXTERNAL_ANTHROPIC_API_KEY;
+export const POST: RequestHandler = async ({ request }) => {
+	// See src/env.ts: process env or app/.env in dev, Worker secret in production.
+	const apiKey = EXTERNAL_ANTHROPIC_API_KEY;
 	if (!apiKey) return json({ error: 'EXTERNAL_ANTHROPIC_API_KEY not configured; enter usage manually' }, { status: 501 });
 	const form = await request.formData();
 	const file = form.get('file');
