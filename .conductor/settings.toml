@@ -5,15 +5,14 @@ setup = "scripts/setup.sh"
 run_mode = "concurrent"
 
 [scripts.run.dev]
-# Local (Mac): localhost on $CONDUCTOR_PORT. Cloud: no CONDUCTOR_PORT, so 5173 on all
-# interfaces; share it with `conductor preview set --port 5173`.
-# An empty EXTERNAL_ANTHROPIC_API_KEY in the environment would shadow app/.env, so drop it.
-command = "cd app && { [ -n \"${EXTERNAL_ANTHROPIC_API_KEY:-}\" ] || unset EXTERNAL_ANTHROPIC_API_KEY; } && if [ \"${CONDUCTOR_IS_LOCAL:-1}\" = 0 ]; then export __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS=.conductor.show; HOST=0.0.0.0; else HOST=localhost; fi && npm run dev -- --host $HOST --port ${CONDUCTOR_PORT:-5173}"
+# scripts/dev.sh: picks a new-enough Node (nvm/.nvmrc), installs app deps if missing, then
+# serves on localhost:$CONDUCTOR_PORT locally or 0.0.0.0:5173 in the cloud.
+command = "scripts/dev.sh"
 default = true
 icon = "play"
 
 [scripts.run.test]
-command = ".venv/bin/python -m pytest -q pipeline/tests && cd app && npm run check"
+command = "scripts/test.sh"
 icon = "test-tube"
 
 [scripts.run.data]
