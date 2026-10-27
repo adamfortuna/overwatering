@@ -166,6 +166,36 @@ Confidence is high or medium for all but 1–7 parcels per neighborhood.
 * Canopy acres exceed lawn acres in every SLC neighborhood, so grass under trees is the
   biggest open accuracy question for SLC (Step 1 in `HANDOFF.md`).
 
+## Run 6: any Utah address, measured on demand in the browser (2026-10-27)
+
+Outside the six prebuilt datasets the app measures a lot on the spot (`app/src/lib/live.ts`,
+a port of `pipeline/lawn.py` + `export_app.py`): UGRC county parcel (LIR) -> 0.6 m UTM grid ->
+2024 NAIP RGB and NIR/red as lossless PNG via `/api/naip` -> haze-corrected NDVI (dark object
+from a 1.6 km window sampled nearest-neighbour) -> minus UGRC statewide building footprints
+(+0.5 m) and Meta CHM >= 2.5 m (read straight from the S3 COGs with range requests) -> regions
+traced with d3-contour. ~6 s per lot.
+
+Same-parcel comparison, 10 random high-confidence residential lots in 84102 (lawn sq ft):
+
+| Parcel | Lot | Pipeline | On-demand | Pipeline canopy | On-demand canopy |
+|---|---|---|---|---|---|
+| 16054310110000 | 4,896 | 785 | 729 | 433 | 620 |
+| 16051640110000 | 7,106 | 834 | 767 | 3,033 | 2,971 |
+| 16072320050000 | 4,353 | 73 | 96 | 2,274 | 2,190 |
+| 16051330150000 | 3,407 | 256 | 289 | 256 | 211 |
+| 16052760040000 | 5,850 | 1,311 | 1,166 | 1,459 | 1,211 |
+| 16053260040000 | 3,759 | 168 | 405 | 0 | 0 |
+| 16072780080000 | 4,008 | 19 | 25 | 2,377 | 2,426 |
+| 16052520310000 | 5,356 | 528 | 578 | 1,859 | 1,914 |
+| 16081310270000 | 5,463 | 519 | 388 | 949 | 691 |
+| 16054550120000 | 5,844 | 884 | 888 | 1,629 | 1,806 |
+
+Most lots agree within ~10%. The big outlier (168 vs 405) is building footprints: UGRC's
+statewide layer is from 2018 and covers 1,764 sq ft of that lot vs 2,422 for Overture 2026.
+A 400 m bilinear haze window (first attempt) read NIR dark values of 51-61 vs the scene's 41
+and undercounted lawn; the 1.6 km nearest-neighbour window reads 36-47.
+Governor's Mansion (603 E South Temple): pipeline 13,270 / on-demand 14,055 sq ft.
+
 ## NAIP year and haze notes
 
 * Utah NAIP years on Planetary Computer: 2011, 2014, 2016 (1 m), 2018, 2021 (60 cm). The 2021

@@ -32,7 +32,7 @@
 	<Scene variant="footer" />
 	<div class="foot">
 		<p><b>Made in Utah, for Utah yards.</b> Utah is the second-driest state, and most of what a Utah home uses outdoors goes on grass. Overwater.ing? shows how much lawn is on a lot, what it really needs, and what the state will pay you to replace it.</p>
-		<p class="small">Lawn from 2024 USDA aerial imagery; parcels from Utah's UGRC and the Salt Lake County Recorder; rebates from Utah Water Savers. We don't keep the addresses you look up.</p>
+		<p class="small">Lawn from 2024 USDA aerial imagery; parcels, addresses and buildings from Utah's county recorders and UGRC; tree heights from Meta; weather from gridMET; rebates from Utah Water Savers. We don't keep the addresses you look up.</p>
 	</div>
 </footer>
 

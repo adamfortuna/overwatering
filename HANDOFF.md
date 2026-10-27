@@ -25,6 +25,35 @@ use `.nvmrc` (22) because Conductor's non-interactive shell had Node 20.15 on PA
 `app/node_modules` npm fell through to a Ruby `vite` shim from rbenv ("vite dev was called with
 arguments").
 
+## Overnight 2026-10-27: retheme, Utah-wide, deployed
+
+Adam asked (before bed) for: Governor's Mansion as the example address (done earlier), a new
+light/watery/playful theme with SVG characters, more Utah identity (Delicate Arch), a new
+logo, and **any address in Utah**. All committed and deployed to https://overwater.ing.
+
+* **Theme**: Fredoka + Nunito, sky/water palette, sticker cards. `src/lib/art/` has the cast:
+  `Sprinkler` (Sprinkles, can be switched off/sleepy), `Grass` (Gramma, a native blue grama
+  bunchgrass), `Drop`, `Coin`, `Sun`, `Arch` (Delicate Arch + La Sals). `Scene.svelte` composes
+  the home hero (thirsty lawn vs. native landscape under the arch), the inner-page wave strip
+  and the footer (Wasatch, arch, sleepy sprinkler, a "UT" sign). `Logo.svelte` = droplet with a
+  spray "?" (same drawing as `assets/favicon.svg`). "Doors" became "three ways to save".
+* **Any Utah address**: `/api/search?group=0..4&q=` fans out to UGRC `Parcels_<County>_LIR`
+  layers (Workers allow 6 concurrent outbound connections per request, so 5 groups of <= 6
+  counties, fired in parallel by the browser). Statewide address-point layers skip Salt Lake
+  County, so parcels are the index. Picking a hit opens `/u/<County>/<PARCEL_ID>`, which runs
+  `src/lib/live.ts` in the browser (see RESULTS Run 6 for the method and the validation table):
+  `/api/parcel`, `/api/naip` (USDA PNG proxy, Cloudflare-cached), `/api/naip-info` (flight
+  date), `/api/buildings` (UGRC statewide footprints), Meta CHM COGs directly from S3 (CORS ok).
+* **Rebates statewide**: `rebate_programs.json` rebuilt from the full Utah Water Savers
+  eligibility list (155 cities, 7 programs incl. Weber Basin two tiers and Washington County;
+  unincorporated areas of 8 counties mapped by inference). Cities not on the list are shown as
+  not eligible (no more $2 statewide fallback). `city_notes` flags inferred tiers.
+* **Reference ET statewide**: `app/src/lib/eto_utah.json`, one gridMET point per county
+  (`scripts/build-eto.sh`, `pipeline/data/eto_points.csv`), 42 in/yr (Rich) to 70 (St. George).
+* Known gaps: UGRC building footprints are 2018 (newer additions read as lawn/other until
+  tapped); on-demand haze estimate differs slightly from the pipeline's per-scene value;
+  very large parcels (> ~750 m across) are refused; `/api/*` has no rate limiting.
+
 ## Next session (start here)
 
 Run `scripts/resume.sh` first. It checks that `EXTERNAL_ANTHROPIC_API_KEY`,

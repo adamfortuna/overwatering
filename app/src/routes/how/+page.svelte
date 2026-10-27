@@ -6,11 +6,11 @@
 <ol class="steps">
 	<li class="card">
 		<h3>Find your lot</h3>
-		<p class="muted">Parcel lines come from the Salt Lake County Recorder via UGRC, building footprints from Overture Maps.</p>
+		<p class="muted">Parcel lines and addresses come from Utah's 29 county recorders, published by UGRC. Building outlines come from Overture Maps (our prebuilt neighborhoods) or UGRC's statewide buildings layer (everywhere else).</p>
 	</li>
 	<li class="card">
 		<h3>Find the grass</h3>
-		<p class="muted">USDA's 2024 aerial imagery (60 cm pixels, flown July 7, 2024) includes near-infrared, where healthy plants glow. We keep the green pixels, then subtract buildings and anything under tree canopy taller than 2.5 m (Meta's canopy height map).</p>
+		<p class="muted">USDA's 2024 aerial imagery (60 cm pixels, flown summer 2024) includes near-infrared, where healthy plants glow. We correct for haze, keep the green pixels, then subtract buildings and anything under tree canopy taller than 2.5 m (Meta's canopy height map). For the six prebuilt neighborhoods this ran ahead of time; for any other Utah address your browser does the same math on the spot in a few seconds.</p>
 	</li>
 	<li class="card">
 		<h3>You fix what we got wrong</h3>
@@ -18,7 +18,7 @@
 	</li>
 	<li class="card">
 		<h3>Do the water math</h3>
-		<p class="muted">Turf needs about 80% of reference evapotranspiration from April to October, minus half the rain (FAO-56, from gridMET weather, 2023–2025). Your bill's winter months set the indoor baseline; everything above it in summer is outdoor water.</p>
+		<p class="muted">Turf needs about 80% of reference evapotranspiration from April to October, minus half the rain (FAO-56, from gridMET weather, 2023–2025, one station-like point per county: from 42 in/yr in Rich County to 70 in St. George). Your bill's winter months set the indoor baseline; everything above it in summer is outdoor water.</p>
 	</li>
 	<li class="card">
 		<h3>Three ways to save</h3>
@@ -32,7 +32,8 @@
 		<li>Grass under trees is counted as trees, so lots with big canopy read low. Fix it with a tap.</li>
 		<li>Park strips belong to the city, not the parcel, so they aren't counted.</li>
 		<li>Brown or dormant lawn in July 2024 reads as "not lawn"; artificial turf does too.</li>
-		<li>Rebate rates were checked against provider pages on October 27, 2026. Always get pre-approval before removing any lawn.</li>
+		<li>Rebates cover all 155 cities on Utah Water Savers' eligible list across seven programs, checked October 27, 2026. Cities not on the list aren't eligible yet. Always get pre-approval before removing any lawn.</li>
+		<li>Outside the prebuilt neighborhoods, building outlines are from 2018 and can miss newer additions, so a little roof can show up as "not lawn" or a new addition as lawn. Tap to fix it.</li>
 		<li>We don't keep the addresses you look up, and there's no map provider tracking you.</li>
 	</ul>
 </div>

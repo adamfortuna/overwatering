@@ -1,13 +1,22 @@
 from pipeline import rebates
 
 
-def test_city_resolution_and_fallback():
+def test_city_resolution():
     t = rebates.load_table()
     assert rebates.resolve_provider("Sandy", t)["id"] == "cuwcd"
     assert rebates.resolve_provider("salt lake city", t)["id"] == "cuwcd"
     assert rebates.resolve_provider("Draper", t)["id"] == "jvwcd"
     assert rebates.resolve_provider("Provo", t)["id"] == "cuwcd_rural"
-    assert rebates.resolve_provider("Nowhere", t)["id"] == "state"
+    assert rebates.resolve_provider("St. George", t)["id"] == "wcwcd"
+    assert rebates.resolve_provider("SAINT GEORGE", t)["id"] == "wcwcd"
+
+
+def test_not_listed_is_ineligible_and_unincorporated_by_county():
+    t = rebates.load_table()
+    assert rebates.resolve_provider("Nowhere", t) is None
+    assert rebates.estimate(3000, "Nowhere")["eligible"] is False
+    assert rebates.resolve_provider("Unincorporated", t, county="Washington")["id"] == "wcwcd"
+    assert rebates.resolve_provider("Unincorporated", t, county="Salt Lake") is None
 
 
 def test_estimate_ranges_and_minimum():

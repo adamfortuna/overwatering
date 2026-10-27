@@ -5,13 +5,16 @@ open three doors: **water what it needs** (bill vs. need), **take the rebate** (
 Savers), **convert it** (water saved every year after). Positioned as the parcel-level last
 mile for the Utah Division of Water Resources' statewide turf model. Domain: overwater.ing.
 
-Covered so far: Salt Lake City's 84102, Central City, Liberty Wells, Downtown and the Avenues,
-plus a Sandy subdivision as a suburban comparison.
+Covers **any address in Utah**: six prebuilt datasets (Salt Lake City's 84102, Central City,
+Liberty Wells, Downtown and the Avenues, plus a Sandy subdivision) load instantly; any other
+Utah parcel is found through UGRC's 29 county parcel layers and measured on demand in the
+browser from the same 2024 imagery. Rebates cover all 155 eligible cities. Live at https://overwater.ing.
 
 * `pipeline/`: offline Python batch (parcels, footprints, 2024 NAIP, NDVI, canopy, overlays).
   `python -m pipeline.run_spike --help`; neighborhood polygons in `pipeline/data/aoi/` (`python -m pipeline.aoi`).
-* `app/`: SvelteKit (MapLibre, tap-to-cycle corrections, the reveal + three doors, scoreboard,
-  neighborhood maps, bill reading with Claude).
+* `app/`: SvelteKit on Cloudflare Workers (MapLibre, tap-to-fix corrections in D1, three ways to
+  save, neighborhood maps, statewide search + on-demand measurement in `src/lib/live.ts`, bill
+  reading with Claude). Playful SVG cast in `src/lib/art/`.
 * `scripts/setup.sh`: bootstrap (Python venv via uv, `npm ci`, the 84102 dataset).
   `scripts/build-data.sh [dataset ...]` builds datasets into `app/static/data/`.
 * `RESULTS.md`: accuracy notes and runs. `HANDOFF.md`: to-do list and gotchas.

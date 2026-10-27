@@ -24,6 +24,37 @@
 		return out;
 	});
 
+	// Anywhere in Utah: five parallel county-group searches (see /api/search), merged as they land.
+	type Remote = { address: string; city: string; county: string; parcel_id: string; prop_class: string };
+	let remote = $state<Remote[]>([]);
+	let searching = $state(0);
+	let timer: ReturnType<typeof setTimeout> | undefined;
+	let seq = 0;
+	$effect(() => {
+		const query = q.trim();
+		clearTimeout(timer);
+		remote = [];
+		if (query.length < 6 || !/\d/.test(query)) return;
+		timer = setTimeout(() => {
+			const mine = ++seq;
+			searching = 5;
+			for (let g = 0; g < 5; g++)
+				fetch(`/api/search?group=${g}&q=${encodeURIComponent(query)}`)
+					.then((r) => (r.ok ? r.json() : { hits: [] }))
+					.then((j) => {
+						if (mine !== seq) return;
+						const local = new Set(hits.map((h) => h[2]));
+						const have = new Set(remote.map((h) => h.county + h.parcel_id));
+						remote = [...remote, ...j.hits.filter((h: Remote) => !local.has(h.parcel_id) && !have.has(h.county + h.parcel_id))].slice(0, 12);
+					})
+					.catch(() => {})
+					.finally(() => mine === seq && searching--);
+		}, 350);
+	});
+	const isResidential = (r: Remote) => /resid/i.test(r.prop_class);
+	const hasNumber = (s: string) => /\d/.test(s);
+	const title = (s: string) => s.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+
 	let board = $derived(
 		data.datasets
 			.map((d) => {
@@ -35,14 +66,14 @@
 </script>
 
 <section class="hero">
-	<p class="kicker">Utah · 2024 aerial imagery · free</p>
+	<p class="kicker">Any home in Utah · 2024 aerial imagery · free</p>
 	<h1>Is your lawn getting more water than it needs?</h1>
-	<p class="lede">Type your address. We find the grass on your lot from 2024 aerial imagery, you fix anything we got wrong, and we show three ways to save: water what it needs, take Utah's rebate, or go native.</p>
+	<p class="lede">Type any Utah address. We find the grass on your lot from 2024 aerial imagery, you fix anything we got wrong, and we show three ways to save: water what it needs, take Utah's rebate, or go native.</p>
 
 	<div class="search">
 		<label for="q" class="sr">Your address</label>
 		<input id="q" type="search" placeholder="Your street address, e.g. 603 E South Temple" bind:value={q} autocomplete="street-address" />
-		{#if hits.length}
+		{#if hits.length || remote.length}
 			<ul class="hits">
 				{#each hits as [address, ds, id, lawn]}
 					<li>
@@ -53,9 +84,21 @@
 						</a>
 					</li>
 				{/each}
+				{#each remote as r}
+					<li>
+						<a href="/u/{encodeURIComponent(r.county)}/{encodeURIComponent(r.parcel_id)}">
+							<span class="addr">{r.address}</span>
+							<span class="chip alt">{r.county} Co.</span>
+							<span class="muted lawn">{r.city ? title(r.city) : `${r.county} County`}{isResidential(r) ? '' : ` · ${r.prop_class || 'not residential'}`} · we'll measure it now</span>
+						</a>
+					</li>
+				{/each}
 			</ul>
-		{:else if norm(q).length >= 3}
-			<p class="muted miss">No match in {board.map((b) => b.meta.short).join(', ')} yet (residential lots only).</p>
+		{/if}
+		{#if searching > 0}
+			<p class="muted miss">Searching all 29 Utah counties…</p>
+		{:else if norm(q).length >= 3 && !hits.length && !remote.length}
+			<p class="muted miss">{hasNumber(q) ? 'No Utah parcel with that address. Try just the house number and street, like "603 E South Temple".' : 'Start with the house number, like "603 E South Temple".'}</p>
 		{/if}
 	</div>
 </section>
@@ -103,6 +146,7 @@
 	.hits a:hover, .hits a:focus-visible { background: var(--aqua); }
 	.addr { font-weight: 700; }
 	.lawn { grid-column: 1; font-size: 0.9rem; }
+	.chip.alt { background: var(--lawn); }
 	.chip { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-size: 0.8rem; font-weight: 700; color: #fff; background: var(--water); border-radius: 999px; padding: 3px 12px; }
 	.miss { margin-top: 10px; }
 	.bleed { width: 100vw; margin-left: calc(50% - 50vw); margin-top: -10px; }

@@ -3,7 +3,7 @@
 	import type { Parcel, RegionFeature, RegionCls } from './data';
 	import type * as GeoJSON from 'geojson';
 
-	let { parcel, regions, dataset, ontoggle }: { parcel: Parcel; regions: { type: 'FeatureCollection'; features: RegionFeature[] }; dataset: string; ontoggle: (idx: number) => void } = $props();
+	let { parcel, regions, dataset, imageUrl, ontoggle }: { parcel: Parcel; regions: { type: 'FeatureCollection'; features: RegionFeature[] }; dataset: string; imageUrl?: string; ontoggle: (idx: number) => void } = $props();
 	let el: HTMLDivElement;
 	let map: import('maplibre-gl').Map | undefined;
 
@@ -23,7 +23,7 @@
 		});
 		map.touchZoomRotate.disableRotation();
 		map.on('load', () => {
-			map!.addSource('crop', { type: 'image', url: `/data/${dataset}/crops/${parcel.parcel_id}.png`, coordinates: parcel.crop_corners as [[number, number], [number, number], [number, number], [number, number]] });
+			map!.addSource('crop', { type: 'image', url: imageUrl ?? `/data/${dataset}/crops/${parcel.parcel_id}.png`, coordinates: parcel.crop_corners as [[number, number], [number, number], [number, number], [number, number]] });
 			map!.addLayer({ id: 'crop', type: 'raster', source: 'crop', paint: { 'raster-resampling': 'nearest' } });
 			map!.addSource('regions', { type: 'geojson', data: regions });
 			map!.addLayer({
