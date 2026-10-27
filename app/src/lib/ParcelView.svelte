@@ -61,7 +61,19 @@
 	let canopy = $derived(sum('canopy'));
 	let need = $derived(annualTurfNeedGal(lawn, eto));
 	let conv = $derived(conversionSavingsGal(lawn, eto));
-	let rebate = $derived(rebateEstimate(lawn, ds.city, ds.county));
+	// Who governs and waters this lot (municipality, provider, districts); rebates follow the city.
+	type Juri = { municipality: string | null; county: string | null; provider: string | null; wholesalers: string[] };
+	let juri = $state<Juri | null>(null);
+	$effect(() => {
+		const [lon, lat] = parcel.centroid;
+		fetch(`/api/jurisdiction?lon=${lon}&lat=${lat}`)
+			.then((r) => (r.ok ? r.json() : null))
+			.then((j) => (juri = j))
+			.catch(() => {});
+	});
+	let rebateCity = $derived(juri ? (juri.municipality ?? '') : ds.city);
+	let rebateCounty = $derived(juri?.county ?? ds.county);
+	let rebate = $derived(rebateEstimate(lawn, rebateCity, rebateCounty));
 	let convertedSavings = $derived(conversionSavingsGal(converted, eto));
 
 	// Bill: manual 12-month entry or upload
@@ -100,7 +112,7 @@
 		return `/watering?${q}`;
 	});
 	let nativeHref = $derived.by(() => {
-		const q = new URLSearchParams({ lawn: String(Math.round(lawn)), eto: etoKey, city: ds.city ?? '', county: ds.county ?? '', back: typeof location === 'undefined' ? '/' : location.pathname });
+		const q = new URLSearchParams({ lawn: String(Math.round(lawn)), eto: etoKey, city: rebateCity ?? '', county: rebateCounty ?? '', back: typeof location === 'undefined' ? '/' : location.pathname });
 		return `/native?${q}`;
 	});
 	const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -177,12 +189,31 @@
 			{#if !ds.utah}
 				<p class="muted">No Utah program applies here.</p>
 			{:else if !rebate.provider}
-				<p class="muted">{ds.city || 'This area'} isn't on Utah Water Savers' eligible list. Rebates need a city water-efficient landscape ordinance; ask your city or water provider.</p>
+				<p class="muted">{rebateCity || 'This area'} isn't on Utah Water Savers' eligible list. Rebates need a city water-efficient landscape ordinance; ask your city or water provider.</p>
 			{:else if rebate.eligible}
 				<div class="big gold">up to <CountUp value={rebate.high} prefix="$" /></div>
 				<p class="muted small">{rebate.provider.name}: ${rebate.provider.rate_low.toFixed(2)}{rebate.provider.rate_high !== rebate.provider.rate_low ? `–$${rebate.provider.rate_high.toFixed(2)}` : ''} per sq ft on {fmt(rebate.eligibleSqft)} sq ft{rebate.provider.max_dollars ? `, capped at $${fmt(rebate.provider.max_dollars)} per property` : ''}. {rebate.provider.notes} Rates checked {rebate.provider.last_checked}.{rebate.note ? ` Note: ${rebate.note}` : ''}</p>
 			{:else}
 				<p class="muted">Below the {rebate.provider.min_sqft} sq ft minimum project size for {rebate.provider.name}.</p>
+			{/if}
+			{#if ds.utah}
+				<dl class="where">
+					<dt>City</dt>
+					<dd>
+						{#if juri && !juri.municipality}Unincorporated {rebateCounty} County{:else}<b>{rebateCity || ds.city}</b>{#if rebateCounty}, {rebateCounty} County{/if}{/if}
+						<span class={rebate.provider ? 'ok-pill' : 'no-pill'}>{rebate.provider ? "city's on the list" : 'not on the list'}</span>
+					</dd>
+					{#if juri?.provider}
+						<dt>Water from</dt>
+						<dd>{juri.provider}{#if juri.wholesalers.length}<span class="muted">, supplied by {juri.wholesalers.join(' and ')}</span>{/if}</dd>
+					{/if}
+					{#if rebate.provider}
+						<dt>Program</dt>
+						<dd>{rebate.provider.name} pays this city's lawn rebates</dd>
+					{/if}
+					<dt>Also here</dt>
+					<dd>Up to $100 back on a WaterSense smart controller, for any Utah home. <a href="https://www.utahwatersavers.com/smartcontrollerprogram" target="_blank" rel="noopener">Smart controller rebate →</a></dd>
+				</dl>
 			{/if}
 			<p class="warn">Don't remove or kill any lawn before you're approved. Pre-approval and a site visit come first, or the project is disqualified. <a href={rebate.provider?.apply_url ?? rebate.rules.portal} target="_blank" rel="noopener">How to apply</a></p>
 		</div>
@@ -220,6 +251,12 @@
 	.hint { color: var(--muted); font-size: 0.92rem; margin: 10px 4px 8px; }
 	.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; list-style: none; padding: 0; margin: 0 4px; font-size: 0.88rem; color: var(--muted); }
 	.sw { display: inline-block; width: 13px; height: 13px; border-radius: 4px; margin-right: 6px; vertical-align: -1px; }
+	.where { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 12px 0; padding: 12px 14px; background: var(--panel-2); border: 2px solid var(--line); border-radius: 14px; font-size: 0.92rem; }
+	.where dt { font-family: var(--display); font-weight: 600; color: var(--water); }
+	.where dd { margin: 0; }
+	.ok-pill, .no-pill { display: inline-block; margin-left: 6px; font-size: 0.75rem; font-weight: 700; border-radius: 999px; padding: 1px 8px; color: #fff; vertical-align: 1px; }
+	.ok-pill { background: var(--lawn); }
+	.no-pill { background: #8b93ad; }
 	.warn { background: #fff6dc; border: 2px solid #ffe08a; color: #6b4b00; border-radius: 14px; padding: 10px 12px; font-size: 0.92rem; margin-bottom: 0; }
 	.warn a { color: #8a5d00; font-weight: 700; }
 	details { margin-top: 10px; }

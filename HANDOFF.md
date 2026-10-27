@@ -86,6 +86,18 @@ logo, and **any address in Utah**. All committed and deployed to https://overwat
   resized to 480x360 in `app/static/plants/`, credited and linked per card from
   `app/src/lib/plant_photos.json`. Seven natives incl. western yarrow (it's in the drawing).
 
+## 2026-10-27 (day 2): rebate card shows the jurisdiction
+
+* `/api/jurisdiction?lon&lat`: municipality (UGRC UtahMunicipalBoundaries; `COUNTYNBR` is the
+  alphabetical county number), retail culinary water provider and wholesale districts (Utah
+  DWRe `CulinaryWaterServiceAreas` + `WholesaleCulinaryWaterSuppliers`). Cached a day.
+* The rebate card's "where" box lists City (with an on-the-list / not-on-the-list pill), Water
+  from (provider + districts), Program, and "Also here" (statewide $100 smart controller rebate).
+  Rebate eligibility now resolves from the **municipality boundary** at the lot's centroid
+  (falls back to the dataset/parcel city), which fixes mailing-city mismatches; no municipality
+  = unincorporated, resolved by county. Example: part of Millcreek drinks Salt Lake City water
+  but is eligible through Millcreek's listing.
+
 ## Next session (start here)
 
 Run `scripts/resume.sh` first. It checks that `EXTERNAL_ANTHROPIC_API_KEY`,
