@@ -22,6 +22,38 @@ svelte-check), **data** (`scripts/build-data.sh`, all datasets, ~10 min).
 Cloud: share the dev server with `conductor preview set --port 5173`. Local runs have **not**
 been verified on a Mac yet (only the local-mode dev command was smoke-tested here).
 
+## Next session (start here)
+
+Run `scripts/resume.sh` first. It checks that `EXTERNAL_ANTHROPIC_API_KEY`,
+`CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are set **and accepted** (exits 1 in
+seconds if not, so hand control straight back to Adam), warns if the Cloudflare token can't
+read D1/R2, then installs deps and builds any missing datasets (~10 min). Then:
+
+1. **Bill reading, for real.** Start dev (`cd app && npm run dev`), upload
+   `scripts/fixtures/sample_slc_bill.png` (synthetic SLC bill, CCF, Oct 2025–Sep 2026; expected
+   months 12,7,6,6,6,7,10,18,28,32,30,22) on any parcel page, or
+   `curl -F "file=@scripts/fixtures/sample_slc_bill.png;type=image/png" localhost:5173/api/bill`.
+   Check unit = ccf and all 12 months; then try a real bill photo if Adam has one.
+2. **Local demo with Adam** (he wants to see it run before any deploy). Confirm his Mac
+   workspace's setup script and dev action work.
+3. **Deploy** only after Adam says go: Step 2 below. The old token could list Workers scripts
+   but got "Authentication error" on D1, R2 and billing; `resume.sh` reports what the new one
+   can do. overwater.ing is an active zone on the same account (Free Website plan).
+4. **Validation** when Adam has the tape numbers: `docs/validation/worksheet_816_s_600_e.png`
+   (regenerate: `python -m pipeline.worksheet`) letters each detected patch with our L x W, so
+   he only measures two sides per patch. Then Step 1 below.
+
+Env gotchas learned 2026-10-27:
+* Conductor fixes a workspace's env when the VM starts. A variable saved empty (or changed
+  later) stays empty in every process; a new workspace is the fix.
+* An **empty** `EXTERNAL_ANTHROPIC_API_KEY` in the process env shadows `app/.env` (Vite's
+  `loadEnv` lets process env win). The dev run action unsets it when empty. The key is
+  declared in `app/src/env.ts` (SvelteKit 3 `defineEnvVars`) and imported from
+  `$app/env/private`; there is no `$env/dynamic/private` in SvelteKit 3.
+* Vite's process shows up as `MainThread`, not `node`, so `pgrep -x node` misses it; and any
+  `pkill -f vite` pattern also matches the agent's own shell. Kill by port or by cmdline while
+  skipping `bash`.
+
 ## State in one table
 
 | Piece | Status | Where |
@@ -35,8 +67,8 @@ been verified on a Mac yet (only the local-mode dev command was smoke-tested her
 | Validation vs Adam's tape | **Not done: waiting on the measurement** | Step 1 |
 | Rebate table | Verified 2026-10-27 | Step 3 |
 | App | Rebranded; cross-neighborhood search; `/how`; check clean; build OK | `app/` |
-| Bill reading | Route uses `EXTERNAL_ANTHROPIC_API_KEY`, `claude-opus-5-5` via `beta.messages.parse` with `fallbacks: 'default'`; typed errors fall back to manual entry | `app/src/routes/api/bill/+server.ts` |
-| Bill reading tested? | **Wiring only**: the var is set in Conductor but **empty** in this workspace, so a dummy key was used to confirm the request reaches the API (401). Sample bill for a real test: `.context/bill/sample_slc_bill.png` (not committed) | |
+| Bill reading | Route reads `EXTERNAL_ANTHROPIC_API_KEY` (`app/src/env.ts`), `claude-opus-5-5` via `beta.messages.parse` with `fallbacks: 'default'`; typed errors fall back to manual entry | `app/src/routes/api/bill/+server.ts` |
+| Bill reading tested? | **Wiring only**: the var was empty in this workspace; a dummy key (via env and via `app/.env`) reached the API and got a 401, which the route turns into a friendly 501 | `scripts/fixtures/sample_slc_bill.png` |
 | Cloudflare deploy | **Not started on purpose**: Adam wants a local demo first. `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` are present | Step 2 |
 
 ## Step 1: Adam's lot validation (the number the pitch needs)
