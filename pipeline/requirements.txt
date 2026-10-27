@@ -8,3 +8,5 @@ planetary-computer
 pillow
 requests
 boto3
+h3
+pytest

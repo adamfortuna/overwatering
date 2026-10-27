@@ -112,3 +112,29 @@ outside the Sandy fabric, pass `--parcels <path to UGRC Salt Lake County Parcels
   imagery_date, gsd_m`.
 * `overlays/<parcel_id>.png`, `neighborhood.png`, `summary.json`, optional `ndvi.tif` /
   `classes.tif`.
+
+## Phase 1: water math (done, tested)
+
+`pipeline/water.py` (pure functions, 15 tests in `pipeline/tests`), `pipeline/savings.py`
+(three-layer card + district totals), `pipeline/eto_table.py` (monthly ETo from gridMET).
+
+* **Reference ET**: FAO-56 Penman-Monteith (short reference) computed daily from gridMET
+  (Climatology Lab, CC0; via the Fused H3 mirror on Source Cooperative) for the Sandy H3 cell,
+  2023–2025 average. Wind assumed 2 m/s because the mirror omits it. Result:
+  54.0 in/yr, July 9.1 in; Hargreaves cross-check 48 in/yr. Table in
+  `pipeline/data/eto_sandy_ut.json`. Unit test reproduces FAO-56 Example 18 to ±0.15 mm/day.
+* **Turf need** = ETo × Kc(0.80, cool-season turf) − 50% of monthly rain, Apr–Oct. For the
+  median Sandy parcel (3,361 sq ft lawn): 31.6 in/season = ~66,000 gal/yr.
+* **Bill**: outdoor = monthly use − winter (Dec–Feb) baseline. Units are taken from the bill
+  (gal, kgal, CCF supported), never assumed.
+* **Example card** (synthetic SLC-style bill peaking at 32 CCF in July): overwatering
+  16,000 gal/yr (24% over need), rebate "up to" $5,041 at $1.50/sq ft, conversion
+  46,500 gal/yr at a 0.30 water-wise coefficient.
+* **District framing** for the 497-parcel Sandy test area: 39.8 lawn acres, 105 acre-ft/yr turf
+  need, ~30 acre-ft/yr overwatering at the DWR 0.5–1 ft midpoint, 74 acre-ft/yr if all converted.
+
+## Next
+
+1. Adam: address + hand-measured lawn sq ft, and either allow the NAIP hosts or run locally.
+2. Re-run the Sandy bbox at 60 cm (`--imagery pc`), compare, record error in this file.
+3. Phase 2 app once the 60 cm numbers are in.
