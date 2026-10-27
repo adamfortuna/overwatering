@@ -1,7 +1,6 @@
 # data
 data/raw/
-data/out/*.tif
-data/out/overlays/
+data/out/
 *.parquet
 *.tif
 *.jp2

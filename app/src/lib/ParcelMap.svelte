@@ -48,9 +48,11 @@
 	});
 
 	$effect(() => {
-		// push edited classes to the map
+		// push edited classes to the map. Read `regions` first so the effect tracks it even
+		// before the map has finished loading.
+		const snap = $state.snapshot(regions) as GeoJSON.FeatureCollection;
 		const src = map?.getSource('regions') as import('maplibre-gl').GeoJSONSource | undefined;
-		src?.setData($state.snapshot(regions) as GeoJSON.FeatureCollection);
+		src?.setData(snap);
 	});
 </script>
 
