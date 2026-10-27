@@ -1,0 +1,42 @@
+{
+  "bbox": [
+    -111.875,
+    40.565,
+    -111.865,
+    40.573
+  ],
+  "area_crs": "EPSG:26912",
+  "parcels": 415,
+  "parcels_high_or_medium_conf": 410,
+  "imagery": {
+    "source": "naip-usda",
+    "date": "2024-07-07",
+    "gsd_m": 0.6,
+    "crs": "EPSG:26912",
+    "year": 2024,
+    "items": [
+      "m_4011125_ne_12_060_20240707",
+      "m_4011126_nw_12_060_20240707"
+    ],
+    "center": [
+      -111.87,
+      40.569
+    ]
+  },
+  "ndvi_threshold": 0.3,
+  "canopy_used": true,
+  "median_lawn_sqft": 906.0,
+  "median_lawn_frac": 0.10557184750733138,
+  "total_lawn_acres": 10.74589072543618,
+  "total_lawn_acres_range": [
+    8.945087235996327,
+    12.553076216712581
+  ],
+  "confidence_counts": {
+    "high": 365,
+    "medium": 45,
+    "low": 5
+  },
+  "overlays_written": 415,
+  "runtime_s": 45.4
+}
