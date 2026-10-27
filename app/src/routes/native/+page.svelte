@@ -47,7 +47,7 @@
 	</figure>
 	<figure class="card">
 		<House mode="native" />
-		<figcaption><b>After:</b> swap all of it for natives on drip and the yard needs about <b>{fmt(before - saved)} gallons</b>, leaving <b class="save">{fmt(saved)} gallons</b> a year in the system{data.lawn ? '' : ' (for a typical 2,000 sq ft front-and-back lawn)'}. Keep a patch like this one and you still save most of it.</figcaption>
+		<figcaption><b>After:</b> swap all of it for natives on drip and the yard needs about <b>{fmt(before - saved)} gallons</b>, leaving <b class="save">{fmt(saved)} gallons</b> a year in the system{data.lawn ? '' : ' (for a typical 2,000 sq ft front-and-back lawn)'}.</figcaption>
 	</figure>
 </section>
 
