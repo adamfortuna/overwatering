@@ -5,7 +5,9 @@
   "compatibility_flags": ["nodejs_compat"],
   "main": ".svelte-kit/cloudflare/_worker.js",
   "assets": { "directory": ".svelte-kit/cloudflare", "binding": "ASSETS" },
-  // Create with: npx wrangler d1 create lawn-labels ; then paste the id and run
-  // npx wrangler d1 execute lawn-labels --file=schema.sql
-  "d1_databases": [{ "binding": "DB", "database_name": "lawn-labels", "database_id": "REPLACE_ME" }]
+  "routes": [{ "pattern": "overwater.ing", "custom_domain": true }],
+  // Corrections database (optional; without it /api/labels returns 501 and the app keeps
+  // corrections in localStorage). Needs a token with D1 edit:
+  //   npx wrangler d1 create lawn-labels && npx wrangler d1 execute lawn-labels --remote --file=schema.sql
+  // then add: "d1_databases": [{ "binding": "DB", "database_name": "lawn-labels", "database_id": "<id>" }]
 }

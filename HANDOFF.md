@@ -105,7 +105,19 @@ Record it in `RESULTS.md` plainly, including a miss of the ±20% target:
 * Park strip: **outside** the parcel (right-of-way), visibly green. Counting it needs a strip
   polygon between the parcel front line and the curb. Not built.
 
-## Step 2: deploy (after the local demo)
+## Step 2: deploy
+
+**2026-10-27 attempt:** Adam said go; `wrangler deploy` failed at
+`/workers/scripts/overwater/deployments`: "No access to the specified resource". The token can
+list scripts and read DNS but can't edit Workers, D1, R2, account settings or Workers domains.
+Needs a new token (Account: Workers Scripts Edit, D1 Edit, Account Settings Read, optionally
+R2 Edit; Zone overwater.ing: Workers Routes Edit, DNS Edit). `wrangler.jsonc` now has the
+overwater.ing custom domain and no D1 binding. Build with the key **unset**
+(`env -u EXTERNAL_ANTHROPIC_API_KEY npm run build`) and grep the bundle for it before deploying;
+then `printenv EXTERNAL_ANTHROPIC_API_KEY | npx wrangler secret put EXTERNAL_ANTHROPIC_API_KEY`.
+If the account is on Workers Free, 25.8k asset files exceed the 20k limit: pack the per-parcel
+regions into shards (cuts ~12.8k files) or move data to R2.
+
 
 Credentials are in the workspace env. Rough plan:
 
