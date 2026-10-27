@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import { fmt } from '#lib/water';
+	import { fmt } from '#lib/water.ts';
 	let { data }: PageProps = $props();
 	let q = $state('');
 	const norm = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim();

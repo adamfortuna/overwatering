@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Parcel, RegionFeature, RegionCls } from './data';
+	import type * as GeoJSON from 'geojson';
 
 	let { parcel, regions, dataset, ontoggle }: { parcel: Parcel; regions: { type: 'FeatureCollection'; features: RegionFeature[] }; dataset: string; ontoggle: (idx: number) => void } = $props();
 	let el: HTMLDivElement;
@@ -22,7 +23,7 @@
 		});
 		map.touchZoomRotate.disableRotation();
 		map.on('load', () => {
-			map!.addSource('crop', { type: 'image', url: `/data/${dataset}/crops/${parcel.parcel_id}.png`, coordinates: parcel.crop_corners });
+			map!.addSource('crop', { type: 'image', url: `/data/${dataset}/crops/${parcel.parcel_id}.png`, coordinates: parcel.crop_corners as [[number, number], [number, number], [number, number], [number, number]] });
 			map!.addLayer({ id: 'crop', type: 'raster', source: 'crop', paint: { 'raster-resampling': 'nearest' } });
 			map!.addSource('regions', { type: 'geojson', data: regions });
 			map!.addLayer({
@@ -30,8 +31,8 @@
 				type: 'fill',
 				source: 'regions',
 				paint: {
-					'fill-color': ['match', ['get', 'cls'], ...Object.entries(COLORS).flat(), '#fff'],
-					'fill-opacity': ['match', ['get', 'cls'], ...Object.entries(OPACITY).flat(), 0.2]
+					'fill-color': ['match', ['get', 'cls'], ...Object.entries(COLORS).flat(), '#fff'] as unknown as import('maplibre-gl').ExpressionSpecification,
+					'fill-opacity': ['match', ['get', 'cls'], ...Object.entries(OPACITY).flat(), 0.2] as unknown as import('maplibre-gl').ExpressionSpecification
 				}
 			});
 			map!.addLayer({ id: 'regions-line', type: 'line', source: 'regions', paint: { 'line-color': '#ffffff', 'line-opacity': 0.35, 'line-width': 1 } });

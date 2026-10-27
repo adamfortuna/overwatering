@@ -1,3 +1,4 @@
+import type * as GeoJSON from 'geojson';
 export type Parcel = {
 	parcel_id: string;
 	address: string;
@@ -26,8 +27,8 @@ export type RegionCls = 'lawn' | 'canopy' | 'building' | 'other' | 'converted';
 export type RegionFeature = { type: 'Feature'; properties: { cls: RegionCls; sqft: number; idx?: number; original?: RegionCls }; geometry: GeoJSON.Geometry };
 
 export const DATASETS: Dataset[] = [
-	{ id: 'sandy', name: 'Sandy, Utah', city: 'Sandy', note: 'Real Salt Lake County parcels and footprints. Imagery is the 10 m Sentinel-2 fallback until NAIP access is unblocked, so per-parcel numbers are indicative.', utah: true },
-	{ id: 'philly', name: 'Philadelphia (pipeline test)', city: 'Philadelphia', note: '23 cm 4-band NAIP with real parcels and footprints. Used to validate the 60 cm code path; not a Utah neighborhood.', utah: false }
+	{ id: 'sandy', name: 'Sandy, Utah', city: 'Sandy', note: 'Real Salt Lake County parcels and Overture footprints on 60 cm NAIP (USDA, flown July 7, 2024). Not yet validated against a tape-measured lawn.', utah: true },
+	{ id: 'home', name: 'Salt Lake City (East Central, 84102)', city: 'Salt Lake City', note: 'UGRC Salt Lake County parcels on 60 cm NAIP (July 7, 2024). Older lots with heavy tree canopy: grass under trees is counted as canopy, not lawn. Park strips are public right-of-way and sit outside the parcel.', utah: true }
 ];
 
 export async function loadParcels(fetchFn: typeof fetch, dataset: string) {

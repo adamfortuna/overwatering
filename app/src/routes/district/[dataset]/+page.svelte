@@ -2,7 +2,7 @@
 	import type { PageProps } from './$types';
 	import { onMount } from 'svelte';
 	import eto from '#lib/eto_sandy_ut.json';
-	import { acreFeet, annualTurfNeedGal, conversionSavingsGal, depthToGallons, fmt } from '#lib/water';
+	import { acreFeet, annualTurfNeedGal, conversionSavingsGal, depthToGallons, fmt } from '#lib/water.ts';
 	let { data }: PageProps = $props();
 	let el: HTMLDivElement;
 
