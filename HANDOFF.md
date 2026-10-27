@@ -98,6 +98,15 @@ logo, and **any address in Utah**. All committed and deployed to https://overwat
   = unincorporated, resolved by county. Example: part of Millcreek drinks Salt Lake City water
   but is eligible through Millcreek's listing.
 
+## 2026-10-27 (day 2): state Greenspace model
+
+DWRe (Jack Hinzman, jackhinzman@utah.gov) replied with the public Greenspace data. Compared
+in RESULTS Run 7 (`pipeline/greenspace.py`): totals agree with our lawn + canopy, but
+Greenspace doesn't separate turf from trees. Not yet shown in the app. Options: show "state
+Greenspace model: X sq ft green on this lot" as a cross-check on prebuilt datasets (cheap: add
+`gs_sqft` to parcels.json), and/or a district-level comparison. Unanswered from Adam's email:
+before/after imagery for verification, and preferred "get approved first" wording.
+
 ## Next session (start here)
 
 Run `scripts/resume.sh` first. It checks that `EXTERNAL_ANTHROPIC_API_KEY`,

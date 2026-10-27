@@ -196,6 +196,30 @@ A 400 m bilinear haze window (first attempt) read NIR dark values of 51-61 vs th
 and undercounted lawn; the 1.6 km nearest-neighbour window reads 36-47.
 Governor's Mansion (603 E South Temple): pipeline 13,270 / on-demand 14,055 sq ft.
 
+## Run 7: cross-check against the state's Greenspace model (2026-10-27)
+
+Jack Hinzman (Senior GIS Analyst, Utah Division of Water Resources) pointed us to the public
+Greenspace data: https://dwre-utahdnr.opendata.arcgis.com/pages/greenspace (download links in
+the Division's Google Doc; a whitepaper is coming). Greenspace 2024 is per-quarter-quad
+shapefile polygons of 2024 NAIP pixels with **NDVI >= 0.15**, UTM 12N, in the public bucket
+`gs://ut-dwre-2024-greenspace/<county>/<tile>_NDVI.zip` (2021 too). One class: all vegetation.
+`python -m pipeline.greenspace 84102` reproduces this:
+
+| 84102, 3,104 parcels | Acres |
+|---|---|
+| Greenspace 2024 (all vegetation, NDVI >= 0.15) | 189.2 |
+| Ours: lawn + tree canopy | 170.2 |
+| Ours: lawn only | 52.3 |
+
+Per parcel, Greenspace correlates r = 0.77 with our lawn + canopy (median ratio 0.97) and
+r = 0.81 with our green mask (NDVI > 0.30 after haze correction, minus buildings). The totals
+agree; the products answer different questions. Greenspace measures how much is green
+(irrigation demand at state scale). We split the turf (the part a rebate can replace) from
+trees and beds, per lot, and let the owner correct it. Their 0.15 threshold on raw DN is
+consistent with what we found: hazy 2024 NAIP needs either a lower threshold or a haze
+correction (we chose the correction plus 0.30). Governor's Mansion: Greenspace 39,177 sq ft
+green vs our 13,270 lawn + 7,803 under trees (big mature trees and planted beds).
+
 ## NAIP year and haze notes
 
 * Utah NAIP years on Planetary Computer: 2011, 2014, 2016 (1 m), 2018, 2021 (60 cm). The 2021
