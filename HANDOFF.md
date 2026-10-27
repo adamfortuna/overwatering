@@ -52,6 +52,11 @@ read D1/R2, then installs deps and builds any missing datasets (~10 min). Then:
    (regenerate: `python -m pipeline.worksheet`) letters each detected patch with our L x W, so
    he only measures two sides per patch. Then Step 1 below.
 
+Run-button gotcha: Conductor's Mac app runs a *cloud* workspace's dev action in the synced
+folder (`~/conductor/remote-workspace-sync/utah-water/main`, tracked files only) and kept a
+cached, older command. So `npm run dev` itself (`scripts/app-dev.sh`) now handles Node, first-run
+setup and project-local Vite; the synced folder on Adam's Mac has been set up.
+
 Env gotchas learned 2026-10-27:
 * Conductor fixes a workspace's env when the VM starts. A variable saved empty (or changed
   later) stays empty in every process; a new workspace is the fix.
