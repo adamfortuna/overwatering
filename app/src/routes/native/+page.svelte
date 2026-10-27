@@ -34,7 +34,7 @@
 {#if data.back}<a class="back" href={data.back}>← back to the lot</a>{/if}
 <p class="kicker">Go native</p>
 <h1>Trade thirsty grass for a yard that belongs here</h1>
-<p class="lede">A native Utah yard is planted with things that grow here on their own: bunchgrasses, penstemons, rabbitbrush, sagebrush. It takes about a third of the water of turf once it's established, and the state helps pay for the switch. Here's what it looks like in practice.</p>
+<p class="lede">A native Utah yard is full of things that grow here on their own: flowering perennials, shrubs, small trees and soft bunchgrasses. Once it's established it takes about a third of the water of turf, and the state helps pay for the switch. Here's what it looks like in practice.</p>
 
 <section class="compare">
 	<figure class="card">
@@ -43,8 +43,20 @@
 	</figure>
 	<figure class="card">
 		<House mode="native" />
-		<figcaption><b>After:</b> natives on drip need about <b>{fmt(before - saved)} gallons</b>. That's <b class="save">{fmt(saved)} gallons</b> a year left in the system{data.lawn ? '' : ' (for a typical 2,000 sq ft front-and-back lawn)'}.</figcaption>
+		<figcaption><b>After:</b> swap all of it for natives on drip and the yard needs about <b>{fmt(before - saved)} gallons</b>, leaving <b class="save">{fmt(saved)} gallons</b> a year in the system{data.lawn ? '' : ' (for a typical 2,000 sq ft front-and-back lawn)'}. Keep a patch like this one and you still save most of it.</figcaption>
 	</figure>
+</section>
+
+<section class="card keep">
+	<h2>Keep the grass you actually use</h2>
+	<p>Going native doesn't mean losing the lawn. Keep the patch where the kids play or the dog runs, and swap out the grass that's more trouble than it's worth:</p>
+	<ul>
+		<li>the park strip and skinny side yards you can barely get a mower into</li>
+		<li>slopes and odd corners that never stay green</li>
+		<li>the sunniest spots, which drink the most water</li>
+		<li>anywhere you only ever walk on to mow it</li>
+	</ul>
+	<p class="muted small">Partial projects still qualify for rebates as long as they meet the minimum size, and what's left is easy to water well. Some programs want the lawn you keep in strips at least 8 feet wide, so plan the edges with that in mind.</p>
 </section>
 
 <ol class="steps">
@@ -102,8 +114,8 @@
 <section class="card closer">
 	<svg viewBox="0 0 130 130" aria-hidden="true"><Grass x={6} y={-6} scale={1.05} /></svg>
 	<div>
-		<h2>Not ready for the whole yard?</h2>
-		<p class="muted">Start with the park strip or a side yard. Small projects still qualify if they meet the minimum size (usually 200 sq ft), and they're a good way to learn what grows well for you.</p>
+		<h2>Start with one spot</h2>
+		<p class="muted">The park strip is a great first project: it's hard to water without hitting the sidewalk, and it usually clears the minimum size (often 200 sq ft). You'll learn what grows well in your yard before taking on the rest.</p>
 	</div>
 </section>
 
@@ -114,6 +126,9 @@
 	figure { margin: 0; padding: 12px; }
 	figcaption { padding: 10px 6px 2px; }
 	.save { color: var(--lawn); }
+	.keep { margin-top: 16px; }
+	.keep ul { margin: 6px 0; padding-left: 20px; }
+	.keep li { margin: 3px 0; }
 	.steps { list-style: none; counter-reset: s; padding: 0; display: grid; gap: 14px; margin: 26px 0; }
 	.steps > li { counter-increment: s; position: relative; padding-left: 70px; }
 	.steps > li::before { content: counter(s); position: absolute; left: 18px; top: 18px; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; background: var(--water); color: #fff; font-family: var(--display); font-weight: 700; font-size: 1.1rem; }
