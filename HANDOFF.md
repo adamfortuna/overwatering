@@ -49,7 +49,7 @@ read D1/R2, then installs deps and builds any missing datasets (~10 min). Then:
    but got "Authentication error" on D1, R2 and billing; `resume.sh` reports what the new one
    can do. overwater.ing is an active zone on the same account (Free Website plan).
 4. **Validation** when Adam has the tape numbers: `docs/validation/worksheet_816_s_600_e.png`
-   (regenerate: `python -m pipeline.worksheet`) letters each detected patch with our L x W, so
+   (regenerate: `python -m pipeline.worksheet --parcel 16072770170000 --out ...`; the default parcel is now the Governor's Mansion) letters each detected patch with our L x W, so
    he only measures two sides per patch. Then Step 1 below.
 
 Run-button gotcha: Conductor's Mac app runs a *cloud* workspace's dev action in the synced
@@ -67,6 +67,13 @@ Env gotchas learned 2026-10-27:
 * Vite's process shows up as `MainThread`, not `node`, so `pgrep -x node` misses it; and any
   `pkill -f vite` pattern also matches the agent's own shell. Kill by port or by cmdline while
   skipping `bash`.
+
+**Example address = the Governor's Mansion** (Kearns Mansion, 603 E South Temple, parcel
+09314870040000; Adam doesn't want the app built around his own address). It's
+"Tax Exempt - Government", so `scripts/build-data.sh` keeps it via `--keep-parcels` in the 84102
+and Avenues runs; it's the search placeholder, the 84102 `--address` report, the worksheet
+default and the sample bill's service address. Adam's lot only appears in the validation
+material (opt-in via `ADDRESS=`).
 
 ## State in one table
 
@@ -91,7 +98,7 @@ Waiting on Adam's tape measure for **816 S 600 E** (parcel 16072770170000, 6,997
 for: total grass, **grass under trees separately**, and whether the park strip was included.
 
 ```bash
-TRUTH_SQFT=<tape> scripts/build-data.sh 84102
+ADDRESS="816 S 600 E" TRUTH_SQFT=<tape> scripts/build-data.sh 84102
 ```
 
 That adds `validation.error_pct` to `data/out/84102/summary.json` (compares `lawn_sqft`).

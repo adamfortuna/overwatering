@@ -40,7 +40,7 @@
 
 	<div class="search">
 		<label for="q" class="sr">Your address</label>
-		<input id="q" type="search" placeholder="Your street address, e.g. 816 S 600 E" bind:value={q} autocomplete="street-address" />
+		<input id="q" type="search" placeholder="Your street address, e.g. 603 E South Temple" bind:value={q} autocomplete="street-address" />
 		{#if hits.length}
 			<ul class="hits">
 				{#each hits as [address, ds, id, lawn]}

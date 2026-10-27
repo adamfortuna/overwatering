@@ -13,6 +13,11 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 PY=${PYTHON:-.venv/bin/python}
 ALL=(84102 central-city liberty-wells downtown avenues sandy)
+# Showcase parcels kept even though they aren't residential: the Governor's Mansion
+# (Kearns Mansion, 603 E South Temple), the app's example address.
+SHOWCASE=09314870040000
+# Address reported in 84102's summary.json; with TRUTH_SQFT set, it is validated against it.
+ADDRESS=${ADDRESS:-603 E SOUTH TEMPLE}
 datasets=("$@")
 [ ${#datasets[@]} -eq 0 ] && datasets=("${ALL[@]}")
 
@@ -25,10 +30,11 @@ for ds in "${datasets[@]}"; do
 		$PY -m pipeline.run_spike --bbox -111.875 40.565 -111.865 40.573 --parcels sandy \
 			--imagery usda --out "$out" --save-rasters ;;
 	84102)
-		# Adam's zip; reports 816 S 600 E (and validates it when TRUTH_SQFT is set).
-		$PY -m pipeline.run_spike --aoi 84102 --parcels ugrc --imagery usda --out "$out" \
-			--address "816 S 600 E" ${TRUTH_SQFT:+--truth-sqft $TRUTH_SQFT} --save-rasters ;;
-	central-city | liberty-wells | downtown | avenues)
+		$PY -m pipeline.run_spike --aoi 84102 --parcels ugrc --imagery usda --out "$out" --keep-parcels "$SHOWCASE" \
+			--address "$ADDRESS" ${TRUTH_SQFT:+--truth-sqft $TRUTH_SQFT} --save-rasters ;;
+	avenues)
+		$PY -m pipeline.run_spike --aoi avenues --parcels ugrc --imagery usda --out "$out" --keep-parcels "$SHOWCASE" --save-rasters ;;
+	central-city | liberty-wells | downtown)
 		$PY -m pipeline.run_spike --aoi "$ds" --parcels ugrc --imagery usda --out "$out" --save-rasters ;;
 	*) echo "unknown dataset $ds (known: ${ALL[*]})" >&2; exit 1 ;;
 	esac

@@ -108,7 +108,7 @@ def _fetch_ugrc(layer_url: str, bbox_wgs84, cache: str) -> gpd.GeoDataFrame:
     return g
 
 
-def load_parcels(source: str, bbox_wgs84, area_crs: str, residential_only: bool = True) -> gpd.GeoDataFrame:
+def load_parcels(source: str, bbox_wgs84, area_crs: str, residential_only: bool = True, keep_ids=()) -> gpd.GeoDataFrame:
     """Return parcels intersecting bbox (xmin, ymin, xmax, ymax in lon/lat), in area_crs.
 
     source: "sandy", "ugrc" (Salt Lake County Parcels LIR feature service), or a file path."""
@@ -151,7 +151,8 @@ def load_parcels(source: str, bbox_wgs84, area_crs: str, residential_only: bool 
     if schema == "phl_dor":
         out["is_residential"] = True  # DOR layer has no use code; treat all as candidates
     if residential_only:
-        out = out[out["is_residential"]]
+        # keep_ids: showcase parcels kept whatever their class (e.g. the Governor's Mansion).
+        out = out[out["is_residential"] | out["parcel_id"].isin(list(keep_ids))]
     # Drop slivers and giant parcels (parks, churches); residential lots in SLCo are ~0.1-1 acre.
     out = out[(out["parcel_sqft"] > 800) & (out["parcel_acres"] < 3)]
     out = out.drop_duplicates(subset="parcel_id").reset_index(drop=True)

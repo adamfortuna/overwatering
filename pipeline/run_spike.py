@@ -47,6 +47,7 @@ def main(argv=None):
     ap.add_argument("--ndvi-thr", type=float, default=0.30)
     ap.add_argument("--no-canopy", action="store_true")
     ap.add_argument("--all-parcels", action="store_true", help="keep non-residential parcels")
+    ap.add_argument("--keep-parcels", default="", help="comma-separated parcel ids to keep even if not residential")
     ap.add_argument("--out", required=True)
     ap.add_argument("--max-overlays", type=int, default=600)
     ap.add_argument("--address", help="address substring to report / validate against")
@@ -75,7 +76,8 @@ def main(argv=None):
     log = lambda *x: print(f"[{time.time()-t0:6.1f}s]", *x, flush=True)  # noqa: E731
 
     log("parcels:", a.parcels)
-    parcels = pcl.load_parcels(a.parcels, bbox, area_crs, residential_only=not a.all_parcels)
+    parcels = pcl.load_parcels(a.parcels, bbox, area_crs, residential_only=not a.all_parcels,
+                              keep_ids=[x for x in a.keep_parcels.split(",") if x])
     # Keep parcels wholly inside the AOI: a parcel cut by the image edge gets its lawn fraction
     # from a sliver, which is then scaled to the full parcel area and inflates totals.
     aoi = gpd.GeoSeries([box(*bbox)], crs=4326).to_crs(area_crs).iloc[0].buffer(-1.0)

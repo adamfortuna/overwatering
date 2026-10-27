@@ -4,7 +4,7 @@ Draws the lot's imagery crop with every detected lawn patch (and tree-canopy pat
 plus each patch's approximate length x width (sides of its minimum rotated rectangle) and
 area in feet. Measuring two sides per patch is much faster than tracing the whole yard.
 
-  python -m pipeline.worksheet --dataset 84102 --parcel 16072770170000 --out worksheet.png
+  python -m pipeline.worksheet --dataset 84102 --parcel <parcel id> --out worksheet.png
 """
 from __future__ import annotations
 
@@ -104,7 +104,7 @@ def build(data_dir: str, parcel_id: str, out: str, scale: int = 8, min_sqft: flo
 def main():
 	ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 	ap.add_argument("--dataset", default="84102")
-	ap.add_argument("--parcel", default="16072770170000")
+	ap.add_argument("--parcel", default="09314870040000", help="default: the Governor's Mansion")
 	ap.add_argument("--data-root", default="app/static/data")
 	ap.add_argument("--out", default="worksheet.png")
 	a = ap.parse_args()
