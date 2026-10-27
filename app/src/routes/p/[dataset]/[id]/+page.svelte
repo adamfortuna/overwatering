@@ -2,10 +2,10 @@
 	import type { PageProps } from './$types';
 	import ParcelMap from '#lib/ParcelMap.svelte';
 	import eto from '#lib/eto_sandy_ut.json';
-	import { rebateEstimate } from '#lib/rebates';
-	import { annualTurfNeedGal, conversionSavingsGal, outdoorFromBill, overwateringGap, fmt } from '#lib/water';
-	import { loadLabels, saveLabel } from '#lib/labels';
-	import type { RegionCls } from '#lib/data';
+	import { rebateEstimate } from '#lib/rebates.ts';
+	import { annualTurfNeedGal, conversionSavingsGal, outdoorFromBill, overwateringGap, fmt } from '#lib/water.ts';
+	import { loadLabels, saveLabel } from '#lib/labels.ts';
+	import type { RegionCls } from '#lib/data.ts';
 	import { onMount } from 'svelte';
 
 	let { data }: PageProps = $props();
@@ -119,7 +119,7 @@
 				<p class="muted">No Utah program applies to this test neighborhood. For a Utah address the saved provider table gives the rate.</p>
 			{:else if rebate.eligible}
 				<div class="big">up to ${fmt(rebate.high)}</div>
-				<p class="muted small">{rebate.provider.name}: ${rebate.provider.rate_low.toFixed(2)}–${rebate.provider.rate_high.toFixed(2)} per sq ft on {fmt(rebate.eligibleSqft)} sq ft. {rebate.provider.notes} Rates last checked {rebate.provider.last_checked}{rebate.provider.verified ? '' : ' (unverified, confirm on the portal)'}.</p>
+				<p class="muted small">{rebate.provider.name}: ${rebate.provider.rate_low.toFixed(2)}{rebate.provider.rate_high !== rebate.provider.rate_low ? `–$${rebate.provider.rate_high.toFixed(2)}` : ''} per sq ft on {fmt(rebate.eligibleSqft)} sq ft{rebate.provider.max_dollars ? `, capped at $${fmt(rebate.provider.max_dollars)} per property` : ''}. {rebate.provider.notes} Rates last checked {rebate.provider.last_checked}{rebate.provider.verified ? '' : ' (unverified, confirm on the portal)'}.</p>
 			{:else}
 				<p class="muted">Below the {rebate.provider.min_sqft} sq ft minimum project size.</p>
 			{/if}
