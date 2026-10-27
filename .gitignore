@@ -13,3 +13,4 @@ node_modules/
 .wrangler/
 .env
 .DS_Store
+app/static/data/

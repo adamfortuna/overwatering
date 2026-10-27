@@ -22,6 +22,7 @@ import numpy as np
 import rasterio
 
 from . import buildings as bld
+from . import export_app
 from . import canopy as cnp
 from . import imagery as imgmod
 from . import lawn, overlay, parcels as pcl
@@ -97,6 +98,9 @@ def main(argv=None):
             break
         if overlay.parcel_overlay(img, rgb, masks, p_img.geometry.iloc[i], row, os.path.join(a.out, "overlays", f"{row.parcel_id}.png")):
             n_ov += 1
+
+    log("export for app")
+    export_app.export(img, rgb, masks, parcels, df, a.out, area_crs)
 
     if a.save_rasters:
         prof = dict(driver="GTiff", height=img.height, width=img.width, crs=img.crs, transform=img.transform, compress="deflate", tiled=True)
