@@ -1,0 +1,44 @@
+{
+ "blue-grama": {
+  "artist": "Wikimedia Commons",
+  "license": "Public domain",
+  "license_url": "",
+  "source": "https://commons.wikimedia.org/wiki/File:Bouteloua_gracilis.jpg"
+ },
+ "firecracker-penstemon": {
+  "artist": "Stan Shebs",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Penstemon_eatonii_3.jpg"
+ },
+ "rubber-rabbitbrush": {
+  "artist": "Wsiegmund",
+  "license": "CC BY 2.5",
+  "license_url": "https://creativecommons.org/licenses/by/2.5",
+  "source": "https://commons.wikimedia.org/wiki/File:Chrysothamnus_nauseosus_7991.jpg"
+ },
+ "apache-plume": {
+  "artist": "Andrew Hart",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Fallugia_paradoxa_2017.jpg"
+ },
+ "globemallow": {
+  "artist": "Stan Shebs",
+  "license": "CC BY-SA 3.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Sphaeralcea_grossulariifolia_8.jpg"
+ },
+ "utah-serviceberry": {
+  "artist": "Eric Hunt",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Amelanchier_utahensis.jpg"
+ },
+ "western-yarrow": {
+  "artist": "Rhododendrites",
+  "license": "CC BY-SA 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+  "source": "https://commons.wikimedia.org/wiki/File:Achillea_millefolium_(52354).jpg"
+ }
+}

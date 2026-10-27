@@ -82,6 +82,9 @@ logo, and **any address in Utah**. All committed and deployed to https://overwat
   plant natives (six Wasatch Front natives), re-plumb to drip or cut run times, finish and get
   paid. Program-rule specifics are attributed to Central Utah's program (the one we verified).
   Expert sites checked live 2026-10-27; YardFarmer showed consults booking into January 2027.
+* Plant cards have photos: Wikimedia Commons images (public domain / CC BY / CC BY-SA),
+  resized to 480x360 in `app/static/plants/`, credited and linked per card from
+  `app/src/lib/plant_photos.json`. Seven natives incl. western yarrow (it's in the drawing).
 
 ## Next session (start here)
 

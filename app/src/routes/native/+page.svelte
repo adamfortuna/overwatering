@@ -6,6 +6,8 @@
 	import { etoByKey } from '#lib/data.ts';
 	import { annualTurfNeedGal, conversionSavingsGal, fmt } from '#lib/water.ts';
 	import { rebateEstimate } from '#lib/rebates.ts';
+	import photos from '#lib/plant_photos.json';
+	const credit = (slug: string) => (photos as Record<string, { artist: string; license: string; source: string }>)[slug];
 	let { data }: PageProps = $props();
 
 	let lawn = $derived(data.lawn ?? 2000);
@@ -19,13 +21,15 @@
 		{ name: 'Silver Sage Xeriscape & Design', href: 'https://silversagexeriscape.com/', what: 'A Salt Lake City firm that designs, installs and maintains water-wise landscapes, with 20 years of Wasatch Front projects.' },
 		{ name: 'Localscapes', href: 'https://localscapes.jvwcd.gov/', what: "Utah's free do-it-yourself approach from the water districts: ready-made designs, how-to videos and classes. Several rebate programs are built around it." }
 	];
+	// Photos: Wikimedia Commons, resized into /static/plants (credits in plant_photos.json).
 	const PLANTS = [
-		{ name: 'Blue grama', kind: 'Grass', note: 'Native bunchgrass with eyelash seed heads (our Gramma).' },
-		{ name: 'Firecracker & Palmer penstemon', kind: 'Flower', note: 'Red and pink spikes in late spring; hummingbirds love them.' },
-		{ name: 'Rubber rabbitbrush', kind: 'Shrub', note: 'Gold flowers in fall when everything else is done.' },
-		{ name: 'Apache plume', kind: 'Shrub', note: 'White flowers, then feathery pink seed heads.' },
-		{ name: 'Globemallow', kind: 'Flower', note: 'Orange cups on silver leaves, tough in heat.' },
-		{ name: 'Utah serviceberry', kind: 'Small tree', note: 'Spring blossoms, summer berries for birds.' }
+		{ slug: 'blue-grama', name: 'Blue grama', kind: 'Grass', note: 'Native bunchgrass with eyelash seed heads (our Gramma). Soft enough to walk on.' },
+		{ slug: 'firecracker-penstemon', name: 'Firecracker penstemon', kind: 'Flower', note: 'Bright red spikes in late spring; hummingbirds love them. Palmer penstemon is its pink cousin.' },
+		{ slug: 'western-yarrow', name: 'Western yarrow', kind: 'Flower', note: 'Flat white flower clusters all summer over ferny leaves. Tough, and a pollinator magnet.' },
+		{ slug: 'globemallow', name: 'Globemallow', kind: 'Flower', note: 'Orange cups on silvery leaves, happy in full sun and heat.' },
+		{ slug: 'rubber-rabbitbrush', name: 'Rubber rabbitbrush', kind: 'Shrub', note: 'Gold flowers in fall when everything else is done.' },
+		{ slug: 'apache-plume', name: 'Apache plume', kind: 'Shrub', note: 'White flowers, then feathery pink seed heads that glow in low sun.' },
+		{ slug: 'utah-serviceberry', name: 'Utah serviceberry', kind: 'Small tree', note: 'White spring blossoms, summer berries for birds, good fall color.' }
 	];
 </script>
 
@@ -93,9 +97,19 @@
 
 	<li class="card">
 		<h2>Plant natives</h2>
-		<p>Spring and fall are the best times to plant. Start with small pots, give them room to grow, and mulch around them. A few that thrive along the Wasatch Front:</p>
+		<p>Spring and fall are the best times to plant. Start with small pots, give them room to grow, and mulch around them. A few Utah natives that thrive along the Wasatch Front:</p>
 		<ul class="plants">
-			{#each PLANTS as p}<li><b>{p.name}</b> <span class="tag">{p.kind}</span><br /><span class="muted small">{p.note}</span></li>{/each}
+			{#each PLANTS as p}
+				{@const c = credit(p.slug)}
+				<li class="plant">
+					<img src="/plants/{p.slug}.jpg" alt="{p.name} ({p.kind.toLowerCase()})" width="480" height="360" loading="lazy" />
+					<div class="pbody">
+						<b>{p.name}</b> <span class="tag">{p.kind}</span>
+						<p class="muted small">{p.note}</p>
+						<a class="credit" href={c.source} target="_blank" rel="noopener">Photo: {c.artist}, {c.license}</a>
+					</div>
+				</li>
+			{/each}
 		</ul>
 	</li>
 
@@ -139,7 +153,14 @@
 	.expert { display: flex; flex-direction: column; gap: 4px; padding: 12px; border: 2px solid var(--line); border-radius: 16px; text-decoration: none; color: var(--ink); background: #fff; box-shadow: 0 3px 0 #d6ecf9; }
 	.expert:hover { border-color: var(--water-2); }
 	.expert b { color: var(--water); font-family: var(--display); font-weight: 600; }
-	.plants { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px 16px; }
+	.plants { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; margin: 12px 0 4px; }
+	.plant { background: #fff; border: 2px solid var(--line); border-radius: 18px; overflow: hidden; box-shadow: 0 4px 0 #d6ecf9; display: flex; flex-direction: column; }
+	.plant img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+	.pbody { padding: 10px 12px 12px; }
+	.pbody p { margin: 4px 0 6px; }
+	.credit { font-size: 0.72rem; color: var(--muted); }
+	.plant .tag { white-space: nowrap; }
+	@media (max-width: 560px) { .plants { grid-template-columns: 1fr 1fr; gap: 10px; } .pbody { padding: 8px 10px 10px; line-height: 1.3; } .pbody b { font-size: 0.95rem; } .pbody p { font-size: 0.82rem; } .credit { font-size: 0.66rem; } }
 	.tag { font-size: 0.75rem; font-weight: 700; color: #fff; background: var(--lawn); border-radius: 999px; padding: 1px 8px; margin-left: 4px; }
 	.closer { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: center; }
 	.closer svg { width: 96px; height: 96px; background: var(--aqua); border-radius: 20px; }
