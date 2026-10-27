@@ -71,6 +71,18 @@ logo, and **any address in Utah**. All committed and deployed to https://overwat
   gal/season), Utah Water Savers smart controller rebate up to $100 (checked 2026-10-27),
   Utah's Weekly Lawn Watering Guide.
 
+## 2026-10-27 (day 2): /native
+
+* "Go native" (step 3 on lots, and the home teaser) links to **`/native`**
+  (`?lawn&eto&city&county&back`): before/after SVG of a bungalow (`src/lib/art/House.svelte`,
+  lawn + Sprinkles + sidewalk runoff vs. natives, mulch, boulders, drip, Gramma) with the lot's
+  gallons, then six steps: get approved first (with this lot's program, rate and apply link),
+  design it (YardFarmer as the example; Silver Sage Xeriscape & Design; Localscapes for DIY;
+  plus Conservation Garden Park plans and USU's water-wise plant list), remove the grass,
+  plant natives (six Wasatch Front natives), re-plumb to drip or cut run times, finish and get
+  paid. Program-rule specifics are attributed to Central Utah's program (the one we verified).
+  Expert sites checked live 2026-10-27; YardFarmer showed consults booking into January 2027.
+
 ## Next session (start here)
 
 Run `scripts/resume.sh` first. It checks that `EXTERNAL_ANTHROPIC_API_KEY`,

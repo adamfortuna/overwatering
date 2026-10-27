@@ -3,12 +3,12 @@
 	import Sprinkler from './art/Sprinkler.svelte';
 	import Coin from './art/Coin.svelte';
 	import Grass from './art/Grass.svelte';
-	type Way = { kicker: string; title: string; body: string };
+	type Way = { kicker: string; title: string; body: string; href?: string; cta?: string };
 	let { ways }: { ways?: Way[] } = $props();
 	const DEFAULT: Way[] = [
-		{ kicker: '1 · Today', title: 'Water what it needs', body: 'Most Utah lawns get 6–12 inches more water a year than they use. Add your bill and we show your gap.' },
+		{ kicker: '1 · Today', title: 'Water what it needs', body: 'Most Utah lawns get 6–12 inches more water a year than they use. Add your bill and we show your gap.', href: '/watering', cta: 'Dial in your sprinklers' },
 		{ kicker: '2 · One time', title: 'Take the rebate', body: "Utah Water Savers pays $1.50–$3 per square foot of lawn you replace in most Wasatch Front cities. Get approved first." },
-		{ kicker: '3 · Every year', title: 'Go native', body: 'Water-wise Utah landscape needs roughly a third of the water turf does, every summer after.' }
+		{ kicker: '3 · Every year', title: 'Go native', body: 'Water-wise Utah landscape needs roughly a third of the water turf does, every summer after.', href: '/native', cta: 'What going native looks like' }
 	];
 	let list = $derived(ways ?? DEFAULT);
 </script>
@@ -25,6 +25,7 @@
 				<p class="kicker">{w.kicker}</p>
 				<h3>{w.title}</h3>
 				<p class="muted small">{w.body}</p>
+				{#if w.href}<a class="small" href={w.href}>{w.cta} →</a>{/if}
 			</div>
 		</article>
 	{/each}

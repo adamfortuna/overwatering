@@ -99,6 +99,10 @@
 		if (bill) q.set('out', Object.entries(bill.outdoor).map(([m, g]) => `${m}:${Math.round(g)}`).join(','));
 		return `/watering?${q}`;
 	});
+	let nativeHref = $derived.by(() => {
+		const q = new URLSearchParams({ lawn: String(Math.round(lawn)), eto: etoKey, city: ds.city ?? '', county: ds.county ?? '', back: typeof location === 'undefined' ? '/' : location.pathname });
+		return `/native?${q}`;
+	});
 	const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 </script>
 
@@ -189,6 +193,7 @@
 			<h3>Go native</h3>
 			<div class="big save"><CountUp value={conv} suffix=" gal/yr" /></div>
 			<p class="muted small">Water saved if this lawn becomes water-wise Utah landscape (plant water use 0.8 → 0.3 of reference ET; {eto.annual_eto_in ?? '?'} in/yr here). {converted ? `The area you marked converted already saves about ${fmt(convertedSavings)} gal/yr.` : ''}</p>
+			<a class="plan-cta native-cta" href={nativeHref}>What going native looks like →</a>
 		</div>
 	</section>
 </div>
@@ -228,4 +233,6 @@
 	.plan-line { margin: 4px 0 8px; }
 	.plan-cta { display: inline-block; font-family: var(--display); font-weight: 600; color: #fff; background: var(--water); border-radius: 999px; padding: 6px 16px; text-decoration: none; box-shadow: 0 3px 0 #1567a8; }
 	.plan-cta:hover { background: #1a78c2; }
+	.native-cta { background: var(--lawn); box-shadow: 0 3px 0 #1f6e36; margin-top: 4px; }
+	.native-cta:hover { background: #258541; }
 </style>
