@@ -26,6 +26,7 @@
 		{ slug: 'blue-grama', name: 'Blue grama', kind: 'Grass', note: 'Native bunchgrass with eyelash seed heads (our Gramma). Soft enough to walk on.' },
 		{ slug: 'firecracker-penstemon', name: 'Firecracker penstemon', kind: 'Flower', note: 'Bright red spikes in late spring; hummingbirds love them. Palmer penstemon is its pink cousin.' },
 		{ slug: 'western-yarrow', name: 'Western yarrow', kind: 'Flower', note: 'Flat white flower clusters all summer over ferny leaves. Tough, and a pollinator magnet.' },
+		{ slug: 'blanketflower', name: 'Blanketflower', kind: 'Flower', note: 'Red and gold daisies from June to frost, and a favorite of bees and butterflies.' },
 		{ slug: 'globemallow', name: 'Globemallow', kind: 'Flower', note: 'Orange cups on silvery leaves, happy in full sun and heat.' },
 		{ slug: 'rubber-rabbitbrush', name: 'Rubber rabbitbrush', kind: 'Shrub', note: 'Gold flowers in fall when everything else is done.' },
 		{ slug: 'apache-plume', name: 'Apache plume', kind: 'Shrub', note: 'White flowers, then feathery pink seed heads that glow in low sun.' },
