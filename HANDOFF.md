@@ -129,6 +129,8 @@ Keep the two JSON copies in sync.
 * npm 11 holds back install scripts for `esbuild` and `workerd` (wrangler's runtime). Dev and
   `npm run build` work without them; if `wrangler dev`/`deploy` complains, run
   `npm install-scripts approve workerd esbuild`.
+* Re-running `scripts/setup.sh` (it does `npm ci`) under a running dev server leaves Vite with
+  stale optimized deps ("504 Outdated Optimize Dep", blank maps). Restart the dev server.
 * Headless screenshots: Chrome's `--virtual-time-budget` stalls the MapLibre worker so the maps
   look empty. Use puppeteer with a real wait (worked fine).
 * Phase 2 items from `CLAUDE.md` not built: before/after NAIP-year comparison for a converted
