@@ -204,9 +204,8 @@ text(s, 0.75, 4.55, 6.0, 1.2, "Every lawn in Utah, measured from the air. What i
      size=20, color=MUTED, line=1.15)
 text(s, 0.75, 6.25, 6.4, 0.5, [[("Adam Fortuna", {"bold": True}), ("  ·  overwater.ing  ·  Nucleus × Startup State", {})]],
      size=16, color=INK)
-notes(s, "0:00–0:10", """
-Hi, I'm Adam Fortuna. This is Overwater.ing, with a question mark, because that's the question
-every Utah yard should be asking.
+notes(s, "0:00–0:05", """
+Hi, I'm Adam Fortuna. This is Overwater.ing. Question mark.
 """)
 
 # 2. The story
@@ -229,13 +228,11 @@ text(s, 0.75, 5.3, 8.0, 1.2, [[("Nobody could tell me. ", {"bold": True}), ("Not
      size=24, line=1.1)
 png(s, ART / "grass.png", 10.9, 4.95, w=1.6)
 png(s, ART / "drop.png", 10.2, 5.65, w=0.62)
-notes(s, "0:10–0:30", """
-Back in July I went to Perspectives Over Pints at Fisher Brewing. The Yard Farmer gave the talk,
-about where Utah's water goes. Most of it goes on grass, and the state will actually pay you to
-rip the grass out and put in native plants.
-I was hooked enough that we booked our own yard consult with them for November.
-But my first question was simple: how much lawn do I have, and how much water does it really
-need? Nobody could tell me. Not for my lot, and not for any lot in Utah.
+notes(s, "0:05–0:30", """
+In July I went to Perspectives Over Pints at Fisher Brewing, and The Yard Farmer gave the talk.
+Most of Utah's water goes on grass, and the state will pay you to replace it. We booked our own
+yard consult for November. But my first question was: how much lawn do I have, and what does it
+really need? Nobody could tell me.
 """)
 
 # 3. Where the water goes
@@ -249,11 +246,9 @@ text(s, 0.75, 5.35, 9.0, 0.9, [[("500,993 acre-feet a year ", {"bold": True, "co
                                 ("on Utah's residential yards alone.", {})]], size=22)
 png(s, ART / "sprinkler.png", 9.75, 2.35, w=3.3)
 source(s, "Sources: USU Extension citing Utah DWR (60%, 500,993 AF/yr, 2021 data); USU Institute for Land, Water & Air, 2025 (96% of M&I depletion); Utah DWR GSL Basin M&I report, Aug 2025.")
-notes(s, "0:30–0:45", """
-Here's the problem in two numbers. About 60 percent of Utah's city water goes outdoors, mostly on
-grass. And because indoor water goes back to the treatment plant and the river, outdoor watering
-is 96 percent of what our cities actually use up. That's half a million acre-feet a year on
-residential yards alone.
+notes(s, "0:30–0:42", """
+About 60 percent of Utah's city water goes outdoors. And since indoor water flows back to the
+river, outdoor watering is 96 percent of what our cities use up.
 """)
 
 # 4. The lake and the AI build-out
@@ -280,13 +275,10 @@ text(s, 7.1, 4.0, 5.3, 2.0, [
 text(s, 0.75, 6.2, 11.8, 0.5, "Every new megawatt has to find its water somewhere. The biggest place to find it is the yard.",
      size=18, bold=True, color=INK)
 source(s, "Sources: Utah News Dispatch / USGS gauge (lake level); GSL Strategic Plan (inflow need); Utah Exec. Order 2026-03 (May 29, 2026); Deseret News, Aug 19 2026 (48 data centers); SL Tribune, Oct 20 2026 (Stratos project estimate, net depletion).")
-notes(s, "0:45–1:00", """
-Meanwhile Great Salt Lake sits at 4,190 feet, eight feet below where the healthy range starts,
-and the state's plan says it needs up to a million more acre-feet a year.
-And now the AI build-out: 48 data centers already, and since May the Governor's executive order
-says new ones can't add to the lake's depletion. One proposed campus in Box Elder County alone is
-about a thousand acre-feet a year. That water has to come from somewhere, and the biggest place
-to find it is the yard.
+notes(s, "0:42–1:00", """
+Great Salt Lake is eight feet below healthy. Meanwhile Utah has 48 data centers, and since May,
+new ones can't add to the lake's depletion. One proposed campus is about a thousand acre-feet a
+year. That water has to come from somewhere. The biggest place to find it is the yard.
 """)
 
 # 5. Utah pays, but can't see
@@ -306,9 +298,8 @@ text(s, 1.05, 5.3, 11.3, 1.15, "But nobody knows, lot by lot, how much lawn ther
      size=24, font=HEAD, bold=True, anchor=MSO_ANCHOR.MIDDLE, line=1.0)
 source(s, "Sources: Utah Water Savers program rates (checked Oct 27 2026); Utah DWR turf buyback results 2024; Sowby et al., BYU 2022.")
 notes(s, "1:00–1:10", """
-The state already pays people to fix this: up to three dollars a square foot, seven million
-dollars last year. About half of us overwater. But nobody knows, lot by lot, how much lawn
-there is or what it actually needs. So I built it.
+The state already pays up to three dollars a square foot to replace grass. But nobody knows, lot
+by lot, how much lawn there is. So I built it.
 """)
 
 # 6. Demo
@@ -365,9 +356,8 @@ text(s, 0.75, 5.75, 11.8, 0.9, [[("Built on real data: ", {"bold": True}),
      size=18, line=1.15)
 source(s, "Greenspace comparison: Utah DWRe Greenspace 2024 (NDVI ≥ 0.15) vs. our lawn + tree canopy for ZIP 84102: 189.2 vs 170.2 acres. Data shared by Jack Hinzman, Senior GIS Analyst, DWRe. Method: RESULTS.md, Run 7.")
 notes(s, "3:00–3:10", """
-This is live today. Twelve thousand eight hundred lots precomputed, any address in all 29
-counties measured on demand, and when we checked against the state's own Greenspace model, lot
-by lot, we track it with a correlation of 0.77.
+It's live: twelve thousand eight hundred lots precomputed, any address in all 29 counties
+measured on demand, and it tracks the state's own Greenspace model lot by lot.
 """)
 
 # 8. Hard tech
@@ -396,15 +386,11 @@ for r, (label, c, items) in enumerate(rows):
 text(s, 0.75, 6.4, 11.8, 0.5, [[("Runs in the browser and on Cloudflare's edge. ", {"bold": True}),
                                ("No GIS desktop, no per-lot cost: a new address is measured in seconds.", {})]], size=16)
 notes(s, "3:10–3:40", """
-Under the hood: USDA's 60-centimeter, four-band aerial imagery, haze-corrected NDVI to find what's
-growing, Meta's LiDAR-derived tree heights read straight out of cloud-optimized GeoTIFFs to pull
-out trees, and building footprints. That gives turf polygons for each lot, computed in the
-browser and on Cloudflare's edge.
-Then gridMET reference evapotranspiration and the FAO-56 method give the water the lawn needs,
-tied to the state's weekly watering guide, which becomes a schedule.
-And we close the loop: an open API and a calendar that a sprinkler controller follows, OpenSprinkler
-today and Rachio next. Claude reads water bills so we can measure the before and after, and every
-correction someone makes becomes a training label for a real segmentation model.
+Under the hood: 60-centimeter aerial imagery, haze-corrected NDVI to find what's growing, Meta's
+LiDAR tree heights to pull out trees, and building footprints, all computed in the browser and
+on Cloudflare's edge. Then local weather and the FAO-56 method give what the lawn needs, tied to
+the state's weekly guide. And we close the loop: a calendar and API the sprinkler controller
+follows. Claude reads bills to measure the result, and every correction trains our model.
 """)
 
 # 9. Water = energy = AI headroom
@@ -426,11 +412,9 @@ text(s, 0.75, 5.5, 11.8, 0.9, [[("Per home it's small (~30 kWh a year). ", {"bol
                                ("At district and state scale, verified yard savings are how Utah grows AI without draining the lake.", {})]],
      size=18, line=1.15)
 source(s, "Sources: EPRI via ACEEE 2009 (650 kWh/AF, range 260–880); EIA Utah profile 2024 (1,322 lb CO₂/MWh); USU Extension citing DWR (500,993 AF/yr); SL Tribune Oct 20 2026 (Stratos estimate). Saved water can increase potential flows to the lake; it may be reused upstream.")
-notes(s, "3:40–3:55", """
-Water is energy: about 650 kilowatt-hours to treat and deliver every acre-foot. Per home that's
-small, so we pitch it at scale: two tenths of one percent of Utah's residential outdoor water is
-one entire data-center campus. Verified yard savings are how Utah grows AI without draining
-the lake.
+notes(s, "3:40–3:52", """
+Water is energy: about 650 kilowatt-hours per acre-foot. And two tenths of a percent of Utah's
+yard water equals one entire data-center campus.
 """)
 
 # 10. Who pays
@@ -458,14 +442,11 @@ for i, (n, head, art, body, foot) in enumerate(cols):
     text(s, x + 0.3, 3.5, 3.2, 2.3, body, size=15.5, line=1.15)
     text(s, x + 0.3, 5.95, 3.2, 0.65, foot, size=15, bold=True, color=WATER, line=1.05)
 source(s, "Districts already named on the site: Central Utah, Jordan Valley, Weber Basin, Washington County, and the statewide program.")
-notes(s, "3:55–4:20", """
-Who pays. First, water districts: they already spend money on rebate outreach. We hand them a
-ranked list of the lots with the most lawn to replace and the biggest savings, and we prove it
-with a metered before-and-after pilot.
-Second, data centers. Under the executive order they need offsets, and hyperscalers already fund
-"water positive" projects. We're the measurement and verification layer that turns that money
-into verified acre-feet.
-Third, homeowners: they're the distribution and the ground truth.
+notes(s, "3:52–4:15", """
+Who pays? Water districts first: they already spend on rebate outreach, and we hand them the
+lots with the most to save, proven with a metered pilot. Then data centers, which now need
+offsets: we're the verification layer that turns their money into real acre-feet. Homeowners are
+the distribution and the ground truth.
 """)
 
 # 11. What $10K unlocks
@@ -490,12 +471,10 @@ text(s, 8.55, 2.8, 3.8, 3.6, [
     [("Utah DWRe GIS ", {"bold": True}), ("shared the state's Greenspace model; we validated against it.", {})],
     [("[Confirm with Adam] ", {"bold": True, "color": CORAL}), ("Outreach to districts and controller makers going out this week.", {})],
 ], size=16, line=1.15, after=12)
-notes(s, "4:20–4:42", """
-Ten thousand dollars gets us statewide: every Utah lot precomputed and hosted, a trained lawn
-model built on our users' corrections and the state's own Greenspace data, a district pilot
-with real meter data, and partner access to the big smart-controller platforms.
-What's already moving: it's live, and the state's GIS team shared their Greenspace model with
-us, which is how we validated it.
+notes(s, "4:15–4:40", """
+Ten thousand dollars takes it statewide: every Utah lot precomputed, a trained lawn model, a
+district pilot with real meter data, and integrations with the big smart controllers. It's
+already live, and the state's GIS team shared their data with us to validate it.
 (DRAFT split: Adam to confirm the dollar amounts and the outreach line before presenting.)
 """)
 
@@ -511,10 +490,10 @@ text(s, 0.75, 3.05, 8.0, 1.5, [
 ], size=20, line=1.15, after=8)
 png(s, qr("https://overwater.ing"), 9.75, 0.85, w=2.6)
 text(s, 9.75, 3.5, 2.6, 0.4, "overwater.ing", size=18, font=HEAD, bold=True, align=PP_ALIGN.CENTER)
-notes(s, "4:42–5:00", """
-So here's the ask: ten thousand dollars to go statewide and run the first district pilot, and
-introductions to a water district's conservation team and a data-center sustainability lead.
-And one more thing: take out your phone and type your address at overwater.ing. Thank you.
+notes(s, "4:40–5:00", """
+So: ten thousand dollars to go statewide and run a district pilot, and introductions to a water
+district and a data-center sustainability team. And right now, take out your phone and type
+your address at overwater.ing. Thank you.
 """)
 
 # ---------- backup / appendix ----------

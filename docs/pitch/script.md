@@ -5,54 +5,45 @@ or edit freely here once Adam has the deck in Google Slides. Target: 5:00. Demo 
 
 | # | Slide | Time |
 |---|---|---|
-| 1 | Title | 0:00–0:10 |
-| 2 | How I got here | 0:10–0:30 |
-| 3 | Where the water goes | 0:30–0:45 |
-| 4 | The lake and the AI build-out | 0:45–1:00 |
+| 1 | Title | 0:00–0:05 |
+| 2 | How I got here | 0:05–0:30 |
+| 3 | Where the water goes | 0:30–0:42 |
+| 4 | The lake and the AI build-out | 0:42–1:00 |
 | 5 | Utah pays, but can't see the yards | 1:00–1:10 |
 | 6 | Live demo | 1:10–3:00 |
 | 7 | Built, live, checked | 3:00–3:10 |
 | 8 | How it works | 3:10–3:40 |
-| 9 | Water, energy, AI | 3:40–3:55 |
-| 10 | Who pays | 3:55–4:20 |
-| 11 | What $10K unlocks | 4:20–4:42 |
-| 12 | The ask | 4:42–5:00 |
+| 9 | Water, energy, AI | 3:40–3:52 |
+| 10 | Who pays | 3:52–4:15 |
+| 11 | What $10K unlocks | 4:15–4:40 |
+| 12 | The ask | 4:40–5:00 |
 
-## 0:00–0:10 · Slide 1: Title
+## 0:00–0:05 · Slide 1: Title
 
-Hi, I'm Adam Fortuna. This is Overwater.ing, with a question mark, because that's the question
-every Utah yard should be asking.
+Hi, I'm Adam Fortuna. This is Overwater.ing. Question mark.
 
-## 0:10–0:30 · Slide 2: How I got here
+## 0:05–0:30 · Slide 2: How I got here
 
-Back in July I went to Perspectives Over Pints at Fisher Brewing. The Yard Farmer gave the talk,
-about where Utah's water goes. Most of it goes on grass, and the state will actually pay you to
-rip the grass out and put in native plants.
-I was hooked enough that we booked our own yard consult with them for November.
-But my first question was simple: how much lawn do I have, and how much water does it really
-need? Nobody could tell me. Not for my lot, and not for any lot in Utah.
+In July I went to Perspectives Over Pints at Fisher Brewing, and The Yard Farmer gave the talk.
+Most of Utah's water goes on grass, and the state will pay you to replace it. We booked our own
+yard consult for November. But my first question was: how much lawn do I have, and what does it
+really need? Nobody could tell me.
 
-## 0:30–0:45 · Slide 3: Where the water goes
+## 0:30–0:42 · Slide 3: Where the water goes
 
-Here's the problem in two numbers. About 60 percent of Utah's city water goes outdoors, mostly on
-grass. And because indoor water goes back to the treatment plant and the river, outdoor watering
-is 96 percent of what our cities actually use up. That's half a million acre-feet a year on
-residential yards alone.
+About 60 percent of Utah's city water goes outdoors. And since indoor water flows back to the
+river, outdoor watering is 96 percent of what our cities use up.
 
-## 0:45–1:00 · Slide 4: The lake and the AI build-out
+## 0:42–1:00 · Slide 4: The lake and the AI build-out
 
-Meanwhile Great Salt Lake sits at 4,190 feet, eight feet below where the healthy range starts,
-and the state's plan says it needs up to a million more acre-feet a year.
-And now the AI build-out: 48 data centers already, and since May the Governor's executive order
-says new ones can't add to the lake's depletion. One proposed campus in Box Elder County alone is
-about a thousand acre-feet a year. That water has to come from somewhere, and the biggest place
-to find it is the yard.
+Great Salt Lake is eight feet below healthy. Meanwhile Utah has 48 data centers, and since May,
+new ones can't add to the lake's depletion. One proposed campus is about a thousand acre-feet a
+year. That water has to come from somewhere. The biggest place to find it is the yard.
 
 ## 1:00–1:10 · Slide 5: Utah pays, but can't see the yards
 
-The state already pays people to fix this: up to three dollars a square foot, seven million
-dollars last year. About half of us overwater. But nobody knows, lot by lot, how much lawn
-there is or what it actually needs. So I built it.
+The state already pays up to three dollars a square foot to replace grass. But nobody knows, lot
+by lot, how much lawn there is. So I built it.
 
 ## 1:10–3:00 · Slide 6: Live demo
 
@@ -75,53 +66,41 @@ and water district this lot is in.
 
 ## 3:00–3:10 · Slide 7: Built, live, checked
 
-This is live today. Twelve thousand eight hundred lots precomputed, any address in all 29
-counties measured on demand, and when we checked against the state's own Greenspace model, lot
-by lot, we track it with a correlation of 0.77.
+It's live: twelve thousand eight hundred lots precomputed, any address in all 29 counties
+measured on demand, and it tracks the state's own Greenspace model lot by lot.
 
 ## 3:10–3:40 · Slide 8: How it works
 
-Under the hood: USDA's 60-centimeter, four-band aerial imagery, haze-corrected NDVI to find what's
-growing, Meta's LiDAR-derived tree heights read straight out of cloud-optimized GeoTIFFs to pull
-out trees, and building footprints. That gives turf polygons for each lot, computed in the
-browser and on Cloudflare's edge.
-Then gridMET reference evapotranspiration and the FAO-56 method give the water the lawn needs,
-tied to the state's weekly watering guide, which becomes a schedule.
-And we close the loop: an open API and a calendar that a sprinkler controller follows, OpenSprinkler
-today and Rachio next. Claude reads water bills so we can measure the before and after, and every
-correction someone makes becomes a training label for a real segmentation model.
+Under the hood: 60-centimeter aerial imagery, haze-corrected NDVI to find what's growing, Meta's
+LiDAR tree heights to pull out trees, and building footprints, all computed in the browser and
+on Cloudflare's edge. Then local weather and the FAO-56 method give what the lawn needs, tied to
+the state's weekly guide. And we close the loop: a calendar and API the sprinkler controller
+follows. Claude reads bills to measure the result, and every correction trains our model.
 
-## 3:40–3:55 · Slide 9: Water, energy, AI
+## 3:40–3:52 · Slide 9: Water, energy, AI
 
-Water is energy: about 650 kilowatt-hours to treat and deliver every acre-foot. Per home that's
-small, so we pitch it at scale: two tenths of one percent of Utah's residential outdoor water is
-one entire data-center campus. Verified yard savings are how Utah grows AI without draining
-the lake.
+Water is energy: about 650 kilowatt-hours per acre-foot. And two tenths of a percent of Utah's
+yard water equals one entire data-center campus.
 
-## 3:55–4:20 · Slide 10: Who pays
+## 3:52–4:15 · Slide 10: Who pays
 
-Who pays. First, water districts: they already spend money on rebate outreach. We hand them a
-ranked list of the lots with the most lawn to replace and the biggest savings, and we prove it
-with a metered before-and-after pilot.
-Second, data centers. Under the executive order they need offsets, and hyperscalers already fund
-"water positive" projects. We're the measurement and verification layer that turns that money
-into verified acre-feet.
-Third, homeowners: they're the distribution and the ground truth.
+Who pays? Water districts first: they already spend on rebate outreach, and we hand them the
+lots with the most to save, proven with a metered pilot. Then data centers, which now need
+offsets: we're the verification layer that turns their money into real acre-feet. Homeowners are
+the distribution and the ground truth.
 
-## 4:20–4:42 · Slide 11: What $10K unlocks
+## 4:15–4:40 · Slide 11: What $10K unlocks
 
-Ten thousand dollars gets us statewide: every Utah lot precomputed and hosted, a trained lawn
-model built on our users' corrections and the state's own Greenspace data, a district pilot
-with real meter data, and partner access to the big smart-controller platforms.
-What's already moving: it's live, and the state's GIS team shared their Greenspace model with
-us, which is how we validated it.
+Ten thousand dollars takes it statewide: every Utah lot precomputed, a trained lawn model, a
+district pilot with real meter data, and integrations with the big smart controllers. It's
+already live, and the state's GIS team shared their data with us to validate it.
 (DRAFT split: Adam to confirm the dollar amounts and the outreach line before presenting.)
 
-## 4:42–5:00 · Slide 12: The ask
+## 4:40–5:00 · Slide 12: The ask
 
-So here's the ask: ten thousand dollars to go statewide and run the first district pilot, and
-introductions to a water district's conservation team and a data-center sustainability lead.
-And one more thing: take out your phone and type your address at overwater.ing. Thank you.
+So: ten thousand dollars to go statewide and run a district pilot, and introductions to a water
+district and a data-center sustainability team. And right now, take out your phone and type
+your address at overwater.ing. Thank you.
 
 ## Backup slides
 
