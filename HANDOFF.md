@@ -54,6 +54,23 @@ logo, and **any address in Utah**. All committed and deployed to https://overwat
   tapped); on-demand haze estimate differs slightly from the pipeline's per-scene value;
   very large parcels (> ~750 m across) are refused; `/api/*` has no rate limiting.
 
+## 2026-10-27 (day 2): watering plan
+
+* Step 1 is now "1 · Today" (Adam: "free" implied something else costs money); "free" also
+  dropped from the home kicker.
+* With a bill entered, step 1 adds **"Optimize your watering for next year"**: one action and
+  its gallons a year (`headline()` in `src/lib/watering.ts`, assuming spray heads + a basic
+  timer), linking to **`/watering`** (`?lawn&eto&out&back`). That page: choose sprinkler type
+  (spray / rotor / rotary nozzle / hose-end) and controller (timer / smart / by hand), get the
+  top fix with gallons saved, a bill-vs-well-run-system chart by month, a month-by-month
+  schedule (days a week, cycle-and-soak minutes per zone) from local reference ET, and more
+  fixes ranked by gallons. Typical precipitation rates and distribution uniformity per
+  sprinkler type are ballpark industry values (in `SYSTEMS`); savings = bill minus a well-run
+  system (or the "set for July, leave it all season" habit when there's no bill), plus the
+  evenness gain from spray -> rotary nozzles. Cited: EPA WaterSense (broken head up to 25,000
+  gal/season), Utah Water Savers smart controller rebate up to $100 (checked 2026-10-27),
+  Utah's Weekly Lawn Watering Guide.
+
 ## Next session (start here)
 
 Run `scripts/resume.sh` first. It checks that `EXTERNAL_ANTHROPIC_API_KEY`,

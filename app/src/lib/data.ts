@@ -1,6 +1,7 @@
 import type * as GeoJSON from 'geojson';
 import etoSlc from './eto_slc_ut.json';
 import etoSandy from './eto_sandy_ut.json';
+import etoUtah from './eto_utah.json';
 import type { EtoTable } from './water.ts';
 export type Parcel = {
 	parcel_id: string;
@@ -43,6 +44,14 @@ export const DATASETS: Dataset[] = [
 ];
 
 export const etoFor = (ds: Dataset): EtoTable => (ds.eto === 'slc' ? etoSlc : etoSandy) as EtoTable;
+
+/** 'slc' | 'sandy' (prebuilt datasets) or a county name (eto_utah.json points). */
+export function etoByKey(key: string): EtoTable & { annual_eto_in: number; place: string } {
+	if (key === 'slc') return { ...(etoSlc as unknown as EtoTable), annual_eto_in: etoSlc.annual_eto_in, place: 'Salt Lake City' };
+	if (key === 'sandy') return { ...(etoSandy as unknown as EtoTable), annual_eto_in: etoSandy.annual_eto_in, place: 'Sandy' };
+	const p = etoUtah.points.find((x) => x.county === key) ?? etoUtah.points.find((x) => x.county === 'Salt Lake')!;
+	return { eto_in: p.eto_in, precip_in: p.precip_in, annual_eto_in: p.annual_eto_in, place: p.place } as unknown as EtoTable & { annual_eto_in: number; place: string };
+}
 
 export type IndexDataset = { id: string; imagery: { source: string; date: string; gsd_m: number }; parcels: number; lawn_sqft: number };
 // [address, dataset, parcel_id, lawn_sqft]

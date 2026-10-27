@@ -6,7 +6,7 @@
 	type Way = { kicker: string; title: string; body: string };
 	let { ways }: { ways?: Way[] } = $props();
 	const DEFAULT: Way[] = [
-		{ kicker: '1 · Free, today', title: 'Water what it needs', body: 'Most Utah lawns get 6–12 inches more water a year than they use. Add your bill and we show your gap.' },
+		{ kicker: '1 · Today', title: 'Water what it needs', body: 'Most Utah lawns get 6–12 inches more water a year than they use. Add your bill and we show your gap.' },
 		{ kicker: '2 · One time', title: 'Take the rebate', body: "Utah Water Savers pays $1.50–$3 per square foot of lawn you replace in most Wasatch Front cities. Get approved first." },
 		{ kicker: '3 · Every year', title: 'Go native', body: 'Water-wise Utah landscape needs roughly a third of the water turf does, every summer after.' }
 	];

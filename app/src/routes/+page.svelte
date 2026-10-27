@@ -66,7 +66,7 @@
 </script>
 
 <section class="hero">
-	<p class="kicker">Any home in Utah · 2024 aerial imagery · free</p>
+	<p class="kicker">Any home in Utah · 2024 aerial imagery</p>
 	<h1>Is your lawn getting more water than it needs?</h1>
 	<p class="lede">Type any Utah address. We find the grass on your lot from 2024 aerial imagery, you fix anything we got wrong, and we show three ways to save: water what it needs, take Utah's rebate, or go native.</p>
 

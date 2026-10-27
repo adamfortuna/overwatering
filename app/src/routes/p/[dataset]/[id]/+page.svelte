@@ -7,4 +7,4 @@
 
 <svelte:head><title>{data.parcel.address} · Overwater.ing?</title></svelte:head>
 
-<ParcelView ds={data.ds} eto={etoFor(data.ds)} parcel={data.parcel} regions={data.regions} imagery={data.imagery} />
+<ParcelView ds={data.ds} eto={etoFor(data.ds)} parcel={data.parcel} regions={data.regions} imagery={data.imagery} etoKey={data.ds.eto} />

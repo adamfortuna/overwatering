@@ -7,6 +7,7 @@
 	import { loadLabels, saveLabel } from './labels.ts';
 	import type { Parcel, RegionCls, RegionFeature } from './data.ts';
 	import CountUp from './CountUp.svelte';
+	import { headline } from './watering.ts';
 	import Sprinkler from './art/Sprinkler.svelte';
 	import Coin from './art/Coin.svelte';
 	import Grass from './art/Grass.svelte';
@@ -20,7 +21,8 @@
 		parcel,
 		regions: initialRegions,
 		imagery,
-		imageUrl
+		imageUrl,
+		etoKey
 	}: {
 		ds: ViewDataset;
 		eto: EtoTable & { annual_eto_in?: number };
@@ -28,6 +30,8 @@
 		regions: { type: 'FeatureCollection'; features: RegionFeature[] };
 		imagery: { source: string; date: string; gsd_m: number };
 		imageUrl?: string;
+		/** Which reference-ET table /watering should use: 'slc', 'sandy', or a county name. */
+		etoKey: string;
 	} = $props();
 	const CYCLE: RegionCls[] = ['lawn', 'other', 'converted', 'canopy'];
 	const COLORS: Record<RegionCls, string> = { lawn: '#4ade80', canopy: '#15803d', building: '#ff7a6b', other: '#8b93ad', converted: '#4cc9f0' };
@@ -89,6 +93,12 @@
 		for (const m of j.months) months[m.month] = m.usage;
 		billNote = `Read ${j.months.length} months from ${j.provider} in ${j.unit}. ${j.notes ?? ''}`;
 	}
+	let plan = $derived(bill ? headline(lawn, eto, bill.total) : null);
+	let planHref = $derived.by(() => {
+		const q = new URLSearchParams({ lawn: String(Math.round(lawn)), eto: etoKey, back: typeof location === 'undefined' ? '/' : location.pathname });
+		if (bill) q.set('out', Object.entries(bill.outdoor).map(([m, g]) => `${m}:${Math.round(g)}`).join(','));
+		return `/watering?${q}`;
+	});
 	const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 </script>
 
@@ -121,7 +131,7 @@
 
 		<div class="card door">
 			<svg class="corner" viewBox="0 0 130 130" aria-hidden="true"><Sprinkler x={20} y={-26} scale={0.92} spray={false} /></svg>
-			<p class="kicker">1 · Free, today</p>
+			<p class="kicker">1 · Today</p>
 			<h3>Water what it needs</h3>
 			{#if bill}
 				{#if bill.gap > 0}
@@ -131,8 +141,18 @@
 					<div class="big ok">Right on target</div>
 					<p class="muted small">Your outdoor use ({fmt(bill.total)} gal/yr) is at or under what this lawn needs ({fmt(need.gal)}). Nice.</p>
 				{/if}
+				{#if plan}
+					<div class="plan">
+						<p class="plan-kicker">Optimize your watering for next year</p>
+						<p class="plan-line">
+							<b>{plan.action}</b>{#if plan.gallons > 0}{' '}and save about <b class="save">{fmt(plan.gallons)} gallons</b> a year{/if}.
+						</p>
+						<a class="plan-cta" href={planHref}>Build my watering plan →</a>
+					</div>
+				{/if}
 			{:else}
 				<p class="muted">Add your water bill to see how far over the lawn's need you are. Most Utah lawns get 6–12 inches a year more than they use.</p>
+				<p class="small"><a href={planHref}>Or tune up your sprinklers now →</a></p>
 			{/if}
 			<details>
 				<summary>{bill ? 'Edit your bill' : 'Add your water bill'}</summary>
@@ -203,4 +223,9 @@
 	.months label { font-size: 0.8rem; color: var(--muted); }
 	.months input, select { width: 100%; box-sizing: border-box; padding: 6px 8px; border-radius: 10px; }
 	.file { display: block; margin: 10px 0; font-size: 0.92rem; }
+	.plan { margin-top: 12px; background: var(--aqua); border: 2px solid #a9e1f8; border-radius: 16px; padding: 12px 14px; }
+	.plan-kicker { margin: 0; font-family: var(--display); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--water); }
+	.plan-line { margin: 4px 0 8px; }
+	.plan-cta { display: inline-block; font-family: var(--display); font-weight: 600; color: #fff; background: var(--water); border-radius: 999px; padding: 6px 16px; text-decoration: none; box-shadow: 0 3px 0 #1567a8; }
+	.plan-cta:hover { background: #1a78c2; }
 </style>

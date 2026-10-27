@@ -36,7 +36,7 @@
 <svelte:head><title>{result ? result.parcel.address : 'Measuring a lawn'} · Overwater.ing?</title></svelte:head>
 
 {#if result && ds}
-	<ParcelView {ds} eto={result.eto} parcel={result.parcel} regions={result.regions} imagery={result.imagery} imageUrl={result.imageUrl} />
+	<ParcelView {ds} eto={result.eto} parcel={result.parcel} regions={result.regions} imagery={result.imagery} imageUrl={result.imageUrl} etoKey={data.county} />
 	<p class="muted small fine">
 		Measured just now from 2024 aerial imagery{result.canopyMissing ? ' (tree-height data was unavailable, so trees may be counted as lawn)' : ''}. Water need uses {result.eto.place}'s weather ({result.eto.annual_eto_in} in/yr reference ET).
 		{#if !/resid/i.test(result.propClass)}This parcel is classed "{result.propClass}", not residential.{/if}
