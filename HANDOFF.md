@@ -1,83 +1,83 @@
-# Handoff: Utah Lawn Water Lens
+# Handoff: Overwater.ing?
 
 Updated 2026-10-27 (Conductor cloud workspace). Deadline: **Wed Oct 28, 5:00 PM Mountain**.
-Everything is on `main` now (the `spike/phase-0` branch was squashed in, dropping the ~80 MB of
-PNGs its early commits tracked). `RESULTS.md` has the numbers; this file is the to-do list and
-the gotchas. There is no `CLAUDE.md` in the repo (the old handoff referred to one); the product
-brief lives in `README.md` + `RESULTS.md`.
+Work goes straight to `main` (Adam asked for no PRs). `RESULTS.md` has the numbers; this file
+is the to-do list and the gotchas. The product brief is `README.md` + `RESULTS.md`.
 
-## Getting it running (Conductor or anywhere)
+**Name and brand:** Overwater.ing? (domain overwater.ing). Theme is a subtle game show: midnight
+"stage" palette, marquee-gold accents, a slow chase of bulbs under the nav, Bricolage Grotesque
+display type (self-hosted via @fontsource, so no font CDN), the lot's lawn as **"The reveal"**
+(numbers roll up), and the three savings layers as **Door 1 / 2 / 3**. The home page has a
+neighborhood **Scoreboard** (totals only; never rank households).
 
-`.conductor/settings.toml` runs `scripts/setup.sh` on workspace creation: installs `uv`, makes
-`.venv` (Python 3.12) with `pipeline/requirements.txt`, `npm ci` in `app/`, and builds the two
-app datasets if `app/static/data/` is empty (~2 min, needs network; `SKIP_DATA=1` to skip).
-Run actions: **dev** (Vite on `$CONDUCTOR_PORT` or 5173, bound to 0.0.0.0, `.conductor.show`
-allowed), **test** (pytest + svelte-check), **data** (`scripts/build-data.sh`).
+## Getting it running (Mac via Conductor, cloud, or plain shell)
 
-In a cloud workspace, share the dev server with `conductor preview set --port 5173`.
+`.conductor/settings.toml` runs `scripts/setup.sh` on workspace creation: checks Node ≥ 20.19,
+installs `uv`, makes `.venv` (Python 3.12) with `pipeline/requirements.txt`, `npm ci` in `app/`,
+and builds the **84102** dataset if missing (~2 min, needs network). `SETUP_DATASETS="..."`
+picks others, `SKIP_DATA=1` skips. Run actions: **dev** (localhost:`$CONDUCTOR_PORT` on the
+Mac; 0.0.0.0:5173 in the cloud with `.conductor.show` allowed), **test** (pytest +
+svelte-check), **data** (`scripts/build-data.sh`, all datasets, ~10 min).
+
+Cloud: share the dev server with `conductor preview set --port 5173`. Local runs have **not**
+been verified on a Mac yet (only the local-mode dev command was smoke-tested here).
 
 ## State in one table
 
 | Piece | Status | Where |
 |---|---|---|
-| Python pipeline | Working end to end on 2024 60 cm Utah NAIP | `pipeline/`, `scripts/build-data.sh` |
-| Imagery | **NAIP 2024 (2024-07-07) via USDA `conus_naip` ImageServer**, default `--imagery usda` | `pipeline/imagery.py::fetch_naip_usda` |
-| Planetary Computer NAIP | Works, but Utah ends at 2021 = November leaf-off; 2018 is the newest summer scene | `--imagery pc [--naip-year 2018]` |
-| NDVI haze correction | Dark-object subtraction for uint8 NAIP; keeps the 0.30 threshold valid on hazy 2024 | `pipeline/common.py::Imagery.ndvi` |
-| Utah parcels, Sandy fabric | Working | `--parcels sandy` |
-| Utah parcels, UGRC SLCo LIR | **Working** (URL fixed to `Parcels_SaltLake_LIR`; field map was right) | `--parcels ugrc` |
-| Overture footprints, Meta CHM | Working | `pipeline/buildings.py`, `canopy.py` |
-| Sandy at 60 cm | **Done**: 10.7 lawn acres / 415 parcels (S2 said 33.2 for the same parcels) | `RESULTS.md` Run 3 |
-| 84102 at 60 cm incl. 816 S 600 E | **Done**: lot = 1,329 sq ft lawn + 1,757 under trees | `RESULTS.md` Run 4 |
-| Validation vs Adam's tape | **Not done: waiting on the measurement** | Step 1 below |
-| Water math | Done, 18 tests pass | `pipeline/water.py`, `savings.py`, `pipeline/tests/` |
-| Rebate table | **Verified 2026-10-27** against provider pages (rates changed, see Step 3 notes) | `pipeline/data/rebate_programs.json` (+ app copy) |
-| SvelteKit app | Runs in Conductor with `sandy` + `home` datasets; `npm run check` clean; build OK | `app/` |
-| Cloudflare deploy | **Not done**: no Cloudflare login or `ANTHROPIC_API_KEY` in the workspace | Step 2 below |
+| Datasets | **84102, Central City, Liberty Wells, Downtown, Avenues, Sandy** (12.8k searchable addresses) | `scripts/build-data.sh`, `app/static/data/` (gitignored) |
+| Neighborhood AOIs | SLC community council polygons + UGRC 84102 zip, clipped to residential extent | `pipeline/aoi.py`, `pipeline/data/aoi/*.geojson` |
+| Pipeline | `--aoi <id>` polygon runs; USDA imagery in 2048 px tiles (bigger tiles 500) | `pipeline/run_spike.py`, `imagery.py` |
+| Imagery | NAIP 2024 (2024-07-07) via USDA `conus_naip`, haze-corrected NDVI | see `RESULTS.md` |
+| Reference ET | SLC table added (50.4 in/yr, gridMET 2023–25); Sandy stays 54.0 | `pipeline/data/eto_slc_ut.json`, app `etoFor()` |
+| 816 S 600 E | 1,355 sq ft lawn + 1,739 under trees (84102 run) | `RESULTS.md` Run 5 |
+| Validation vs Adam's tape | **Not done: waiting on the measurement** | Step 1 |
+| Rebate table | Verified 2026-10-27 | Step 3 |
+| App | Rebranded; cross-neighborhood search; `/how`; check clean; build OK | `app/` |
+| Bill reading | Route uses `EXTERNAL_ANTHROPIC_API_KEY`, `claude-opus-5-5` via `beta.messages.parse` with `fallbacks: 'default'`; typed errors fall back to manual entry | `app/src/routes/api/bill/+server.ts` |
+| Bill reading tested? | **Wiring only**: the var is set in Conductor but **empty** in this workspace, so a dummy key was used to confirm the request reaches the API (401). Sample bill for a real test: `.context/bill/sample_slc_bill.png` (not committed) | |
+| Cloudflare deploy | **Not started on purpose**: Adam wants a local demo first. `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` are present | Step 2 |
 
 ## Step 1: Adam's lot validation (the number the pitch needs)
 
-Pipeline side is done. Waiting on Adam's tape measure for **816 S 600 E** (parcel
-16072770170000, 6,997 sq ft). Ask for: total grass, **grass under trees separately**, and
-whether the park strip was included.
+Waiting on Adam's tape measure for **816 S 600 E** (parcel 16072770170000, 6,997 sq ft). Ask
+for: total grass, **grass under trees separately**, and whether the park strip was included.
 
 ```bash
-TRUTH_SQFT=<tape> scripts/build-data.sh home
+TRUTH_SQFT=<tape> scripts/build-data.sh 84102
 ```
 
-That adds `validation.error_pct` to `data/out/home/summary.json` (compares `lawn_sqft`). Then
-record in `RESULTS.md` Run 4, plainly, including a miss of the ±20% target:
+That adds `validation.error_pct` to `data/out/84102/summary.json` (compares `lawn_sqft`).
+Record it in `RESULTS.md` plainly, including a miss of the ±20% target:
 
-* tape (lawn in sun) vs `lawn_sqft` **1,329** (range 1,025–1,595)
-* tape (all grass incl. under trees) vs `green_sqft` **2,578** and `lawn + canopy` **3,086**
-* If the under-canopy share is large (likely: 35% of pixels in 84102 are canopy ≥2.5 m),
-  options are: count a fraction of residential canopy as lawn, lower `CANOPY_MIN_M`, or use
-  the leaf-off 2021 NAIP (November) to see grass under deciduous trees (lawns are faint
-  but visible in its CIR, see `docs/spike/naip2021_leaf_off_vs_cir.jpg`).
-* Park strip: confirmed **outside** the SLCo parcel polygon (it is right-of-way). It is visibly
-  green in the imagery. Counting it means a strip polygon between parcel front line and curb
-  (e.g. buffer the street-facing parcel edge to the Overture/UGRC road edge). Not built.
+* tape (lawn in sun) vs `lawn_sqft` **1,355** (range 1,073–1,588)
+* tape (all grass incl. under trees) vs `green_sqft` **2,660** and `lawn + canopy` **3,094**
+* If the under-canopy share is large, options: count a fraction of residential canopy as
+  lawn, lower `CANOPY_MIN_M`, or use the leaf-off 2021 NAIP (November) to see grass under
+  deciduous trees (`docs/spike/naip2021_leaf_off_vs_cir.jpg`).
+* Park strip: **outside** the parcel (right-of-way), visibly green. Counting it needs a strip
+  polygon between the parcel front line and the curb. Not built.
 
-Optional photo experiment (unchanged): 5–6 yard photos, three estimates (model blind on
-photos; model with photos + overlay; pipeline alone), tabulate against the tape.
+## Step 2: deploy (after the local demo)
 
-## Step 2: deploy
-
-Not possible from the workspace without credentials. Adam (or an agent given a
-`CLOUDFLARE_API_TOKEN` + `ANTHROPIC_API_KEY`):
+Credentials are in the workspace env. Rough plan:
 
 ```bash
 cd app && npm run build
 npx wrangler d1 create lawn-labels        # paste database_id into wrangler.jsonc
 npx wrangler d1 execute lawn-labels --remote --file=schema.sql
-npx wrangler secret put ANTHROPIC_API_KEY
-npx wrangler deploy
+npx wrangler secret put EXTERNAL_ANTHROPIC_API_KEY
+npx wrangler deploy                       # worker name is "overwater"
 ```
 
-Static data is `app/static/data/{sandy,home}` (~18 MB + ~14 MB, gitignored, built by
-`scripts/build-data.sh`). Well inside Workers' asset limits. Without D1 the labels route
-returns 501 and the client falls back to localStorage; without the key the bill route returns
-501 and the UI shows the manual 12-month grid. So a bare `wrangler deploy` still demos.
+Then the custom domain overwater.ing (is the zone on this Cloudflare account?).
+
+**Asset limits:** the six datasets are ~305 MB in ~25.8k files (a crop PNG + regions GeoJSON
+per parcel). Workers static assets allow 100,000 files per version on the **paid** plan but
+20,000 on free; 25 MiB per file either way. If the account is on free, or for headroom, put
+`app/static/data/` in R2 and serve it from the worker (or pack regions per dataset).
+Without D1 the labels route returns 501 and corrections stay in localStorage.
 
 ## Step 3: rebate follow-ups (table itself is verified)
 
@@ -99,8 +99,11 @@ Keep the two JSON copies in sync.
 
 ## Step 4: demo polish (if time)
 
-* Decide lead dataset (open question 3). Sandy has cleaner lots; 84102 is Adam's own block and
-  shows the canopy problem honestly.
+* Hillside lots in the upper Avenues: native scrub under 2.5 m can read as lawn. Spot-check a
+  few parcels there before quoting Avenues totals.
+* The parcel map is 4:3; very wide or tall lots leave dark bands. Fine for the demo.
+* Downtown has only 36 parcels: condo units are tiny stacked polygons (dropped by the 800 sq ft
+  floor) and apartments aren't `PROP_CLASS = Residential`. The dataset note says so.
 * Edge parcels: `run_spike` now keeps only parcels wholly inside the AOI. Before, a parcel cut
   by the image edge had its sliver's lawn fraction scaled to the full parcel, inflating totals
   (Sandy 13.4 → 10.7 acres, 84102 10.5 → 7.6). Enlarge the bbox if a wanted lot gets dropped.
@@ -117,9 +120,14 @@ Keep the two JSON copies in sync.
 * Tap cycle is `lawn → other → converted → canopy`; buildings are not tappable. The
   `ParcelMap.svelte` effect reads `regions` before touching the map so it tracks the prop even
   before load (this was a real bug).
-* Datasets in `app/src/lib/data.ts`: `sandy` and `home` (84102). The Philadelphia dataset was
-  dropped from the list: its inputs were local files from the earlier sandbox and cannot be
-  regenerated here, and it is not part of the Utah pitch.
+* `app/src/lib/data.ts::DATASETS` is the registry of dataset names/notes/ETo; which ones show
+  up is driven by `/data/index.json` (written by `pipeline.app_index` at the end of
+  `scripts/build-data.sh`), so unbuilt datasets just don't appear. The index also carries
+  `[address, dataset, parcel_id, lawn_sqft]` for the home-page search (~0.6 MB for 12.8k addresses).
+* 84102 overlaps Central City and East Central; search dedupes by parcel id (first dataset
+  wins, which is 84102 by sort order).
+* Bill route in dev: SvelteKit server code reads `process.env.EXTERNAL_ANTHROPIC_API_KEY`
+  (Vite dev runs in Node), `platform.env` in Workers. Restart the dev server after changing it.
 * Corrections: `POST /api/labels` `{dataset, parcel_id, region_index, cls, original_cls}`;
   `GET` returns the latest label per region. Client mirrors to `localStorage`.
 * Svelte 5 runes, SvelteKit 3, Vite 8, adapter-cloudflare 8. `npm run check`: 0 errors,
@@ -168,6 +176,6 @@ Work directly on `main`, small commits (Adam asked for no PRs). `data/`, `.venv/
 
 1. Tape-measured lawn sq ft for 816 S 600 E, with under-tree grass separately, and whether the
    park strip was included.
-2. Does the demo lead with Sandy or the 84102 neighborhood? Both are loaded.
-3. Cloudflare account/token for deploy (and an Anthropic key for bill parsing), or will you
-   deploy yourself?
+2. `EXTERNAL_ANTHROPIC_API_KEY` is empty in the cloud workspace: re-set it in Conductor (and
+   for the local run, make sure the dev server's environment has it).
+3. Is overwater.ing's DNS zone on the same Cloudflare account? Paid Workers plan (asset count)?

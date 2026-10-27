@@ -19,9 +19,13 @@ Conductor cloud workspace with open network.
   415 parcels (39.8 for all 497 incl. edge parcels); at 60 cm it is clear
   that many Sandy back yards are dry, native scrub, or xeriscape, and that 10 m pixels mixed
   lawn with trees and dirt. Treat Run 2 as superseded.
-* **Adam's neighborhood (84102) at 60 cm: 7.6 lawn acres** across 547 UGRC parcels, 35% of
+* **Adam's block (800 m box around his lot, Run 4) at 60 cm: 7.6 lawn acres** across 547 UGRC parcels, 35% of
   pixels under ≥2.5 m canopy. **816 S 600 E: 1,329 sq ft lawn** (range 1,025–1,595) plus
   **1,757 sq ft under trees**, on a 6,997 sq ft lot. Park strip is outside the parcel.
+* **Salt Lake City neighborhoods** (Run 5): 84102, Central City, Liberty Wells, Downtown and the
+  Avenues: 12.4k residential parcels and ~308 lawn acres summed across the five (84102 overlaps
+  Central City, so that double-counts some); tree canopy covers more ground
+  than lawn in every one of them.
 * **Validation against Adam's hand-measured lot: still not done** (needs the tape number).
   Expect the under-canopy share to dominate the error on this lot.
 
@@ -132,6 +136,35 @@ irrigated turf in the imagery and would need a separate right-of-way polygon to 
 
 ![816 S 600 E](docs/spike/slc_816_s_600_e.png)
 ![84102 at 60 cm](docs/spike/slc_naip2024_neighborhood.jpg)
+
+## Run 5: Salt Lake City neighborhoods (polygon AOIs), 2024 NAIP 60 cm
+
+`scripts/build-data.sh` (= `run_spike --aoi <id> --parcels ugrc --imagery usda` per neighborhood).
+AOIs are SLC community council polygons (maps.slc.gov) and the UGRC 84102 ZIP polygon, clipped
+to the extent of their residential parcels (`pipeline/aoi.py`). A parcel belongs to an AOI if
+its interior point does. Reference ET for SLC: 50.4 in/yr (gridMET 2023–25 at 816 S 600 E,
+`pipeline/data/eto_slc_ut.json`) vs 54.0 for Sandy.
+
+| Dataset | Parcels | Lawn acres (NDVI ±0.05) | Median lawn sq ft | Canopy acres | Turf need af/yr | Saved if all converted af/yr | Runtime |
+|---|---|---|---|---|---|---|---|
+| 84102 | 3,103 | 52.0 (46.5–57.7) | 508 | 117.7 | 126 | 91 | 87 s |
+| Central City | 1,092 | 17.7 (15.4–20.3) | 394 | 34.1 | 43 | 31 | 96 s |
+| Liberty Wells | 3,759 | 79.7 (69.9–90.1) | 741 | 106.6 | 193 | 139 | 113 s |
+| Downtown | 36 | 1.1 (0.8–1.4) | 333 | 0.6 | 3 | 2 | 62 s |
+| The Avenues | 4,384 | 157.8 (142.0–173.0) | 874 | 219.6 | 382 | 276 | 168 s |
+| Sandy (Run 3) | 415 | 10.7 (8.9–12.6) | 906 | 17.4 | 28 | 20 | 45 s |
+
+Confidence is high or medium for all but 1–7 parcels per neighborhood.
+
+* **816 S 600 E** in the 84102 run: 1,355 sq ft lawn (1,073–1,588), 1,739 sq ft under canopy,
+  green upper bound 2,660. Within 2% of Run 4 (different imagery tile grid).
+* **Downtown** is only 36 parcels: condo units are tiny stacked polygons that fall under the
+  800 sq ft floor, and apartment buildings aren't classed Residential. Honest, but thin.
+* **Avenues** includes the hillside subdivisions above 11th Ave. Lawn detection on those lots
+  looks right (dry slopes excluded), but native scrub under 2.5 m inside large lots can read as
+  lawn. Spot-check before quoting.
+* Canopy acres exceed lawn acres in every SLC neighborhood, so grass under trees is the
+  biggest open accuracy question for SLC (Step 1 in `HANDOFF.md`).
 
 ## NAIP year and haze notes
 
