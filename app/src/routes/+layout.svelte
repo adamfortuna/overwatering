@@ -65,6 +65,9 @@
 	}
 	:global(a) { color: var(--water); }
 	:global(h1, h2, h3) { font-family: var(--display); line-height: 1.12; margin: 0 0 0.5rem; letter-spacing: -0.005em; font-weight: 650; }
+	/* No one-word last lines: balance headings, avoid orphans in body text. */
+	:global(h1, h2, h3, figcaption) { text-wrap: balance; }
+	:global(p, li, dd) { text-wrap: pretty; }
 	:global(h1) { font-size: clamp(2.1rem, 4.6vw, 3.3rem); font-weight: 700; }
 	:global(h2) { font-size: 1.6rem; }
 	:global(button) { font: inherit; cursor: pointer; }
