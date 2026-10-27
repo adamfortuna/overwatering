@@ -1,0 +1,10 @@
+rasterio>=1.4
+geopandas>=1.0
+shapely>=2.0
+numpy
+pyarrow
+pystac-client
+planetary-computer
+pillow
+requests
+boto3
