@@ -3,7 +3,7 @@
 <script lang="ts">
 	// Delicate Arch on its slickrock bowl, with the La Sal Mountains behind.
 	// Local box ~360 x 220 with the slickrock base at y = 220.
-	let { x = 0, y = 0, scale = 1, mountains = true }: { x?: number; y?: number; scale?: number; mountains?: boolean } = $props();
+	let { x = 0, y = 0, scale = 1, mountains = true, bowl = true }: { x?: number; y?: number; scale?: number; mountains?: boolean; bowl?: boolean } = $props();
 </script>
 
 <g transform="translate({x} {y}) scale({scale})">
@@ -12,9 +12,11 @@
 		<path d="M-20 168 L40 96 L70 120 L112 66 L150 108 L176 88 L226 138 L262 104 L320 160 L380 168 Z" fill="#c9cfee" />
 		<path d="M112 66 L100 82 L108 80 L114 88 L122 79 L127 84 Z M176 88 L168 98 L176 97 L182 103 L186 98 Z" fill="#ffffff" />
 	{/if}
-	<!-- slickrock bowl -->
-	<path d="M-30 220 C10 180 90 168 180 170 C270 172 340 186 390 220 Z" fill="#f2b98a" />
-	<path d="M10 220 C60 196 120 190 180 191 C250 192 300 202 340 220 Z" fill="#eaa274" />
+	{#if bowl}
+		<!-- slickrock bowl -->
+		<path d="M-30 220 C10 180 90 168 180 170 C270 172 340 186 390 220 Z" fill="#f2b98a" />
+		<path d="M10 220 C60 196 120 190 180 191 C250 192 300 202 340 220 Z" fill="#eaa274" />
+	{/if}
 	<!-- the arch: pinched left leg, thick lintel, heavier right leg -->
 	<path
 		d="M150 188 C147 172 142 150 136 128 C129 104 128 80 140 60 C152 42 176 34 200 36 C224 38 240 54 244 80 C248 106 244 140 246 168 C247 177 249 183 252 188 L222 188 C221 170 224 140 223 114 C222 90 210 70 190 68 C170 66 158 82 154 104 C151 126 158 156 164 188 Z"

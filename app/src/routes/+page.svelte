@@ -66,6 +66,7 @@
 </script>
 
 <section class="hero">
+	<div class="hero-text">
 	<p class="kicker">Any home in Utah · 2024 aerial imagery</p>
 	<h1>Is your lawn getting more water than it needs?</h1>
 	<p class="lede">Type any Utah address. We find the grass on your lot from 2024 aerial imagery, you fix anything we got wrong, and we show three ways to save: water what it needs, take Utah's rebate, or go native.</p>
@@ -73,6 +74,7 @@
 	<div class="search">
 		<label for="q" class="sr">Your address</label>
 		<input id="q" type="search" placeholder="e.g. 603 E South Temple" bind:value={q} autocomplete="street-address" />
+		<div class="dropdown">
 		{#if hits.length || remote.length}
 			<ul class="hits">
 				{#each hits as [address, ds, id, lawn]}
@@ -100,10 +102,11 @@
 		{:else if norm(q).length >= 3 && !hits.length && !remote.length}
 			<p class="muted miss">{hasNumber(q) ? 'No Utah parcel with that address. Try just the house number and street, like "603 E South Temple".' : 'Start with the house number, like "603 E South Temple".'}</p>
 		{/if}
+		</div>
 	</div>
+	</div>
+	<div class="hero-art"><Scene variant="hero" /></div>
 </section>
-
-<div class="bleed"><Scene variant="hero" /></div>
 
 <Doors />
 
@@ -135,10 +138,15 @@
 </section>
 
 <style>
-	.hero { padding: 26px 0 0; max-width: 820px; }
+	.hero { padding: 26px 0 0; display: grid; grid-template-columns: 1fr; gap: 8px 32px; align-items: center; }
+	@media (min-width: 900px) { .hero { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); } }
+	.hero-art { max-width: 520px; width: 100%; justify-self: center; }
 	.lede { font-size: 1.15rem; color: var(--muted); max-width: 700px; }
 	.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-	.search { margin-top: 20px; position: relative; z-index: 2; }
+	.search { margin-top: 20px; position: relative; z-index: 5; }
+	/* Results float over the page instead of pushing it down. */
+	.dropdown { position: absolute; top: 100%; left: 0; right: 0; z-index: 20; max-height: min(70vh, 560px); overflow-y: auto; }
+	.dropdown .miss { background: #fff; border: 2px solid var(--line); border-radius: 16px; padding: 10px 14px; box-shadow: 0 6px 0 #d6ecf9; }
 	.search input { width: 100%; box-sizing: border-box; font-size: 1.25rem; padding: 16px 20px; border-radius: 999px; border: 3px solid var(--water-2); box-shadow: 0 6px 0 #bfe6f8; }
 	.search input:focus { outline: none; border-color: var(--water); }
 	@media (max-width: 560px) { .search input { font-size: 1.1rem; padding: 14px 18px; } }
@@ -150,7 +158,6 @@
 	.chip.alt { background: var(--lawn); }
 	.chip { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-size: 0.8rem; font-weight: 700; color: #fff; background: var(--water); border-radius: 999px; padding: 3px 12px; }
 	.miss { margin-top: 10px; }
-	.bleed { width: 100vw; margin-left: calc(50% - 50vw); margin-top: -10px; }
 	#neighborhoods { margin-top: 44px; }
 	.head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 	.board { padding: 8px 8px 14px; overflow-x: auto; }
