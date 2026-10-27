@@ -36,6 +36,7 @@ def main(argv=None):
     ap.add_argument("--bbox", nargs=4, type=float, metavar=("XMIN", "YMIN", "XMAX", "YMAX"), help="WGS84 lon/lat")
     ap.add_argument("--center", nargs=2, type=float, metavar=("LON", "LAT"))
     ap.add_argument("--radius-m", type=float, default=350)
+    ap.add_argument("--aoi", help="AOI polygon: geojson path or an id under pipeline/data/aoi/ (see pipeline.aoi)")
     ap.add_argument("--parcels", default="sandy", help="'sandy', 'ugrc' (SLCo LIR feature service), or path to a parcel file")
     ap.add_argument("--buildings", default="overture", help="'overture' or path to a footprint file")
     ap.add_argument("--imagery", default="usda", help="'usda' (latest NAIP via USDA ImageServer), 'pc' (NAIP via Planetary Computer), 'sentinel2', or path to a 4-band GeoTIFF")
@@ -53,7 +54,13 @@ def main(argv=None):
     ap.add_argument("--save-rasters", action="store_true")
     a = ap.parse_args(argv)
 
-    if a.center:
+    aoi_geom = None
+    if a.aoi:
+        from . import aoi as aoimod
+
+        aoi_geom = aoimod.load(a.aoi)
+        bbox = tuple(aoi_geom.bounds)
+    elif a.center:
         lon, lat = a.center
         dlat = a.radius_m / 111_320
         dlon = a.radius_m / (111_320 * np.cos(np.radians(lat)))
@@ -73,8 +80,13 @@ def main(argv=None):
     # from a sliver, which is then scaled to the full parcel area and inflates totals.
     aoi = gpd.GeoSeries([box(*bbox)], crs=4326).to_crs(area_crs).iloc[0].buffer(-1.0)
     n_all = len(parcels)
-    parcels = parcels[parcels.within(aoi)].reset_index(drop=True)
-    log(f"  {len(parcels)} parcels inside AOI ({n_all - len(parcels)} on the edge dropped) (schema={parcels.attrs.get('schema')}), area CRS {area_crs}")
+    keep = parcels.within(aoi)
+    if aoi_geom is not None:
+        # Polygon AOI: a parcel belongs to the neighborhood if its interior point is inside.
+        poly = gpd.GeoSeries([aoi_geom], crs=4326).to_crs(area_crs).iloc[0]
+        keep &= parcels.representative_point().within(poly)
+    parcels = parcels[keep].reset_index(drop=True)
+    log(f"  {len(parcels)} parcels inside AOI ({n_all - len(parcels)} outside or on the edge dropped) (schema={parcels.attrs.get('schema')}), area CRS {area_crs}")
     if len(parcels) == 0:
         sys.exit("No parcels in bbox")
 

@@ -17,6 +17,7 @@ import os
 
 import numpy as np
 import rasterio
+import rasterio.transform
 from rasterio.merge import merge
 from rasterio.warp import transform_bounds
 from rasterio.windows import from_bounds
@@ -75,6 +76,8 @@ def fetch_naip_pc(bbox_wgs84, years=(2024, 2023, 2022, 2021, 2018)) -> Imagery:
 def fetch_naip_usda(bbox_wgs84, crs: str = "EPSG:26912", gsd: float = 0.6) -> Imagery:
     """Export a 4-band window from USDA's NAIP ImageServer, resampled to `gsd` in `crs`."""
     import json
+    import time
+    import urllib.error
     import urllib.parse
     import urllib.request
 
@@ -84,21 +87,35 @@ def fetch_naip_usda(bbox_wgs84, crs: str = "EPSG:26912", gsd: float = 0.6) -> Im
     w, h = int(round((xmax - xmin) / gsd)), int(round((ymax - ymin) / gsd))
     xmax, ymin = xmin + w * gsd, ymax - h * gsd
     epsg = int(crs.split(":")[1])
-    q = {
-        "bbox": f"{xmin},{ymin},{xmax},{ymax}",
-        "bboxSR": epsg,
-        "imageSR": epsg,
-        "size": f"{w},{h}",
-        "format": "tiff",
-        "pixelType": "U8",
-        "interpolation": "RSP_BilinearInterpolation",
-        "f": "image",
-    }
-    with urllib.request.urlopen(f"{USDA_NAIP}/exportImage?{urllib.parse.urlencode(q)}", timeout=300) as r:
-        blob = r.read()
-    with MemoryFile(blob) as mf, mf.open() as src:
-        data = src.read()
-        tr = src.transform
+    # The service advertises 15000 x 4100 px but 500s above ~2-3k px square; fetch 2048 px tiles.
+    data = np.zeros((4, h, w), dtype="uint8")
+    tile = 2048
+    for r0 in range(0, h, tile):
+        for c0 in range(0, w, tile):
+            th, tw = min(tile, h - r0), min(tile, w - c0)
+            tx0, ty1 = xmin + c0 * gsd, ymax - r0 * gsd
+            q = {
+                "bbox": f"{tx0},{ty1 - th * gsd},{tx0 + tw * gsd},{ty1}",
+                "bboxSR": epsg,
+                "imageSR": epsg,
+                "size": f"{tw},{th}",
+                "format": "tiff",
+                "pixelType": "U8",
+                "interpolation": "RSP_BilinearInterpolation",
+                "f": "image",
+            }
+            for attempt in range(4):
+                try:
+                    with urllib.request.urlopen(f"{USDA_NAIP}/exportImage?{urllib.parse.urlencode(q)}", timeout=300) as r:
+                        blob = r.read()
+                    break
+                except urllib.error.HTTPError:
+                    if attempt == 3:
+                        raise
+                    time.sleep(5 * (attempt + 1))
+            with MemoryFile(blob) as mf, mf.open() as src:
+                data[:, r0:r0 + th, c0:c0 + tw] = src.read()[:4]
+    tr = rasterio.transform.from_origin(xmin, ymax, gsd, gsd)
     # Which quarter-quads (and flight dates) went into the mosaic.
     cx, cy = (bbox_wgs84[0] + bbox_wgs84[2]) / 2, (bbox_wgs84[1] + bbox_wgs84[3]) / 2
     ident = {
