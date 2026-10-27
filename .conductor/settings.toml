@@ -5,8 +5,9 @@ setup = "scripts/setup.sh"
 run_mode = "concurrent"
 
 [scripts.run.dev]
-# Cloud workspaces have no CONDUCTOR_PORT: use 5173 and share it with `conductor preview set --port 5173`.
-command = "cd app && __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS=.conductor.show npm run dev -- --host 0.0.0.0 --port ${CONDUCTOR_PORT:-5173}"
+# Local (Mac): localhost on $CONDUCTOR_PORT. Cloud: no CONDUCTOR_PORT, so 5173 on all
+# interfaces; share it with `conductor preview set --port 5173`.
+command = "cd app && if [ \"${CONDUCTOR_IS_LOCAL:-1}\" = 0 ]; then export __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS=.conductor.show; HOST=0.0.0.0; else HOST=localhost; fi && npm run dev -- --host $HOST --port ${CONDUCTOR_PORT:-5173}"
 default = true
 icon = "play"
 
