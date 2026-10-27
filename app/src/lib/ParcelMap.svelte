@@ -7,7 +7,7 @@
 	let el: HTMLDivElement;
 	let map: import('maplibre-gl').Map | undefined;
 
-	export const COLORS: Record<RegionCls, string> = { lawn: '#4ade80', canopy: '#15803d', building: '#f87171', other: '#9ca3af', converted: '#38bdf8' };
+	export const COLORS: Record<RegionCls, string> = { lawn: '#4ade80', canopy: '#15803d', building: '#ff7a6b', other: '#8b93ad', converted: '#4cc9f0' };
 	const OPACITY: Record<RegionCls, number> = { lawn: 0.5, canopy: 0.45, building: 0.35, other: 0.12, converted: 0.55 };
 
 	onMount(async () => {
@@ -16,7 +16,7 @@
 		maplibregl.setWorkerUrl('/ml/maplibre-gl-worker.mjs'); // bundler-safe worker (copied from node_modules)
 		map = new maplibregl.Map({
 			container: el,
-			style: { version: 8, sources: {}, layers: [{ id: 'bg', type: 'background', paint: { 'background-color': '#0f1413' } }] },
+			style: { version: 8, sources: {}, layers: [{ id: 'bg', type: 'background', paint: { 'background-color': '#080c18' } }] },
 			attributionControl: false,
 			dragRotate: false,
 			pitchWithRotate: false
@@ -60,5 +60,5 @@
 <div class="map" bind:this={el}></div>
 
 <style>
-	.map { width: 100%; aspect-ratio: 1 / 1; max-height: 70vh; border-radius: 12px; overflow: hidden; background: #0f1413; }
+	.map { width: 100%; aspect-ratio: 4 / 3; max-height: 70vh; border-radius: 12px; overflow: hidden; background: #080c18; }
 </style>

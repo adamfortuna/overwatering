@@ -1,4 +1,7 @@
 import type * as GeoJSON from 'geojson';
+import etoSlc from './eto_slc_ut.json';
+import etoSandy from './eto_sandy_ut.json';
+import type { EtoTable } from './water.ts';
 export type Parcel = {
 	parcel_id: string;
 	address: string;
@@ -22,14 +25,38 @@ export type Parcel = {
 	centroid: [number, number];
 	n_regions: number;
 };
-export type Dataset = { id: string; name: string; city: string; note: string; utah: boolean };
+export type Dataset = { id: string; name: string; short: string; city: string; note: string; utah: boolean; eto: 'slc' | 'sandy' };
 export type RegionCls = 'lawn' | 'canopy' | 'building' | 'other' | 'converted';
 export type RegionFeature = { type: 'Feature'; properties: { cls: RegionCls; sqft: number; idx?: number; original?: RegionCls }; geometry: GeoJSON.Geometry };
 
+const SLC_NOTE = 'UGRC Salt Lake County parcels on 60 cm NAIP (USDA, flown July 7, 2024). Grass under tree canopy is counted as trees, not lawn. Park strips are city right-of-way and sit outside the parcel.';
+
+// Every dataset the app knows how to label. Which ones are actually built comes from
+// /data/index.json (written by scripts/build-data.sh), so missing ones just don't show.
 export const DATASETS: Dataset[] = [
-	{ id: 'sandy', name: 'Sandy, Utah', city: 'Sandy', note: 'Real Salt Lake County parcels and Overture footprints on 60 cm NAIP (USDA, flown July 7, 2024). Not yet validated against a tape-measured lawn.', utah: true },
-	{ id: 'home', name: 'Salt Lake City (East Central, 84102)', city: 'Salt Lake City', note: 'UGRC Salt Lake County parcels on 60 cm NAIP (July 7, 2024). Older lots with heavy tree canopy: grass under trees is counted as canopy, not lawn. Park strips are public right-of-way and sit outside the parcel.', utah: true }
+	{ id: '84102', name: '84102: East Central and Central City', short: '84102', city: 'Salt Lake City', note: SLC_NOTE, utah: true, eto: 'slc' },
+	{ id: 'central-city', name: 'Central City', short: 'Central City', city: 'Salt Lake City', note: SLC_NOTE, utah: true, eto: 'slc' },
+	{ id: 'liberty-wells', name: 'Liberty Wells', short: 'Liberty Wells', city: 'Salt Lake City', note: SLC_NOTE, utah: true, eto: 'slc' },
+	{ id: 'downtown', name: 'Downtown', short: 'Downtown', city: 'Salt Lake City', note: SLC_NOTE + ' Downtown is mostly apartments and condos, which have no lot of their own, so only the few dozen houses and duplexes are counted.', utah: true, eto: 'slc' },
+	{ id: 'avenues', name: 'The Avenues', short: 'Avenues', city: 'Salt Lake City', note: SLC_NOTE + ' Clipped to the developed blocks of the Greater Avenues council area.', utah: true, eto: 'slc' },
+	{ id: 'sandy', name: 'Sandy (suburban comparison)', short: 'Sandy', city: 'Sandy', note: 'Salt Lake County Recorder parcels (2022 fabric) and Overture footprints on 60 cm NAIP (July 7, 2024).', utah: true, eto: 'sandy' }
 ];
+
+export const etoFor = (ds: Dataset): EtoTable => (ds.eto === 'slc' ? etoSlc : etoSandy) as EtoTable;
+
+export type IndexDataset = { id: string; imagery: { source: string; date: string; gsd_m: number }; parcels: number; lawn_sqft: number };
+// [address, dataset, parcel_id, lawn_sqft]
+export type AddressHit = [string, string, string, number];
+export async function loadIndex(fetchFn: typeof fetch) {
+	const r = await fetchFn('/data/index.json');
+	if (!r.ok) return { datasets: [] as (IndexDataset & { meta: Dataset })[], addresses: [] as AddressHit[] };
+	const j = (await r.json()) as { datasets: IndexDataset[]; addresses: AddressHit[] };
+	const built = DATASETS.flatMap((meta) => {
+		const d = j.datasets.find((x) => x.id === meta.id);
+		return d ? [{ ...d, meta }] : [];
+	});
+	return { datasets: built, addresses: j.addresses };
+}
 
 export async function loadParcels(fetchFn: typeof fetch, dataset: string) {
 	const r = await fetchFn(`/data/${dataset}/parcels.json`);

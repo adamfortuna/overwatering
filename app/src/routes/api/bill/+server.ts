@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 import Anthropic from '@anthropic-ai/sdk';
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
+import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
 import type { RequestHandler } from './$types';
 
@@ -14,30 +14,44 @@ const BillSchema = z.object({
 });
 
 export const POST: RequestHandler = async ({ request, platform }) => {
-	const apiKey = platform?.env?.ANTHROPIC_API_KEY ?? process.env.ANTHROPIC_API_KEY;
-	if (!apiKey) return json({ error: 'ANTHROPIC_API_KEY not configured; enter usage manually' }, { status: 501 });
+	const apiKey = platform?.env?.EXTERNAL_ANTHROPIC_API_KEY ?? process.env.EXTERNAL_ANTHROPIC_API_KEY;
+	if (!apiKey) return json({ error: 'EXTERNAL_ANTHROPIC_API_KEY not configured; enter usage manually' }, { status: 501 });
 	const form = await request.formData();
 	const file = form.get('file');
 	if (!(file instanceof File)) return json({ error: 'file required' }, { status: 400 });
 	const bytes = Buffer.from(await file.arrayBuffer()).toString('base64');
 	const isPdf = file.type === 'application/pdf';
 	const client = new Anthropic({ apiKey });
-	const response = await client.messages.parse({
-		model: 'claude-opus-5-5',
-		max_tokens: 4000,
-		output_config: { effort: 'medium', format: zodOutputFormat(BillSchema) },
-		messages: [
-			{
-				role: 'user',
-				content: [
-					isPdf
-						? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: bytes } }
-						: { type: 'image', source: { type: 'base64', media_type: file.type as 'image/png' | 'image/jpeg' | 'image/webp', data: bytes } },
-					{ type: 'text', text: 'This is a residential water bill. Read the monthly water usage history (chart or table). Report the unit exactly as the bill labels it (do not assume gallons vs hundred cubic feet). If a value is unreadable, omit that month and say so in notes.' }
-				]
-			}
-		]
-	});
+	let response;
+	try {
+		// Beta surface only for server-side fallbacks: if a safety classifier declines, the API
+		// re-runs the request on Anthropic's recommended fallback model inside the same call.
+		response = await client.beta.messages.parse({
+			model: 'claude-opus-5-5',
+			max_tokens: 16000,
+			betas: ['server-side-fallback-2026-07-01'],
+			fallbacks: 'default',
+			output_config: { effort: 'medium', format: betaZodOutputFormat(BillSchema) },
+			messages: [
+				{
+					role: 'user',
+					content: [
+						isPdf
+							? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: bytes } }
+							: { type: 'image', source: { type: 'base64', media_type: file.type as 'image/png' | 'image/jpeg' | 'image/webp', data: bytes } },
+						{ type: 'text', text: 'This is a residential water bill. Read the monthly water usage history (chart or table). Report the unit exactly as the bill labels it (do not assume gallons vs hundred cubic feet). If a value is unreadable, omit that month and say so in notes.' }
+					]
+				}
+			]
+		});
+	} catch (e) {
+		// The UI falls back to the manual 12-month grid on any error status.
+		if (e instanceof Anthropic.AuthenticationError) return json({ error: 'Bill reading is not set up (API key rejected); enter usage manually' }, { status: 501 });
+		if (e instanceof Anthropic.RateLimitError) return json({ error: 'Too many bills at once; try again in a minute or enter usage manually' }, { status: 429 });
+		if (e instanceof Anthropic.BadRequestError) return json({ error: 'Could not read that file; try a clearer photo or a PDF' }, { status: 400 });
+		if (e instanceof Anthropic.APIError) return json({ error: `Bill reader error (${e.status}); enter usage manually` }, { status: 502 });
+		throw e;
+	}
 	if (response.stop_reason === 'refusal' || !response.parsed_output) return json({ error: 'could not read bill', stop_reason: response.stop_reason }, { status: 422 });
 	return json(response.parsed_output);
 };
