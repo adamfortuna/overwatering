@@ -19,8 +19,11 @@ picks others, `SKIP_DATA=1` skips. Run actions: **dev** (localhost:`$CONDUCTOR_P
 Mac; 0.0.0.0:5173 in the cloud with `.conductor.show` allowed), **test** (pytest +
 svelte-check), **data** (`scripts/build-data.sh`, all datasets, ~10 min).
 
-Cloud: share the dev server with `conductor preview set --port 5173`. Local runs have **not**
-been verified on a Mac yet (only the local-mode dev command was smoke-tested here).
+Cloud: share the dev server with `conductor preview set --port 5173`. Mac: verified on Adam's
+machine from a plain clone (`scripts/setup.sh`, then `scripts/dev.sh`). The scripts load nvm and
+use `.nvmrc` (22) because Conductor's non-interactive shell had Node 20.15 on PATH, and with no
+`app/node_modules` npm fell through to a Ruby `vite` shim from rbenv ("vite dev was called with
+arguments").
 
 ## Next session (start here)
 
@@ -29,6 +32,12 @@ Run `scripts/resume.sh` first. It checks that `EXTERNAL_ANTHROPIC_API_KEY`,
 seconds if not, so hand control straight back to Adam), warns if the Cloudflare token can't
 read D1/R2, then installs deps and builds any missing datasets (~10 min). Then:
 
+0. **Status 2026-10-27 late:** bill reading verified with the real key (sample bill: all 12
+   months, unit ccf, 6.5 s). Adam's Mac has a clean checkout at `~/Code/utah-water` (setup ran,
+   84102 built, dev server on http://localhost:5173; other datasets built in the background,
+   log `/tmp/overwater-data.log`). Don't run the app from Conductor's synced folder
+   (`~/conductor/remote-workspace-sync/...`): it has tracked files only, and Mac-side installs
+   there may be clobbered by the sync. Local bill reading needs `app/.env` with the key.
 1. **Bill reading, for real.** Start dev (`cd app && npm run dev`), upload
    `scripts/fixtures/sample_slc_bill.png` (synthetic SLC bill, CCF, Oct 2025–Sep 2026; expected
    months 12,7,6,6,6,7,10,18,28,32,30,22) on any parcel page, or
@@ -68,7 +77,7 @@ Env gotchas learned 2026-10-27:
 | Rebate table | Verified 2026-10-27 | Step 3 |
 | App | Rebranded; cross-neighborhood search; `/how`; check clean; build OK | `app/` |
 | Bill reading | Route reads `EXTERNAL_ANTHROPIC_API_KEY` (`app/src/env.ts`), `claude-opus-5-5` via `beta.messages.parse` with `fallbacks: 'default'`; typed errors fall back to manual entry | `app/src/routes/api/bill/+server.ts` |
-| Bill reading tested? | **Wiring only**: the var was empty in this workspace; a dummy key (via env and via `app/.env`) reached the API and got a 401, which the route turns into a friendly 501 | `scripts/fixtures/sample_slc_bill.png` |
+| Bill reading tested? | **Yes** with the real key (cloud): all 12 months + unit from the sample bill in 6.5 s | `scripts/fixtures/sample_slc_bill.png` |
 | Cloudflare deploy | **Not started on purpose**: Adam wants a local demo first. `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` are present | Step 2 |
 
 ## Step 1: Adam's lot validation (the number the pitch needs)
