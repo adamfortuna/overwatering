@@ -317,3 +317,24 @@ Work directly on `main`, small commits (Adam asked for no PRs). `data/`, `.venv/
 2. `EXTERNAL_ANTHROPIC_API_KEY` is empty in the cloud workspace: re-set it in Conductor (and
    for the local run, make sure the dev server's environment has it).
 3. Is overwater.ing's DNS zone on the same Cloudflare account? Paid Workers plan (asset count)?
+
+## 2026-10-28: rubric push (hard tech + pitch)
+
+- **Watering calendar + schedule API.**
+  - `lib/guide.ts` parses Utah's Weekly Lawn Watering Guide (wateringindex.utah.gov SVG map, aria-labels per county). `lib/server/guide.ts` caches it 6 h.
+  - `lib/calendar.ts` has `week()` (this week: guide count or the monthly plan) and `ics()`, a rolling year of 5 a.m. events.
+  - Routes: `/api/schedule/<county>-<system>[?date=]` (JSON, CORS open) and `/api/calendar/<county>-<system>.ics`. Keys carry no address.
+  - Subscribe card on `/watering`. Tests: `app/tests/calendar.test.ts` (vitest, now in `scripts/test.sh`), with guide fixtures from Oct and July 2026.
+- **OpenSprinkler connector.** `app/static/connect/opensprinkler.mjs` is served at `/connect/opensprinkler.mjs`, documented on `/connect`.
+  - It writes one weekly program ("Overwater.ing <key>"): cycle-and-soak repeats, and a date range of this week plus one week of grace. It switches the program off when the guide says no watering.
+  - Tested against firmware 2.2.1 built in DEMO mode. `scripts/opensprinkler-demo.sh` builds and runs it (Docker, or native on Linux; the firmware listens on port 80 unless built with `-DHTTP_PORT`), and `... sync [--date]` runs the connector.
+- **USDA outage.**
+  - usda.gov DNSSEC is broken (DNSKEY missing). Validating resolvers return SERVFAIL, including Cloudflare's, so the Worker gets a 530 for apps.geo.fpac.usda.gov.
+  - Tried and ruled out:
+    - CNAME + Origin Rule: Host override isn't on this plan.
+    - Sockets `startTls` with `expectedServerHostname`: still validates against the load balancer name.
+    - fetch to the load balancer: 526.
+  - `live.ts` now falls back to calling USDA from the browser (CORS allows overwater.ing). That only works where the user's DNS doesn't validate. Precomputed neighborhoods are unaffected.
+- **`/impact`.** State numbers with sources, plus measured-area numbers computed at runtime. `water.ts` gained `KWH_PER_ACRE_FT` (650) and `CO2_KG_PER_KWH` (0.6).
+- **Sample bill re-sized** for the mansion's lawn so the demo shows a gap.
+- **Pitch.** A separate Conductor workspace ("Pitch deck") builds `docs/pitch/` from `docs/pitch/BRIEF.md`.

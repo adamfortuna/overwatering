@@ -172,5 +172,9 @@ Already in motion: the DWRe contact. Outreach to districts and controller makers
   - Demo: `scripts/opensprinkler-demo.sh` starts the controller at http://localhost:8080 (password `opendoor`; needs Docker on a Mac).
   - Then `scripts/opensprinkler-demo.sh sync` runs this week. The state says no watering in late October, so the program switches off.
   - Then `scripts/opensprinkler-demo.sh sync --date 2027-07-14` previews July: Mon/Wed/Fri at 5:00, 4 × 7 min, 60 min apart, on zones 1–4. The program appears in the OpenSprinkler UI.
-- [ ] `/impact` page: statewide, energy and data-center framing
-- [ ] Usage analytics
+- [x] `/impact` page ("Why it matters", in the nav), live. Its numbers are computed from our data:
+  - **12,791 lots and 319 acres of lawn measured.** The grass needs ~775 acre-feet a year.
+  - Assume half of homes overwater (BYU) and leave a July schedule on all season. That's ~372 AF a year wasted, which costs ~242 MWh and ~145 t CO2 to pump and treat. It's also ~38% of the Box Elder data center campus's expected consumption, from a few neighborhoods alone.
+  - Statewide scenario, if a fifth of residential outdoor water is waste: ~100,000 AF a year, ~65 GWh, ~39,000 t CO2, roughly 100× a large AI data center's water.
+  - Each lot's plan line now also shows the kWh saved.
+- [x] Usage analytics: Cloudflare Web Analytics is collecting. Oct 27: 187 page loads, 95 visits. Ask the Utah Water session for fresh numbers before the pitch.
