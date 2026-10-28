@@ -3,7 +3,7 @@
 <!-- Generated from docs/pitch/tools/demo.template.md by build_deck.py. Edit the template. -->
 
 The demo slot is **1:10–3:00** in `script.md`, about 1 minute 50 seconds. It follows the flow on
-slide 6: enter an address → confirm what's grass → see what going native saves → or lower your
+slide 5: enter an address → confirm what's grass → see what going native saves → or lower your
 water use today. The example lot is **603 E South Temple** (the Governor's Mansion, parcel
 `09314870040000`). It's precomputed, so it doesn't depend on USDA. Never demo Adam's own address.
 
@@ -12,7 +12,7 @@ corrections** then, which make it 6,828 sq ft of lawn (the model's own range bef
 edits was 12,796–13,737). If anyone taps shapes on this lot, every number changes.
 Rerun `node docs/pitch/tools/shots.mjs` and `build_deck.py` to refresh them.
 
-Backup slides 12–25 show every step in order. If the Wi-Fi dies, stay in Slides and
+Backup slides 11–24 show every step in order. If the Wi-Fi dies, stay in Slides and
 click through them.
 
 ## Before you go on (15 minutes ahead)
@@ -38,16 +38,16 @@ click through them.
 
 | Time | Do | Say | If it fails |
 |---|---|---|---|
-| 1:10 | **1 · Enter your address.** On tab 1, type `603 E South Temple`. Click **603 E SOUTH TEMPLE ST 84102**. | "Any address in Utah. Let's take the Governor's Mansion." | Search hangs: go to **tab 2**. Site down: slide 13. |
-| 1:20 | **2 · Confirm what's grass.** Point at the aerial photo, then the **Your lawn** card. Tap one green shape once, then tap it three more times so it's green again. | "The 2024 aerial photo. Green is lawn, dark green is trees, red is buildings: 6,828 square feet of lawn. Get a shape wrong and you tap it. That correction trains the model." | The photo is blank: talk over the numbers, which come from our own data. Slide 14. |
-| 1:40 | **3 · See what going native saves.** Scroll to **3 · Every year: Go native** (89,236 gal/yr), then up to **2 · One time: Take the rebate**. | "Go native and this lot saves about 89,000 gallons a year. And Utah pays up to $20,484 here, from Central Utah Water Conservancy District. It knows the city, the water system and the program." | Slides 15–16. |
-| 1:55 | Click **What going native looks like →**. Show the before and after. | "Here's what that looks like, the plants that grow here, and who to call." | Slide 15. |
-| 2:05 | **4 · Lower your water use today.** Go to **tab 3**. Click **Pop-up spray heads**, then **A basic timer**. | "Or start today. Spray heads and a basic timer, like most Utah yards: here's the one thing to change, and the schedule month by month for this county." | Slide 17. |
-| 2:15 | Scroll to **Get this schedule as a calendar**. Point at the **This week** line. | "Subscribe once and it follows the state's weekly watering guide." | Slide 19. |
-| 2:25 | **Terminal:** run `scripts/opensprinkler-demo.sh sync`. It prints that it switched the program off. On **tab 4**, reload **Programs**: **Enabled** is unchecked. | "Or send it straight to the controller. This is OpenSprinkler's real firmware. This week the state says no watering, so it switched itself off." | If the program is hidden, open the footer menu and pick **Show Disabled**. Otherwise slide 20. |
-| 2:35 | **Terminal:** `scripts/opensprinkler-demo.sh sync --date 2027-07-14`. It prints **Mon, Wed, Fri at 05:00: 4 × 7 min**. Reload **Programs**. | "In July: Monday, Wednesday, Friday at 5 a.m., four short cycles a zone, so it soaks in." | Slide 20. |
-| 2:50 | *(Optional, only if the warm-up worked.)* On the lot, click **← another address** and type `67 W 200 N`. Pick the **St. George** result. | "None of that was precomputed for St. George. The browser just measured it: 10,834 square feet, needing 42 inches a season." | Skip it, or use slide 23. |
-| 3:00 | Switch back to Slides, slide 7. | | |
+| 1:10 | **1 · Enter your address.** On tab 1, type `603 E South Temple`. Click **603 E SOUTH TEMPLE ST 84102**. | "Any address in Utah. Let's take the Governor's Mansion." | Search hangs: go to **tab 2**. Site down: slide 12. |
+| 1:20 | **2 · Confirm what's grass.** Point at the aerial photo, then the **Your lawn** card. Tap one green shape once, then tap it three more times so it's green again. | "The 2024 aerial photo. Green is lawn, dark green is trees, red is buildings: 6,828 square feet of lawn. Get a shape wrong and you tap it. That correction trains the model." | The photo is blank: talk over the numbers, which come from our own data. Slide 13. |
+| 1:40 | **3 · See what going native saves.** Scroll to **3 · Every year: Go native** (89,236 gal/yr), then up to **2 · One time: Take the rebate**. | "Go native and this lot saves about 89,000 gallons a year. And Utah pays up to $20,484 here, from Central Utah Water Conservancy District. It knows the city, the water system and the program." | Slides 14–15. |
+| 1:55 | Click **What going native looks like →**. Show the before and after. | "Here's what that looks like, the plants that grow here, and who to call." | Slide 14. |
+| 2:05 | **4 · Lower your water use today.** Go to **tab 3**. Click **Pop-up spray heads**, then **A basic timer**. | "Or start today. Spray heads and a basic timer, like most Utah yards: here's the one thing to change, and the schedule month by month for this county." | Slide 16. |
+| 2:15 | Scroll to **Get this schedule as a calendar**. Point at the **This week** line. | "Subscribe once and it follows the state's weekly watering guide." | Slide 18. |
+| 2:25 | **Terminal:** run `scripts/opensprinkler-demo.sh sync`. It prints that it switched the program off. On **tab 4**, reload **Programs**: **Enabled** is unchecked. | "Or send it straight to the controller. This is OpenSprinkler's real firmware. This week the state says no watering, so it switched itself off." | If the program is hidden, open the footer menu and pick **Show Disabled**. Otherwise slide 19. |
+| 2:35 | **Terminal:** `scripts/opensprinkler-demo.sh sync --date 2027-07-14`. It prints **Mon, Wed, Fri at 05:00: 4 × 7 min**. Reload **Programs**. | "In July: Monday, Wednesday, Friday at 5 a.m., four short cycles a zone, so it soaks in." | Slide 19. |
+| 2:50 | *(Optional, only if the warm-up worked.)* On the lot, click **← another address** and type `67 W 200 N`. Pick the **St. George** result. | "None of that was precomputed for St. George. The browser just measured it: 10,834 square feet, needing 42 inches a season." | Skip it, or use slide 22. |
+| 3:00 | Switch back to Slides, slide 6. | | |
 
 ## Watch out
 
@@ -77,5 +77,5 @@ Nov 12, Dec 10.
 ## Backup video
 
 Record the full click path once on the Mac. Use QuickTime (File → New Screen Recording) at 125%
-zoom; it runs about 2 minutes. Keep it on the desktop and play it over slide 6 if the network is
+zoom; it runs about 2 minutes. Keep it on the desktop and play it over slide 5 if the network is
 unusable.

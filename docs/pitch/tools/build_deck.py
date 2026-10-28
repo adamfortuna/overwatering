@@ -358,36 +358,13 @@ text(s, 7.1, 4.0, 5.25, 1.9, [
 ], size=18, line=1.1, after=10)
 png(s, ART / "arch-solo.png", 11.55, 0.55, h=1.4)
 source(s, "Sources: Utah News Dispatch / USGS gauge (lake level); Great Salt Lake Strategic Plan (inflow need); Utah Executive Order 2026-03 (May 29, 2026). Saved water can increase potential flows to the lake; it may be reused upstream.")
-notes(s, "0:45–1:00", """
+notes(s, "0:45–1:10", """
 Great Salt Lake is eight feet below healthy. Water we save on yards can flow to the lake. And
 since May, new data centers can't add to its depletion, so the AI build-out can't take it.
+But nobody knows, lot by lot, how much lawn there is or what it really needs. So I built it.
 """)
 
-# 5. Utah pays, but can't see
-s = slide()
-named("Utah pays, but can't see the yards")
-kicker(s, "The gap")
-title(s, "Utah pays to fix it. It can't see the yards.")
-png(s, ART / "coin.png", 0.85, 2.3, w=1.15)
-text(s, 2.2, 2.2, 4.5, 0.9, "$1.50–$3", size=48, font=HEAD, bold=True, color=GOLD, line=0.9)
-text(s, 2.2, 3.1, 4.5, 0.6, "per square foot of lawn you replace.", size=18, line=1.1)
-text(s, 0.85, 3.85, 6.0, 1.3, [
-    [("2024: ", {"bold": True}), ("~3 million sq ft replaced, >$7M paid.", {})],
-    [("Oct 2022 – Dec 2025: ", {"bold": True}), ("7.3 million sq ft, 4,700 yards, $16.8M.", {})],
-], size=18, line=1.1, after=6)
-png(s, ART / "sprinkler-off.png", 7.2, 2.3, w=1.0)
-text(s, 8.45, 2.2, 4.2, 0.9, "About half", size=48, font=HEAD, bold=True, color=CORAL, line=0.9)
-text(s, 8.45, 3.1, 4.15, 0.9, "of Utahns overwater (BYU, aerial imagery + water bills).", size=18, line=1.1)
-box(s, 0.75, 5.25, 11.85, 1.25, fill=MIST, radius=0.15)
-text(s, 1.05, 5.3, 11.3, 1.15, "But nobody knows, lot by lot, how much lawn there is or how much water it really needs.",
-     size=24, font=HEAD, bold=True, anchor=MSO_ANCHOR.MIDDLE, line=1.0)
-source(s, "Sources: Utah Water Savers rates (checked Oct 27 2026); Utah DWR turf buyback results 2024; state fact sheet \"Utah's Big Water Win\", Oct 2022–Dec 2025 (Slow the Flow); Sowby et al., BYU 2022.")
-notes(s, "1:00–1:10", """
-That rebate program has replaced 7.3 million square feet of grass since 2022. But nobody knows,
-lot by lot, how much lawn there is. So I built it.
-""")
-
-# 6. Demo: the homeowner's flow
+# 5. Demo: the homeowner's flow
 s = slide()
 named("Live demo")
 kicker(s, "Live demo · overwater.ing")
@@ -432,7 +409,7 @@ firmware: when the state says skip, it switches itself off. In July: Monday, Wed
 2:50 (Only if the warm-up worked.) Any address in Utah is measured live, like this one in St. George.
 """)
 
-# 7. Built, live, checked
+# 6. Built, live, checked
 s = slide()
 named("Built, live, checked")
 kicker(s, "Progress")
@@ -456,7 +433,7 @@ It's live: twelve thousand eight hundred lots precomputed, any address in all 29
 measured on demand, and it tracks the state's own Greenspace model lot by lot.
 """)
 
-# 8. How it works, in plain words
+# 7. How it works, in plain words
 s = slide()
 named("How it works")
 kicker(s, "Hard tech")
@@ -498,7 +475,7 @@ we turn that into days and minutes, checked against the state's weekly guide. Ru
 sprinklers: a calendar, or the controller itself, which switches off when the state says skip.
 """)
 
-# 9. Three phases: what $10K unlocks
+# 8. Three phases: what $10K unlocks
 s = slide()
 named("What $10K unlocks")
 kicker(s, "The plan")
@@ -540,7 +517,7 @@ already in progress. Phase three is with the state: drone scans a few times a we
 sprinkler head waters only the patch that needs it.
 """)
 
-# 10. Two customers
+# 9. Two customers
 s = slide()
 named("Two customers")
 kicker(s, "Path to reality")
@@ -571,7 +548,7 @@ could spot overwatering from the air, before a bill ever shows it. Homeowners ge
 their rebate, and a schedule that runs itself, down to each sprinkler head.
 """)
 
-# 11. Ask + close
+# 10. Ask + close
 s = slide()
 named("The ask")
 footer_scene(s)
@@ -684,8 +661,7 @@ SOURCES = [
     "Great Salt Lake area ~610,000 acres near 4,191 ft: Utah Geological Survey. Level 4,190.4 ft (Aug 2026), healthy from 4,198 ft: Utah News Dispatch; wre-rapps.utah.gov/GSLApp",
     "471,000–1,055,000 AF/yr more inflow: Great Salt Lake Strategic Plan, greatsaltlake.utah.gov",
     "Data centers may not add GSL depletion: Utah Executive Order 2026-03 (May 29, 2026)",
-    "About half of Utahns overwater: Sowby, BYU 2022 (aerial imagery + bills)",
-    "~3M sq ft converted in 2024, >$7M paid: Utah DWR. 7.3M sq ft, 4,700 participants, $16.8M (Oct 2022–Dec 2025): \"Utah's Big Water Win\" fact sheet, Slow the Flow",
+    "Rebates of $1.50–$3 per sq ft: Utah Water Savers Landscape Incentive Program (rates checked Oct 27 2026)",
     "Water-wise partners: slowtheflow.org/partners",
     "Our numbers: 12,791 lots, 319 acres of lawn; Greenspace r = 0.77, median ratio 0.97 (84102, 3,104 lots): RESULTS.md Runs 6–7",
 ]
@@ -732,7 +708,7 @@ ctx = {
         "native": slide_no["3 · What going native saves"], "rebate": slide_no["3 · The rebate, and who's in charge here"],
         "plan": slide_no["4 · Lower your water use today"], "cal": slide_no["4 · Subscribe to the watering calendar"],
         "os": slide_no["4 · The controller follows the schedule"], "live": slide_no["Optional · Any address, measured live"],
-        "back": slide_no["Backup"], "last": len(prs.slides) - 1, "after_demo": slide_no["Built, live, checked"],
+        "back": slide_no["Backup"], "demo": slide_no["Live demo"], "last": len(prs.slides) - 1, "after_demo": slide_no["Built, live, checked"],
     }.items()},
 }
 tpl = (PITCH / "tools" / "demo.template.md").read_text()

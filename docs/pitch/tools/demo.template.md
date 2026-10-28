@@ -3,7 +3,7 @@
 <!-- Generated from docs/pitch/tools/demo.template.md by build_deck.py. Edit the template. -->
 
 The demo slot is **1:10–3:00** in `script.md`, about 1 minute 50 seconds. It follows the flow on
-slide 6: enter an address → confirm what's grass → see what going native saves → or lower your
+slide {s_demo}: enter an address → confirm what's grass → see what going native saves → or lower your
 water use today. The example lot is **603 E South Temple** (the Governor's Mansion, parcel
 `09314870040000`). It's precomputed, so it doesn't depend on USDA. Never demo Adam's own address.
 
@@ -77,5 +77,5 @@ Nov 12, Dec 10.
 ## Backup video
 
 Record the full click path once on the Mac. Use QuickTime (File → New Screen Recording) at 125%
-zoom; it runs about 2 minutes. Keep it on the desktop and play it over slide 6 if the network is
+zoom; it runs about 2 minutes. Keep it on the desktop and play it over slide {s_demo} if the network is
 unusable.
