@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { EXTERNAL_ANTHROPIC_API_KEY } from '$app/env/private';
 import Anthropic from '@anthropic-ai/sdk';
-import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
+import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
 import { z } from 'zod';
 import type { RequestHandler } from './$types';
 
@@ -26,14 +26,13 @@ export const POST: RequestHandler = async ({ request }) => {
 	const client = new Anthropic({ apiKey });
 	let response;
 	try {
-		// Beta surface only for server-side fallbacks: if a safety classifier declines, the API
-		// re-runs the request on Anthropic's recommended fallback model inside the same call.
-		response = await client.beta.messages.parse({
-			model: 'claude-opus-5-5',
+		// Haiku: reading a usage chart is simple extraction, and it costs a few cents less per
+		// bill than Opus. Haiku has no server-side refusal fallback; a refusal falls through to
+		// the 422 below and the manual grid.
+		response = await client.messages.parse({
+			model: 'claude-haiku-5-5',
 			max_tokens: 16000,
-			betas: ['server-side-fallback-2026-07-01'],
-			fallbacks: 'default',
-			output_config: { effort: 'medium', format: betaZodOutputFormat(BillSchema) },
+			output_config: { effort: 'medium', format: zodOutputFormat(BillSchema) },
 			messages: [
 				{
 					role: 'user',
