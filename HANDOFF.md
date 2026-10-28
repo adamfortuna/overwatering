@@ -338,3 +338,20 @@ Work directly on `main`, small commits (Adam asked for no PRs). `data/`, `.venv/
 - **`/impact`.** State numbers with sources, plus measured-area numbers computed at runtime. `water.ts` gained `KWH_PER_ACRE_FT` (650) and `CO2_KG_PER_KWH` (0.6).
 - **Sample bill re-sized** for the mansion's lawn so the demo shows a gap.
 - **Pitch.** A separate Conductor workspace ("Pitch deck") builds `docs/pitch/` from `docs/pitch/BRIEF.md`.
+
+## 2026-10-28 (later): guide via D1, Rachio + Home Assistant connectors
+
+- **Weekly guide.** Workers time out connecting to wateringindex.utah.gov (DNS is fine), so the schedule API had silently used the monthly plan.
+  - The parsed guide now lives in D1 (`guide` table in `schema.sql`). The Worker tries a live fetch only when its copy is more than 6 h old.
+  - `POST /api/guide` takes the raw page. It accepts either a GitHub Actions OIDC token (repo adamfortuna/overwatering, audience https://overwater.ing) or the `GUIDE_PUSH_SECRET` Worker secret. Verification is in `lib/server/github-oidc.ts`.
+  - `.github/workflows/guide.yml` runs `scripts/push-guide.sh` Fridays and daily. Its first run succeeded.
+  - The schedule API reports `guide_error` when the guide is stale.
+  - The token in this sandbox can't set GitHub repo secrets, which is why the workflow uses OIDC instead.
+- **Weeks gain `weeklyIn` and `peakPct`** (this week's water as a % of the July peak week).
+- **`app/static/connect/rachio.mjs`.**
+  - Sets `seasonal_adjustment` (a fraction from -1 to 1, per Rachio's docs) to `peakPct/100 - 1` on enabled fixed schedules. Paused weeks get a `device/rain_delay` through the guide week's end.
+  - Tested against a mock of the documented endpoints, not a device.
+- **`app/static/connect/homeassistant/`.** It has `overwatering.yaml` (REST sensor package) and `overwatering_run.yaml` (automation blueprint, new `triggers:`/`actions:` syntax).
+  - Zones can be switches or valves. Runs are cycles × zones with a soak between cycles, gated on `paused` and today's weekday.
+  - Tested on Home Assistant 2026.2.3 in a venv with template switches as zones: run order and timing were correct, the paused week was skipped, and the live sensor parsed prod.
+- **`/connect`** is a plan picker plus controller tabs.

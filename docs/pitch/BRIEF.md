@@ -162,6 +162,18 @@ Already in motion: the DWRe contact. Outreach to districts and controller makers
   - **Lead the demo with a precomputed lot (any address in 84102, Avenues, Liberty Wells, Central City, Downtown or Sandy).**
   - Show "any Utah address" second, with a screenshot or recorded fallback ready. If USDA fixes their DNS, it just works again.
 
+## Oct 28 update (from the Utah Water session)
+
+- **The state guide is back in the schedule API.**
+  - **Cause:** Cloudflare's network times out reaching wateringindex.utah.gov, so the Worker silently fell back to the monthly plan.
+  - **Fix:** the parsed guide is now stored in D1. A GitHub Action (`.github/workflows/guide.yml`, Fridays plus daily) pushes it, authenticated with GitHub's OIDC token.
+  - `/api/schedule/salt-lake-spray` says "no watering in Salt Lake County this week" again. If the guide ever goes stale, the API reports a `guide_error` field.
+- **Three controller connectors on `/connect`.** Pick a county and sprinkler type, then a controller:
+  - **Rachio**: scales the user's fixed schedules each week (seasonal adjustment vs. July; rain delay when the state says skip). Tested against a mock of Rachio's documented API, not a real device.
+  - **Home Assistant**: a sensor package plus an automation blueprint. It runs lawn zones on Rain Bird, Hydrawise, B-hyve, Rachio, OpenSprinkler or ESPHome, in cycle-and-soak, and skips paused weeks. Tested on a real Home Assistant 2026.2.3.
+  - **OpenSprinkler**: as before, tested on the real firmware.
+  - Pitch line: "Rachio and Home Assistant cover most smart controllers sold in Utah; OpenSprinkler is the open-hardware path."
+
 ## Status of features (update as they land)
 
 - [x] Live site, statewide address search, live measurement, bill reading, watering plan, native page, rebates + jurisdictions
