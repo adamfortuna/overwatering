@@ -3,7 +3,7 @@
 	// prebuilt neighborhoods (/p/...) and on-demand Utah addresses (/u/...).
 	import ParcelMap from './ParcelMap.svelte';
 	import { rebateEstimate } from './rebates.ts';
-	import { annualTurfNeedGal, conversionSavingsGal, outdoorFromBill, overwateringGap, fmt, type EtoTable } from './water.ts';
+	import { annualTurfNeedGal, conversionSavingsGal, kwhForGallons, outdoorFromBill, overwateringGap, fmt, type EtoTable } from './water.ts';
 	import { loadLabels, saveLabel } from './labels.ts';
 	import type { Parcel, RegionCls, RegionFeature } from './data.ts';
 	import CountUp from './CountUp.svelte';
@@ -162,6 +162,7 @@
 						<p class="plan-kicker">Optimize your watering for next year</p>
 						<p class="plan-line">
 							<b>{plan.action}</b>{#if plan.gallons > 0}{' '}and save about <b class="save">{fmt(plan.gallons)} gallons</b> a year{/if}.
+							{#if plan.gallons > 0}<span class="muted small">That's also ~{fmt(kwhForGallons(plan.gallons))} kWh the water system doesn't spend pumping and treating it (<a href="/impact">why it matters</a>).</span>{/if}
 						</p>
 						<a class="plan-cta" href={planHref}>Build my watering plan →</a>
 					</div>

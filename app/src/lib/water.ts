@@ -50,3 +50,10 @@ export function conversionSavingsGal(convertedSqft: number, eto: EtoTable, kcBef
 }
 export const acreFeet = (gal: number) => gal / GAL_PER_ACRE_FT;
 export const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
+
+// Water-energy: pumping, treating and delivering municipal water. ~650 kWh per acre-foot is the US
+// average (EPRI, ~2,000 kWh per million gallons); the defensible range is about 260-880. Utah's grid
+// emitted 0.60 kg CO2 per kWh in 2024 (EIA). Per home this is small; it adds up at city scale.
+export const KWH_PER_ACRE_FT = 650;
+export const CO2_KG_PER_KWH = 0.6;
+export const kwhForGallons = (gal: number) => (gal / GAL_PER_ACRE_FT) * KWH_PER_ACRE_FT;

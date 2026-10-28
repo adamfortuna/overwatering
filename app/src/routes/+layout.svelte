@@ -41,6 +41,7 @@
 		<div class="links">
 			<a href="/#neighborhoods">Neighborhoods</a>
 			<a href="/how">How it works</a>
+			<a href="/impact">Why it matters</a>
 		</div>
 	</nav>
 	{#if !home}<Scene variant="strip" />{/if}
@@ -102,7 +103,8 @@
 	.links a { color: var(--ink); text-decoration: none; font-family: var(--display); font-weight: 600; padding: 6px 14px; border-radius: 999px; white-space: nowrap; }
 	.links a:hover { background: #fff; box-shadow: 0 3px 0 #d6ecf9; }
 	@media (max-width: 560px) { nav { padding: 10px 12px; } .links { gap: 0; font-size: 0.9rem; } .links a { padding: 6px 8px; } nav :global(.word) { font-size: 1.15rem; } nav :global(.logo svg) { width: 34px; height: 34px; } }
-	@media (max-width: 430px) { .links a:first-child { display: none; } }
+	@media (max-width: 520px) { .links a:first-child { display: none; } }
+	@media (max-width: 400px) { .links a:nth-child(2) { display: none; } }
 
 	main { max-width: 1100px; margin: 0 auto; padding: 18px 20px 40px; }
 	main.home { padding-top: 0; }
