@@ -12,8 +12,10 @@ docs/pitch/tools/render.sh                    # LibreOffice -> .build/render/sli
 uv run --with pillow python docs/pitch/tools/sheet.py [slide numbers]
 ```
 
-`build_deck.py` writes both `overwatering.pptx` and `script.md`, so the speaker notes and the
-script always match. Both scripts use the preinstalled Google Chrome (`channel: 'chrome'`).
+`build_deck.py` writes `overwatering.pptx`, `script.md` and `demo.md` (from `demo.template.md`), so the
+speaker notes, script and click path always match. `shots.mjs` also records the demo lot's live numbers
+in `shots/facts.json` (lawn, need, rebate, native savings, bill gap, this week's guide line); the deck
+quotes those. Shared corrections on the demo lot change them, so rerun both before the pitch. Both scripts use the preinstalled Google Chrome (`channel: 'chrome'`).
 Rendering needs the Fredoka and Nunito TTFs in `~/.local/share/fonts` (from github.com/google/fonts).
 
 The OpenSprinkler UI loads from ui.opensprinkler.com, whose Cloudflare blocks the HeadlessChrome

@@ -1,0 +1,51 @@
+{
+	"lot": {
+		"address": "603 E SOUTH TEMPLE ST",
+		"lot_sqft": 48811,
+		"lawn_sqft": 6828,
+		"canopy_sqft": 7781,
+		"converted_sqft": 2019,
+		"need_in": 29,
+		"need_gal": 123581,
+		"corrections": 7,
+		"range_lo": 12796,
+		"range_hi": 13737,
+		"rebate_usd": 20484,
+		"rebate_program": "Central Utah Water Conservancy District",
+		"native_gal": 89236,
+		"county": null,
+		"checked": "2026-10-28T17:22:43.592Z"
+	},
+	"bill": {
+		"gap_gal": 197334,
+		"outdoor_gal": 320914,
+		"months": 12
+	},
+	"plan": {
+		"one_thing": "Change your timer once a month",
+		"save_gal": 119030
+	},
+	"week": {
+		"label": "October 23 - 29, 2026",
+		"text": "Utah's Weekly Lawn Watering Guide says no watering in Salt Lake County this week.",
+		"paused": true
+	},
+	"live": {
+		"address": "67 W 200 N",
+		"lot_sqft": 35181,
+		"lawn_sqft": 10834,
+		"canopy_sqft": 16908,
+		"converted_sqft": null,
+		"need_in": 42,
+		"need_gal": 284181,
+		"corrections": 0,
+		"range_lo": 10399,
+		"range_hi": 11072,
+		"rebate_usd": 21668,
+		"rebate_program": "Washington County Water Conservancy District",
+		"native_gal": 184915,
+		"county": "WASHINGTON",
+		"url": "/u/Washington/SG-464-CB",
+		"checked": "2026-10-28T17:24:15.215Z"
+	}
+}
