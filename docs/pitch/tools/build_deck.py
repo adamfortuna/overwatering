@@ -449,41 +449,11 @@ OpenSprinkler, Rachio and Home Assistant. Ten
 thousand dollars funds phase two: a pilot that manages real sprinklers remotely, more sprinkler
 systems, moisture sensors, and sitting down with each of Utah's water-wise partners to see what's
 already in progress. Phase three is with the state: drone scans a few times a week, so each
-sprinkler head waters only the patch that needs it.
+sprinkler head waters only the patch that needs it, and the state can spot overwatering from
+the air before a bill ever shows it.
 """)
 
-# 7. Two customers
-s = slide()
-named("Two customers")
-kicker(s, "Path to reality")
-title(s, "Two customers: the state and the homeowner.")
-COLX = [2.55, 7.65]
-for (head, art), x in zip([("Cities, districts & the state", "sprinkler-solo.png"), ("Homeowners", "grass.png")], COLX):
-    png(s, ART / art, x, 1.9, h=0.6)
-    text(s, x + 0.7, 1.95, 4.3, 0.5, head, size=22, font=HEAD, bold=True)
-ROWS = [
-    ("Now", LAWN, "Every lot's lawn and need. Rebate outreach goes where the savings are.",
-     "Your lawn, your rebate, and a schedule that changes itself."),
-    ("Phase 2", WATER, "Schedules that follow the state guide across a district. Savings measured on meters.",
-     "Sprinklers managed for you. Moisture sensors skip the wet days."),
-    ("Phase 3", GOLD, "Drone scans spot overwatering from the air, lot by lot.",
-     "Each sprinkler head waters only the patch that needs it."),
-]
-for r, (lab, c, a, b) in enumerate(ROWS):
-    y = 2.75 + r * 1.35
-    text(s, 0.75, y + 0.05, 1.6, 0.5, lab.upper(), size=14, bold=True, color=c)
-    for x, t in zip(COLX, (a, b)):
-        box(s, x, y, 4.95, 1.15, fill=WHITE, line="cfe6f5", radius=0.1)
-        text(s, x + 0.25, y + 0.05, 4.5, 1.05, t, size=16, anchor=MSO_ANCHOR.MIDDLE, line=1.1)
-source(s, "Districts already named on the site: Central Utah, Jordan Valley, Weber Basin, Washington County, and the statewide Utah Water Savers program.")
-notes(s, "3:45–4:15", """
-Two customers. Cities, districts and the state already pay for rebate outreach; we show them
-every lot's lawn and need, so that money goes where the savings are. With drone scans, they
-could spot overwatering from the air, before a bill ever shows it. Homeowners get their lawn,
-their rebate, and a schedule that runs itself, down to each sprinkler head.
-""")
-
-# 8. Ask + close
+# 7. Ask + close
 s = slide()
 named("The ask")
 footer_scene(s)
@@ -495,7 +465,7 @@ text(s, 0.75, 3.05, 8.4, 1.9, [
 ], size=20, line=1.15, after=8)
 png(s, qr("https://overwater.ing"), 9.75, 0.85, w=2.6)
 text(s, 9.75, 3.5, 2.6, 0.4, "overwater.ing", size=18, font=HEAD, bold=True, align=PP_ALIGN.CENTER)
-notes(s, "4:15–4:35", """
+notes(s, "3:45–4:05", """
 So here's the ask: ten thousand dollars for phase two, a pilot that runs real sprinklers. And
 introductions: to Utah's water-wise partners, to a district's conservation team, and to drone
 training academies that could fly LiDAR scans with us. And right now, take out your phone and

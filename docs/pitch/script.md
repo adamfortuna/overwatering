@@ -11,8 +11,7 @@ lot's numbers as read from the live site on 2026-10-28 (`shots/facts.json`). Tar
 | 4 | The lake needs that water back | 0:45–1:10 |
 | 5 | Live demo | 1:10–3:10 |
 | 6 | What $10K unlocks | 3:10–3:45 |
-| 7 | Two customers | 3:45–4:15 |
-| 8 | The ask | 4:15–4:35 |
+| 7 | The ask | 3:45–4:05 |
 
 ## 0:00–0:05 · Slide 1: Title
 
@@ -62,16 +61,10 @@ OpenSprinkler, Rachio and Home Assistant. Ten
 thousand dollars funds phase two: a pilot that manages real sprinklers remotely, more sprinkler
 systems, moisture sensors, and sitting down with each of Utah's water-wise partners to see what's
 already in progress. Phase three is with the state: drone scans a few times a week, so each
-sprinkler head waters only the patch that needs it.
+sprinkler head waters only the patch that needs it, and the state can spot overwatering from
+the air before a bill ever shows it.
 
-## 3:45–4:15 · Slide 7: Two customers
-
-Two customers. Cities, districts and the state already pay for rebate outreach; we show them
-every lot's lawn and need, so that money goes where the savings are. With drone scans, they
-could spot overwatering from the air, before a bill ever shows it. Homeowners get their lawn,
-their rebate, and a schedule that runs itself, down to each sprinkler head.
-
-## 4:15–4:35 · Slide 8: The ask
+## 3:45–4:05 · Slide 7: The ask
 
 So here's the ask: ten thousand dollars for phase two, a pilot that runs real sprinklers. And
 introductions: to Utah's water-wise partners, to a district's conservation team, and to drone
@@ -82,19 +75,19 @@ type your address at overwater.ing. Thank you.
 
 Only if the live demo fails. They follow the demo order.
 
-- **Slide 9: Backup** (backup). Only if the live demo fails. Each following slide matches one demo step in demo.md.
-- **Slide 10: 1 · Enter any Utah address** (demo 1:10). Type 603 E South Temple and pick the first result.
-- **Slide 11: 2 · Confirm what's grass** (demo 1:20). 6,828 sq ft of lawn on the Governor's Mansion lot, about 29 inches and 124,000 gallons a year.
-- **Slide 12: 3 · What going native saves** (demo 1:55). The before and after for this lot.
-- **Slide 13: 3 · The rebate, and who's in charge here** (demo 1:40). The city, the water system and the program for this lot, plus the $100 smart controller rebate.
-- **Slide 14: 4 · Lower your water use today** (demo 2:05). The single change with the most gallons saved, then the month-by-month schedule.
-- **Slide 15: 4 · The schedule** (demo 2:10). Deep and infrequent, split into short cycles so it soaks in.
-- **Slide 16: 4 · Subscribe to the watering calendar** (demo 2:20). Subscribe once; each watering day shows up at 5 a.m. with run times.
-- **Slide 17: 4 · The controller follows the schedule** (demo 2:25). OpenSprinkler firmware in demo mode, set by our connector. When the guide says no watering, the program is switched
+- **Slide 8: Backup** (backup). Only if the live demo fails. Each following slide matches one demo step in demo.md.
+- **Slide 9: 1 · Enter any Utah address** (demo 1:10). Type 603 E South Temple and pick the first result.
+- **Slide 10: 2 · Confirm what's grass** (demo 1:20). 6,828 sq ft of lawn on the Governor's Mansion lot, about 29 inches and 124,000 gallons a year.
+- **Slide 11: 3 · What going native saves** (demo 1:55). The before and after for this lot.
+- **Slide 12: 3 · The rebate, and who's in charge here** (demo 1:40). The city, the water system and the program for this lot, plus the $100 smart controller rebate.
+- **Slide 13: 4 · Lower your water use today** (demo 2:05). The single change with the most gallons saved, then the month-by-month schedule.
+- **Slide 14: 4 · The schedule** (demo 2:10). Deep and infrequent, split into short cycles so it soaks in.
+- **Slide 15: 4 · Subscribe to the watering calendar** (demo 2:20). Subscribe once; each watering day shows up at 5 a.m. with run times.
+- **Slide 16: 4 · The controller follows the schedule** (demo 2:25). OpenSprinkler firmware in demo mode, set by our connector. When the guide says no watering, the program is switched
 off. Preview a July week and it's Monday, Wednesday, Friday at 5 a.m., four 7-minute cycles per zone.
-- **Slide 18: 4 · Any controller: /connect** (demo 2:30). Rachio and Home Assistant cover most smart controllers sold in Utah; OpenSprinkler is the open-hardware path.
-- **Slide 19: Optional · Claude reads the bill: 197,334 gallons over** (optional). Upload the sample bill. Claude reads twelve months; the page shows the overwatering gap.
-- **Slide 20: Optional · Any address, measured live** (demo 2:50). Any Utah address is measured live in the browser in seconds.
-- **Slide 21: Neighborhood view for districts** (backup). What a district sees: lawn, need, likely overwatering and savings for a whole neighborhood.
-- **Slide 22: Utah-scale numbers: overwater.ing/impact** (backup). Utah-scale numbers, live on the site.
-- **Slide 23: Sources** (reference). Sources for every number in the deck. Saved water can increase potential flows to the lake; it may be reused upstream.
+- **Slide 17: 4 · Any controller: /connect** (demo 2:30). Rachio and Home Assistant cover most smart controllers sold in Utah; OpenSprinkler is the open-hardware path.
+- **Slide 18: Optional · Claude reads the bill: 197,334 gallons over** (optional). Upload the sample bill. Claude reads twelve months; the page shows the overwatering gap.
+- **Slide 19: Optional · Any address, measured live** (demo 2:50). Any Utah address is measured live in the browser in seconds.
+- **Slide 20: Neighborhood view for districts** (backup). What a district sees: lawn, need, likely overwatering and savings for a whole neighborhood.
+- **Slide 21: Utah-scale numbers: overwater.ing/impact** (backup). Utah-scale numbers, live on the site.
+- **Slide 22: Sources** (reference). Sources for every number in the deck. Saved water can increase potential flows to the lake; it may be reused upstream.
