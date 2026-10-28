@@ -70,7 +70,7 @@ export async function analyzeParcel(county: string, id: string, step: (msg: stri
 		fetchBuf(`/api/naip?bbox=${bbox}&size=${w},${h}&bands=nrg`),
 		fetchBuf(`/api/naip?bbox=${ctx}&size=400,400&bands=nrg&interp=nearest`),
 		fetch(`/api/buildings?bbox=${[Math.min(...lons), Math.min(...lats), Math.max(...lons), Math.max(...lats)].map((v) => v.toFixed(6)).join(',')}`).then((r) => (r.ok ? r.json() : { features: [] })),
-		fetch(`/api/naip-info?lon=${clon.toFixed(6)}&lat=${clat.toFixed(6)}`).then((r) => (r.ok ? r.json() : {})).catch(() => ({}))
+		naipInfo(clon, clat)
 	]);
 	const rgb = decode(rgbBuf), nrg = decode(nrgBuf), ctxImg = decode(ctxBuf);
 
@@ -175,10 +175,34 @@ export async function analyzeParcel(county: string, id: string, step: (msg: stri
 	};
 }
 
+// USDA's image service, called straight from the browser when our proxy can't reach it (it allows
+// CORS from overwater.ing). In Oct 2026 usda.gov's DNSSEC broke: validating resolvers, Cloudflare's
+// included, can't look the host up, but many home and office resolvers still can.
+const USDA_NAIP = 'https://apps.geo.fpac.usda.gov/geo-imagery/rest/services/naip/conus_naip/ImageServer';
+const BAND_IDS: Record<string, string> = { rgb: '0,1,2', nrg: '3,0,1' };
+
 async function fetchBuf(url: string) {
-	const r = await fetch(url);
-	if (!r.ok) throw new LiveError('The 2024 aerial imagery service is not answering right now. Try again in a minute.');
+	let r = await fetch(url).catch(() => null);
+	if (!r?.ok && url.startsWith('/api/naip?')) {
+		const p = new URL(url, location.href).searchParams;
+		const q = new URLSearchParams({ bbox: p.get('bbox')!, bboxSR: '26912', imageSR: '26912', size: p.get('size')!, format: 'png', bandIds: BAND_IDS[p.get('bands')!], interpolation: p.get('interp') === 'nearest' ? 'RSP_NearestNeighbor' : 'RSP_BilinearInterpolation', f: 'image' });
+		r = await fetch(`${USDA_NAIP}/exportImage?${q}`).catch(() => null);
+	}
+	if (!r?.ok) throw new LiveError('The 2024 aerial imagery service is not answering right now. Try again in a minute.');
 	return new Uint8Array(await r.arrayBuffer());
+}
+
+async function naipInfo(lon: number, lat: number): Promise<{ year?: number; date?: string; item?: string }> {
+	const r = await fetch(`/api/naip-info?lon=${lon.toFixed(6)}&lat=${lat.toFixed(6)}`).catch(() => null);
+	if (r?.ok) return r.json();
+	try {
+		const q = new URLSearchParams({ geometry: JSON.stringify({ x: lon, y: lat, spatialReference: { wkid: 4326 } }), geometryType: 'esriGeometryPoint', returnCatalogItems: 'true', returnGeometry: 'false', f: 'json' });
+		const j = await (await fetch(`${USDA_NAIP}/identify?${q}`)).json();
+		const best = (j.catalogItems?.features ?? []).map((f: { attributes: Record<string, number> }) => f.attributes).filter((a: Record<string, number>) => a.QQDATE).sort((a: Record<string, number>, b: Record<string, number>) => b.year_ts - a.year_ts)[0];
+		return best ? { year: best.year_ts, date: new Date(best.QQDATE).toISOString().slice(0, 10), item: String(best.Name) } : {};
+	} catch {
+		return {};
+	}
 }
 
 function ringArea(r: Ring) {

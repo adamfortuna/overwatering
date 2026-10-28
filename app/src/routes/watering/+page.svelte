@@ -9,6 +9,7 @@
 	import SystemIcon from '#lib/art/SystemIcon.svelte';
 	import Sprinkler from '#lib/art/Sprinkler.svelte';
 	import CountUp from '#lib/CountUp.svelte';
+	import { planKey, type Week } from '#lib/calendar.ts';
 	let { data }: PageProps = $props();
 
 	// svelte-ignore state_referenced_locally
@@ -41,6 +42,28 @@
 		const p = 10 ** Math.floor(Math.log10(x));
 		return [1, 2, 2.5, 5, 10].map((m) => m * p).find((v) => v >= x)!;
 	}
+	// The subscribable calendar and this week's state guide for the chosen weather and sprinklers.
+	let key = $derived(planKey(etoKey, system));
+	let calUrl = $derived(`${location.origin}/api/calendar/${key}.ics`);
+	let thisWeek = $state<(Week & { guideWeek?: string }) | null>(null);
+	$effect(() => {
+		const k = key;
+		thisWeek = null;
+		fetch(`/api/schedule/${k}`)
+			.then((r) => (r.ok ? r.json() : null))
+			.then((j) => {
+				if (j && k === key) thisWeek = { ...j.this_week, guideWeek: j.guide?.week };
+			})
+			.catch(() => {});
+	});
+	let copied = $state(false);
+	function copy() {
+		navigator.clipboard?.writeText(calUrl).then(() => {
+			copied = true;
+			setTimeout(() => (copied = false), 1600);
+		});
+	}
+
 	const MON = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 	const W = 640, H = 240, L = 48, B = 26, T = 12;
 	const kfmt = (g: number) => (g >= 1000 ? `${Math.round(g / 100) / 10}k` : String(Math.round(g)));
@@ -149,6 +172,34 @@
 	<p class="muted small">Then check Utah's <a href="https://conservewater.utah.gov/weekly-lawn-watering-guide/" target="_blank" rel="noopener">Weekly Lawn Watering Guide</a> each Friday and skip a day after a good rain. Shady zones need less; adjust if you see dry spots.</p>
 </section>
 
+<section class="card cal" id="calendar">
+	<div class="cal-top">
+		<svg class="cal-ic" viewBox="0 0 64 64" aria-hidden="true">
+			<rect x="6" y="10" width="52" height="46" rx="10" fill="#fff" stroke="#1f86d6" stroke-width="4" />
+			<path d="M6 22 H58 V20 a10 10 0 0 0 -10 -10 H16 a10 10 0 0 0 -10 10 Z" fill="#1f86d6" />
+			<rect x="17" y="4" width="6" height="12" rx="3" fill="#12324a" /><rect x="41" y="4" width="6" height="12" rx="3" fill="#12324a" />
+			<path d="M32 30 C27 37 25 40 25 43 a7 7 0 0 0 14 0 C39 40 37 37 32 30 Z" fill="#4cc3f0" />
+		</svg>
+		<div>
+			<p class="kicker">Put it on autopilot</p>
+			<h2>Get this schedule as a calendar</h2>
+			<p class="muted small">Subscribe once. Each watering day shows up at 5 a.m. with run times for {SYSTEMS[system].short} in {eto.place}'s weather, and it follows Utah's Weekly Lawn Watering Guide: when the state says skip, the week clears itself. No sign-up, and the link has no address in it.</p>
+		</div>
+	</div>
+	{#if thisWeek}
+		<p class="week" class:paused={thisWeek.paused}>
+			<b>This week{thisWeek.source === 'guide' && thisWeek.guideWeek ? ` (${thisWeek.guideWeek})` : ''}:</b>
+			{#if thisWeek.paused}{thisWeek.note}{:else}{thisWeek.days.join(', ')} at 5 a.m., {thisWeek.cycles > 1 ? `${thisWeek.cycles} × ${thisWeek.minutesPerCycle}` : thisWeek.minutesPerDay} min per zone. <span class="muted">{thisWeek.note}</span>{/if}
+		</p>
+	{/if}
+	<div class="cal-actions">
+		<a class="btn" href={calUrl.replace(/^https?:/, 'webcal:')}>Subscribe (Apple, Outlook)</a>
+		<a class="btn" href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(calUrl.replace(/^https?:/, 'webcal:'))}`} target="_blank" rel="noopener">Add to Google Calendar</a>
+		<button type="button" class="btn ghost" onclick={copy}>{copied ? 'Copied!' : 'Copy link'}</button>
+	</div>
+	<p class="muted small">Smart controller or a Raspberry Pi? The same schedule is open JSON at <a href={`/api/schedule/${key}`}>/api/schedule/{key}</a>, and our <a href="/connect">OpenSprinkler connector</a> sets your controller from it every morning.</p>
+</section>
+
 <section>
 	<h2 class="more">More ways to save</h2>
 	<div class="tips">
@@ -213,4 +264,12 @@
 	.badge { display: inline-block; font-family: var(--display); font-weight: 600; font-size: 0.85rem; color: #fff; background: var(--lawn); border-radius: 999px; padding: 2px 10px; margin-bottom: 6px; }
 	.note { color: #6b4b00; }
 	.fine { margin-top: 18px; }
+	.cal { border-color: #a9e1f8; }
+	.cal-top { display: grid; grid-template-columns: 64px 1fr; gap: 16px; align-items: start; }
+	.cal-ic { width: 64px; height: 64px; }
+	.week { background: var(--aqua); border-radius: 14px; padding: 10px 14px; margin: 12px 0; }
+	.week.paused { background: #fff4d6; }
+	.cal-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 4px; }
+	.btn { display: inline-block; font-family: var(--display); font-weight: 600; text-decoration: none; color: #fff; background: var(--water); border: 2px solid var(--water); border-radius: 999px; padding: 8px 18px; box-shadow: 0 4px 0 #1665a3; }
+	.btn.ghost { background: #fff; color: var(--water); box-shadow: 0 4px 0 #d6ecf9; }
 </style>

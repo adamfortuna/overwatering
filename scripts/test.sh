@@ -5,4 +5,4 @@ cd "$(dirname "$0")/.."
 . scripts/node-env.sh
 ensure_node
 .venv/bin/python -m pytest -q pipeline/tests
-cd app && npm run check
+cd app && npx vitest run && npm run check
