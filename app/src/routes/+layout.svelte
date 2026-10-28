@@ -95,6 +95,9 @@
 	:global(.kicker) { font-family: var(--display); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--water); margin: 0 0 4px; }
 	:global(.small) { font-size: 0.9rem; }
 	:global(input, select) { font: inherit; color: var(--ink); background: #fff; border: 2px solid var(--line); border-radius: 14px; padding: 10px 12px; }
+	/* Our own chevron: Safari ignores padding, radius and height on native select menus. */
+	:global(select) { appearance: none; -webkit-appearance: none; padding-right: 40px; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 6l4.5 4.5L12.5 6' fill='none' stroke='%231f86d6' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 14px center / 14px; cursor: pointer; }
+	:global(select:hover) { border-color: #a9d4ef; }
 	:global(input:focus-visible, select:focus-visible, a:focus-visible, button:focus-visible) { outline: 3px solid var(--water-2); outline-offset: 2px; }
 
 	nav { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 14px 20px; max-width: 1140px; margin: 0 auto; }
