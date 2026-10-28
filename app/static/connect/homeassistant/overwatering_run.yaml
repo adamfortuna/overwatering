@@ -1,0 +1,88 @@
+blueprint:
+  name: Overwater.ing lawn watering
+  description: >-
+    Waters your lawn zones on the days and for the run times in Overwater.ing's weekly schedule,
+    which follows Utah's Weekly Lawn Watering Guide. Long runs are split into cycles with a soak
+    in between so water sinks in instead of running off. Skips the whole week when the state says
+    not to water. Works with any sprinkler integration that exposes zones as switches or valves
+    (Rachio, Rain Bird, OpenSprinkler, Hydrawise, B-hyve, ESPHome relays). Needs the
+    sensor from overwatering.yaml. Turn off your controller's own lawn schedule so zones don't
+    run twice.
+  domain: automation
+  source_url: https://overwater.ing/connect/homeassistant/overwatering_run.yaml
+  input:
+    schedule:
+      name: Schedule sensor
+      description: sensor.overwatering_this_week from overwatering.yaml
+      selector:
+        entity:
+          domain: sensor
+    zones:
+      name: Lawn zones
+      description: Run one after another, in this order. Leave out drip and garden zones.
+      selector:
+        entity:
+          domain:
+            - switch
+            - valve
+          multiple: true
+    start_time:
+      name: Start time
+      description: Early morning loses the least to wind and sun.
+      default: "05:00:00"
+      selector:
+        time: {}
+    soak_minutes:
+      name: Soak between cycles (minutes)
+      default: 30
+      selector:
+        number:
+          min: 0
+          max: 120
+          step: 0.1
+          unit_of_measurement: min
+
+mode: single
+max_exceeded: silent
+
+triggers:
+  - trigger: time
+    at: !input start_time
+
+variables:
+  schedule: !input schedule
+  zones: !input zones
+  soak_minutes: !input soak_minutes
+  days: "{{ state_attr(schedule, 'days') or [] }}"
+  cycles: "{{ state_attr(schedule, 'cycles') | int(0) }}"
+  run_seconds: "{{ ((state_attr(schedule, 'minutesPerCycle') | float(0)) * 60) | round(0) | int }}"
+
+conditions:
+  - condition: template
+    value_template: >-
+      {{ not state_attr(schedule, 'paused') and cycles > 0 and run_seconds > 0
+         and now().strftime('%a') in days }}
+
+actions:
+  - repeat:
+      count: "{{ cycles }}"
+      sequence:
+        - variables:
+            cycle: "{{ repeat.index }}"
+        - repeat:
+            for_each: "{{ zones }}"
+            sequence:
+              - action: "{{ 'valve.open_valve' if repeat.item.startswith('valve.') else 'homeassistant.turn_on' }}"
+                target:
+                  entity_id: "{{ repeat.item }}"
+              - delay:
+                  seconds: "{{ run_seconds }}"
+              - action: "{{ 'valve.close_valve' if repeat.item.startswith('valve.') else 'homeassistant.turn_off' }}"
+                target:
+                  entity_id: "{{ repeat.item }}"
+        - if:
+            - condition: template
+              value_template: "{{ cycle < cycles }}"
+          then:
+            - delay:
+                seconds: "{{ (soak_minutes * 60) | round(0) | int }}"

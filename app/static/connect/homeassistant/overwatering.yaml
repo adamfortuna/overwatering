@@ -1,0 +1,41 @@
+# Overwater.ing for Home Assistant: this week's lawn watering as a sensor.
+#
+# 1. Save this file as config/packages/overwatering.yaml, and make sure configuration.yaml has
+#      homeassistant:
+#        packages: !include_dir_named packages
+# 2. Change salt-lake-spray below to your plan (your county + sprinkler type; see
+#    https://overwater.ing/watering), then restart Home Assistant.
+# 3. Import the blueprint (overwatering_run.yaml) and point it at sensor.overwatering_this_week
+#    and your lawn zones.
+#
+# The sensor's state is this week's watering days ("Mon, Wed, Fri") or "paused"; the attributes
+# carry run times. It follows Utah's Weekly Lawn Watering Guide, so a "no watering" week reads
+# paused. Re-read every 6 hours; no account or key.
+rest:
+  - resource: https://overwater.ing/api/schedule/salt-lake-spray
+    scan_interval: 21600
+    sensor:
+      - name: Overwatering this week
+        unique_id: overwatering_this_week
+        icon: mdi:sprinkler-variant
+        value_template: "{{ 'paused' if value_json.this_week.paused else value_json.this_week.days | join(', ') }}"
+        json_attributes_path: "$.this_week"
+        json_attributes:
+          - start
+          - end
+          - source
+          - waterings
+          - days
+          - minutesPerDay
+          - cycles
+          - minutesPerCycle
+          - waterLevelPct
+          - peakPct
+          - weeklyIn
+          - paused
+          - note
+      - name: Overwatering water level
+        unique_id: overwatering_water_level
+        icon: mdi:water-percent
+        unit_of_measurement: "%"
+        value_template: "{{ value_json.this_week.peakPct }}"

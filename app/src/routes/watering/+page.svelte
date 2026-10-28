@@ -197,7 +197,7 @@
 		<a class="btn" href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(calUrl.replace(/^https?:/, 'webcal:'))}`} target="_blank" rel="noopener">Add to Google Calendar</a>
 		<button type="button" class="btn ghost" onclick={copy}>{copied ? 'Copied!' : 'Copy link'}</button>
 	</div>
-	<p class="muted small">Smart controller or a Raspberry Pi? The same schedule is open JSON at <a href={`/api/schedule/${key}`}>/api/schedule/{key}</a>, and our <a href="/connect">OpenSprinkler connector</a> sets your controller from it every morning.</p>
+	<p class="muted small">Smart controller or a Raspberry Pi? The same schedule is open JSON at <a href={`/api/schedule/${key}`}>/api/schedule/{key}</a>, and our <a href={`/connect?eto=${encodeURIComponent(etoKey)}`}>connectors for Rachio, Home Assistant and OpenSprinkler</a> set your controller from it every morning.</p>
 </section>
 
 <section>
