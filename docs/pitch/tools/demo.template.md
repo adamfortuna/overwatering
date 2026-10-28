@@ -2,7 +2,7 @@
 
 <!-- Generated from docs/pitch/tools/demo.template.md by build_deck.py. Edit the template. -->
 
-The demo slot is **1:10–3:00** in `script.md`, about 1 minute 50 seconds. It follows the flow on
+The demo slot is **1:10–3:10** in `script.md`, about 2 minutes. It follows the flow on
 slide {s_demo}: enter an address → confirm what's grass → see what going native saves → or lower your
 water use today. The example lot is **603 E South Temple** (the Governor's Mansion, parcel
 `09314870040000`). It's precomputed, so it doesn't depend on USDA. Never demo Adam's own address.
@@ -39,7 +39,7 @@ click through them.
 | Time | Do | Say | If it fails |
 |---|---|---|---|
 | 1:10 | **1 · Enter your address.** On tab 1, type `603 E South Temple`. Click **603 E SOUTH TEMPLE ST 84102**. | "Any address in Utah. Let's take the Governor's Mansion." | Search hangs: go to **tab 2**. Site down: slide {s_search}. |
-| 1:20 | **2 · Confirm what's grass.** Point at the aerial photo, then the **Your lawn** card. Tap one green shape once, then tap it three more times so it's green again. | "The 2024 aerial photo. Green is lawn, dark green is trees, red is buildings: {lot_lawn_sqft} square feet of lawn. Get a shape wrong and you tap it. That correction trains the model." | The photo is blank: talk over the numbers, which come from our own data. Slide {s_lot}. |
+| 1:20 | **2 · Confirm what's grass.** Point at the aerial photo, then the **Your lawn** card. Tap one green shape once, then tap it three more times so it's green again. | "The 2024 aerial photo. Green is lawn, dark green is trees, red is buildings: {lot_lawn_sqft} square feet of lawn. That outline comes from 60-centimeter infrared aerial photos, minus trees from laser-scanned tree heights, minus roofs, computed in your browser. Get a shape wrong and you tap it; that correction trains the model." | The photo is blank: talk over the numbers, which come from our own data. Slide {s_lot}. |
 | 1:40 | **3 · See what going native saves.** Scroll to **3 · Every year: Go native** ({lot_native_gal} gal/yr), then up to **2 · One time: Take the rebate**. | "Go native and this lot saves about {lot_native_k} gallons a year. And Utah pays up to ${lot_rebate_usd} here, from {lot_rebate_program}. It knows the city, the water system and the program." | Slides {s_native}–{s_rebate}. |
 | 1:55 | Click **What going native looks like →**. Show the before and after. | "Here's what that looks like, the plants that grow here, and who to call." | Slide {s_native}. |
 | 2:05 | **4 · Lower your water use today.** Go to **tab 3**. Click **Pop-up spray heads**, then **A basic timer**. | "Or start today. Spray heads and a basic timer, like most Utah yards: here's the one thing to change, and the schedule month by month for this county." | Slide {s_plan}. |
@@ -47,7 +47,7 @@ click through them.
 | 2:25 | **Terminal:** run `{off_cmd}`. It prints that it switched the program off. On **tab 4**, reload **Programs**: **Enabled** is unchecked. | "Or send it straight to the controller. This is OpenSprinkler's real firmware. {off_says}" | If the program is hidden, open the footer menu and pick **Show Disabled**. Otherwise slide {s_os}. |
 | 2:35 | **Terminal:** `scripts/opensprinkler-demo.sh sync --date 2027-07-14`. It prints **Mon, Wed, Fri at 05:00: 4 × 7 min**. Reload **Programs**. | "In July: Monday, Wednesday, Friday at 5 a.m., four short cycles a zone, so it soaks in." | Slide {s_os}. |
 | 2:50 | *(Optional, only if the warm-up worked.)* On the lot, click **← another address** and type `67 W 200 N`. Pick the **St. George** result. | "None of that was precomputed for St. George. The browser just measured it: {live_lawn_sqft} square feet, needing {live_need_in} inches a season." | Skip it, or use slide {s_live}. |
-| 3:00 | Switch back to Slides, slide {s_after_demo}. | | |
+| 3:10 | Switch back to Slides, slide {s_after_demo}. | | |
 
 ## Watch out
 

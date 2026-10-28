@@ -392,12 +392,13 @@ text(s, 1.05, 5.7, 9.2, 1.3, [
       {"font": BODY, "bold": False, "size": 15, "color": INK})],
 ], size=21, font=HEAD, bold=True, line=1.1, after=4)
 png(s, ART / "sprinkler.png", 10.7, 5.55, h=1.4)
-notes(s, "1:10–3:00", f"""
+notes(s, "1:10–3:10", f"""
 (Switch to the browser. Full click path and fallbacks are in demo.md.)
 1:10 Type "603 E South Temple", the Governor's Mansion. Pick it.
 1:20 The 2024 aerial photo. Green is lawn, dark green is trees, red is buildings: {n(LOT['lawn_sqft'])} square
-feet of lawn. If we got a shape wrong, tap it. That correction trains the model. (Tap one, then
-tap it back to green.)
+feet of lawn. That outline comes from 60-centimeter infrared aerial photos, minus the trees from
+laser-scanned tree heights, minus the roofs, computed right in your browser. If we got a shape
+wrong, tap it, and that correction trains the model. (Tap one, then tap it back to green.)
 1:40 Go native: about {thou(LOT['native_gal'])} gallons a year saved. And Utah pays up to ${n(LOT['rebate_usd'])} here,
 from {LOT['rebate_program']}. It knows the city, the water system and the program.
 1:55 What going native looks like: the before and after, the plants, the designers to call.
@@ -409,73 +410,7 @@ firmware: when the state says skip, it switches itself off. In July: Monday, Wed
 2:50 (Only if the warm-up worked.) Any address in Utah is measured live, like this one in St. George.
 """)
 
-# 6. Built, live, checked
-s = slide()
-named("Built, live, checked")
-kicker(s, "Progress")
-title(s, "Live, statewide, and checked against the state.")
-tiles = [
-    ("12,791", "lots precomputed in six Salt Lake City and Sandy neighborhoods: 319 acres of lawn.", WATER),
-    ("29 / 29", "Utah counties searchable. Any other address is measured live in the browser.", LAWN),
-    ("r = 0.77", "per-lot agreement with the state's Greenspace model (3,104 lots, median ratio 0.97).", CORAL),
-]
-for i, (num, label, c) in enumerate(tiles):
-    x = 0.75 + i * 4.05
-    box(s, x, 2.25, 3.75, 3.2, fill=WHITE, line="cfe6f5", radius=0.08)
-    text(s, x + 0.3, 2.5, 3.2, 1.1, num, size=54, font=HEAD, bold=True, color=c, line=0.9)
-    text(s, x + 0.3, 3.65, 3.2, 1.7, label, size=17, line=1.15)
-text(s, 0.75, 5.75, 11.8, 0.9, [[("Built on real data: ", {"bold": True}),
-                                 ("USDA aerial imagery, county parcels, Meta tree heights, gridMET weather, Utah Water Savers rebates, the state's weekly watering guide.", {})]],
-     size=18, line=1.15)
-source(s, "Greenspace comparison: Utah DWRe Greenspace 2024 (NDVI ≥ 0.15) vs. our lawn + tree canopy for ZIP 84102: 189.2 vs 170.2 acres. Data shared by Jack Hinzman, Senior GIS Analyst, DWRe. Method: RESULTS.md, Run 7.")
-notes(s, "3:00–3:10", """
-It's live: twelve thousand eight hundred lots precomputed, any address in all 29 counties
-measured on demand, and it tracks the state's own Greenspace model lot by lot.
-""")
-
-# 7. How it works, in plain words
-s = slide()
-named("How it works")
-kicker(s, "Hard tech")
-title(s, "From an aerial photo to your sprinkler.")
-cols = [
-    ("1", "Find the grass", WATER,
-     ["Aerial photos with infrared, so living plants glow.",
-      "Laser-scanned tree heights and building outlines pull out trees and roofs."],
-     "USDA NAIP 2024 (60 cm, 4-band) · NDVI · Meta LiDAR canopy heights · runs in your browser"),
-    ("2", "Know what it needs", LAWN,
-     ["Each county's weather: how much water grass loses each day.",
-      "Turned into days and minutes, checked against the state's weekly guide."],
-     "gridMET reference ET · FAO-56 turf coefficient · Utah Weekly Lawn Watering Guide"),
-    ("3", "Run the sprinklers", CORAL,
-     ["A calendar, or the controller itself: off when the state says skip.",
-      "Your corrections train our model. Claude reads bills to check results."],
-     "Open schedule API · OpenSprinkler, Rachio and Home Assistant connectors · Claude reads bills"),
-]
-imgs = [("flow-2-map", None, 2.05), ("flow-4-schedule", None, 1.45), ("06-os-july-full", (300, 1500, 1500, 2430), 2.05)]
-for i, ((num, head, c, bullets, hood), (img, crop, ih)) in enumerate(zip(cols, imgs)):
-    x = 0.75 + i * 4.05
-    box(s, x, 1.95, 3.75, 4.95, fill=WHITE, line="cfe6f5", radius=0.06)
-    text(s, x + 0.25, 2.08, 3.3, 0.5, [[(num + "  ", {"color": c}), (head, {})]], size=21, font=HEAD, bold=True)
-    if crop:
-        shot(s, img, x + 0.3, 2.7, h=ih, crop=crop, tag="-ht")
-    else:
-        im = Image.open(SHOTS / f"{img}.png")
-        iw = ih * im.width / im.height
-        if iw > 3.15:
-            iw, ih = 3.15, 3.15 * im.height / im.width
-        shot(s, img, x + (3.75 - iw) / 2, 2.7 + (2.05 - ih) / 2, w=iw)
-    text(s, x + 0.25, 4.95, 3.3, 1.3, [[("•  " + b, {})] for b in bullets], size=13.5, line=1.1, after=4)
-    text(s, x + 0.25, 6.3, 3.3, 0.55, hood, size=10, color=MUTED, line=1.05)
-notes(s, "3:10–3:45", """
-How it works, in three steps. Find the grass: aerial photos of the whole state, with infrared so
-living plants glow, minus the trees from laser-scanned tree heights, minus the roofs, right in
-your browser. Know what it needs: each county's weather tells us how much water grass loses, and
-we turn that into days and minutes, checked against the state's weekly guide. Run the
-sprinklers: a calendar, or the controller itself, which switches off when the state says skip.
-""")
-
-# 8. Three phases: what $10K unlocks
+# 6. Three phases: what $10K unlocks
 s = slide()
 named("What $10K unlocks")
 kicker(s, "The plan")
@@ -508,7 +443,7 @@ for i, (head, c, kind, items, foot) in enumerate(phases):
         y += 0.33 * lines + 0.26
     if foot:
         text(s, x + 0.7 if i == 1 else x + 0.25, y - 0.05 if i == 1 else y + 0.1, 3.0, 1.6, foot, size=12 if i == 1 else 15, color=MUTED, line=1.15)
-notes(s, "3:45–4:15", """
+notes(s, "3:10–3:45", """
 Phase one is live today: your rebate estimate, a watering schedule, and connectors for
 OpenSprinkler, Rachio and Home Assistant. Ten
 thousand dollars funds phase two: a pilot that manages real sprinklers remotely, more sprinkler
@@ -517,7 +452,7 @@ already in progress. Phase three is with the state: drone scans a few times a we
 sprinkler head waters only the patch that needs it.
 """)
 
-# 9. Two customers
+# 7. Two customers
 s = slide()
 named("Two customers")
 kicker(s, "Path to reality")
@@ -541,14 +476,14 @@ for r, (lab, c, a, b) in enumerate(ROWS):
         box(s, x, y, 4.95, 1.15, fill=WHITE, line="cfe6f5", radius=0.1)
         text(s, x + 0.25, y + 0.05, 4.5, 1.05, t, size=16, anchor=MSO_ANCHOR.MIDDLE, line=1.1)
 source(s, "Districts already named on the site: Central Utah, Jordan Valley, Weber Basin, Washington County, and the statewide Utah Water Savers program.")
-notes(s, "4:15–4:40", """
+notes(s, "3:45–4:15", """
 Two customers. Cities, districts and the state already pay for rebate outreach; we show them
 every lot's lawn and need, so that money goes where the savings are. With drone scans, they
 could spot overwatering from the air, before a bill ever shows it. Homeowners get their lawn,
 their rebate, and a schedule that runs itself, down to each sprinkler head.
 """)
 
-# 10. Ask + close
+# 8. Ask + close
 s = slide()
 named("The ask")
 footer_scene(s)
@@ -560,7 +495,7 @@ text(s, 0.75, 3.05, 8.4, 1.9, [
 ], size=20, line=1.15, after=8)
 png(s, qr("https://overwater.ing"), 9.75, 0.85, w=2.6)
 text(s, 9.75, 3.5, 2.6, 0.4, "overwater.ing", size=18, font=HEAD, bold=True, align=PP_ALIGN.CENTER)
-notes(s, "4:40–5:00", """
+notes(s, "4:15–4:35", """
 So here's the ask: ten thousand dollars for phase two, a pilot that runs real sprinklers. And
 introductions: to Utah's water-wise partners, to a district's conservation team, and to drone
 training academies that could fly LiDAR scans with us. And right now, take out your phone and
@@ -663,7 +598,6 @@ SOURCES = [
     "Data centers may not add GSL depletion: Utah Executive Order 2026-03 (May 29, 2026)",
     "Rebates of $1.50–$3 per sq ft: Utah Water Savers Landscape Incentive Program (rates checked Oct 27 2026)",
     "Water-wise partners: slowtheflow.org/partners",
-    "Our numbers: 12,791 lots, 319 acres of lawn; Greenspace r = 0.77, median ratio 0.97 (84102, 3,104 lots): RESULTS.md Runs 6–7",
 ]
 text(s, 0.75, 1.25, 11.8, 5.9, [[("•  " + t, {})] for t in SOURCES], size=13, line=1.1, after=5)
 notes(s, "reference", "Sources for every number in the deck. Saved water can increase potential flows to the lake; it may be reused upstream.")
@@ -708,7 +642,7 @@ ctx = {
         "native": slide_no["3 · What going native saves"], "rebate": slide_no["3 · The rebate, and who's in charge here"],
         "plan": slide_no["4 · Lower your water use today"], "cal": slide_no["4 · Subscribe to the watering calendar"],
         "os": slide_no["4 · The controller follows the schedule"], "live": slide_no["Optional · Any address, measured live"],
-        "back": slide_no["Backup"], "demo": slide_no["Live demo"], "last": len(prs.slides) - 1, "after_demo": slide_no["Built, live, checked"],
+        "back": slide_no["Backup"], "demo": slide_no["Live demo"], "last": len(prs.slides) - 1, "after_demo": slide_no["What $10K unlocks"],
     }.items()},
 }
 tpl = (PITCH / "tools" / "demo.template.md").read_text()

@@ -9,12 +9,10 @@ lot's numbers as read from the live site on 2026-10-28 (`shots/facts.json`). Tar
 | 2 | How I got here | 0:05–0:30 |
 | 3 | Where Utah's water goes | 0:30–0:45 |
 | 4 | The lake needs that water back | 0:45–1:10 |
-| 5 | Live demo | 1:10–3:00 |
-| 6 | Built, live, checked | 3:00–3:10 |
-| 7 | How it works | 3:10–3:45 |
-| 8 | What $10K unlocks | 3:45–4:15 |
-| 9 | Two customers | 4:15–4:40 |
-| 10 | The ask | 4:40–5:00 |
+| 5 | Live demo | 1:10–3:10 |
+| 6 | What $10K unlocks | 3:10–3:45 |
+| 7 | Two customers | 3:45–4:15 |
+| 8 | The ask | 4:15–4:35 |
 
 ## 0:00–0:05 · Slide 1: Title
 
@@ -39,13 +37,14 @@ Great Salt Lake is eight feet below healthy. Water we save on yards can flow to 
 since May, new data centers can't add to its depletion, so the AI build-out can't take it.
 But nobody knows, lot by lot, how much lawn there is or what it really needs. So I built it.
 
-## 1:10–3:00 · Slide 5: Live demo
+## 1:10–3:10 · Slide 5: Live demo
 
 (Switch to the browser. Full click path and fallbacks are in demo.md.)
 1:10 Type "603 E South Temple", the Governor's Mansion. Pick it.
 1:20 The 2024 aerial photo. Green is lawn, dark green is trees, red is buildings: 6,828 square
-feet of lawn. If we got a shape wrong, tap it. That correction trains the model. (Tap one, then
-tap it back to green.)
+feet of lawn. That outline comes from 60-centimeter infrared aerial photos, minus the trees from
+laser-scanned tree heights, minus the roofs, computed right in your browser. If we got a shape
+wrong, tap it, and that correction trains the model. (Tap one, then tap it back to green.)
 1:40 Go native: about 89,000 gallons a year saved. And Utah pays up to $20,484 here,
 from Central Utah Water Conservancy District. It knows the city, the water system and the program.
 1:55 What going native looks like: the before and after, the plants, the designers to call.
@@ -56,20 +55,7 @@ firmware: when the state says skip, it switches itself off. In July: Monday, Wed
 5 a.m., four short cycles a zone.
 2:50 (Only if the warm-up worked.) Any address in Utah is measured live, like this one in St. George.
 
-## 3:00–3:10 · Slide 6: Built, live, checked
-
-It's live: twelve thousand eight hundred lots precomputed, any address in all 29 counties
-measured on demand, and it tracks the state's own Greenspace model lot by lot.
-
-## 3:10–3:45 · Slide 7: How it works
-
-How it works, in three steps. Find the grass: aerial photos of the whole state, with infrared so
-living plants glow, minus the trees from laser-scanned tree heights, minus the roofs, right in
-your browser. Know what it needs: each county's weather tells us how much water grass loses, and
-we turn that into days and minutes, checked against the state's weekly guide. Run the
-sprinklers: a calendar, or the controller itself, which switches off when the state says skip.
-
-## 3:45–4:15 · Slide 8: What $10K unlocks
+## 3:10–3:45 · Slide 6: What $10K unlocks
 
 Phase one is live today: your rebate estimate, a watering schedule, and connectors for
 OpenSprinkler, Rachio and Home Assistant. Ten
@@ -78,14 +64,14 @@ systems, moisture sensors, and sitting down with each of Utah's water-wise partn
 already in progress. Phase three is with the state: drone scans a few times a week, so each
 sprinkler head waters only the patch that needs it.
 
-## 4:15–4:40 · Slide 9: Two customers
+## 3:45–4:15 · Slide 7: Two customers
 
 Two customers. Cities, districts and the state already pay for rebate outreach; we show them
 every lot's lawn and need, so that money goes where the savings are. With drone scans, they
 could spot overwatering from the air, before a bill ever shows it. Homeowners get their lawn,
 their rebate, and a schedule that runs itself, down to each sprinkler head.
 
-## 4:40–5:00 · Slide 10: The ask
+## 4:15–4:35 · Slide 8: The ask
 
 So here's the ask: ten thousand dollars for phase two, a pilot that runs real sprinklers. And
 introductions: to Utah's water-wise partners, to a district's conservation team, and to drone
@@ -96,19 +82,19 @@ type your address at overwater.ing. Thank you.
 
 Only if the live demo fails. They follow the demo order.
 
-- **Slide 11: Backup** (backup). Only if the live demo fails. Each following slide matches one demo step in demo.md.
-- **Slide 12: 1 · Enter any Utah address** (demo 1:10). Type 603 E South Temple and pick the first result.
-- **Slide 13: 2 · Confirm what's grass** (demo 1:20). 6,828 sq ft of lawn on the Governor's Mansion lot, about 29 inches and 124,000 gallons a year.
-- **Slide 14: 3 · What going native saves** (demo 1:55). The before and after for this lot.
-- **Slide 15: 3 · The rebate, and who's in charge here** (demo 1:40). The city, the water system and the program for this lot, plus the $100 smart controller rebate.
-- **Slide 16: 4 · Lower your water use today** (demo 2:05). The single change with the most gallons saved, then the month-by-month schedule.
-- **Slide 17: 4 · The schedule** (demo 2:10). Deep and infrequent, split into short cycles so it soaks in.
-- **Slide 18: 4 · Subscribe to the watering calendar** (demo 2:20). Subscribe once; each watering day shows up at 5 a.m. with run times.
-- **Slide 19: 4 · The controller follows the schedule** (demo 2:25). OpenSprinkler firmware in demo mode, set by our connector. When the guide says no watering, the program is switched
+- **Slide 9: Backup** (backup). Only if the live demo fails. Each following slide matches one demo step in demo.md.
+- **Slide 10: 1 · Enter any Utah address** (demo 1:10). Type 603 E South Temple and pick the first result.
+- **Slide 11: 2 · Confirm what's grass** (demo 1:20). 6,828 sq ft of lawn on the Governor's Mansion lot, about 29 inches and 124,000 gallons a year.
+- **Slide 12: 3 · What going native saves** (demo 1:55). The before and after for this lot.
+- **Slide 13: 3 · The rebate, and who's in charge here** (demo 1:40). The city, the water system and the program for this lot, plus the $100 smart controller rebate.
+- **Slide 14: 4 · Lower your water use today** (demo 2:05). The single change with the most gallons saved, then the month-by-month schedule.
+- **Slide 15: 4 · The schedule** (demo 2:10). Deep and infrequent, split into short cycles so it soaks in.
+- **Slide 16: 4 · Subscribe to the watering calendar** (demo 2:20). Subscribe once; each watering day shows up at 5 a.m. with run times.
+- **Slide 17: 4 · The controller follows the schedule** (demo 2:25). OpenSprinkler firmware in demo mode, set by our connector. When the guide says no watering, the program is switched
 off. Preview a July week and it's Monday, Wednesday, Friday at 5 a.m., four 7-minute cycles per zone.
-- **Slide 20: 4 · Any controller: /connect** (demo 2:30). Rachio and Home Assistant cover most smart controllers sold in Utah; OpenSprinkler is the open-hardware path.
-- **Slide 21: Optional · Claude reads the bill: 197,334 gallons over** (optional). Upload the sample bill. Claude reads twelve months; the page shows the overwatering gap.
-- **Slide 22: Optional · Any address, measured live** (demo 2:50). Any Utah address is measured live in the browser in seconds.
-- **Slide 23: Neighborhood view for districts** (backup). What a district sees: lawn, need, likely overwatering and savings for a whole neighborhood.
-- **Slide 24: Utah-scale numbers: overwater.ing/impact** (backup). Utah-scale numbers, live on the site.
-- **Slide 25: Sources** (reference). Sources for every number in the deck. Saved water can increase potential flows to the lake; it may be reused upstream.
+- **Slide 18: 4 · Any controller: /connect** (demo 2:30). Rachio and Home Assistant cover most smart controllers sold in Utah; OpenSprinkler is the open-hardware path.
+- **Slide 19: Optional · Claude reads the bill: 197,334 gallons over** (optional). Upload the sample bill. Claude reads twelve months; the page shows the overwatering gap.
+- **Slide 20: Optional · Any address, measured live** (demo 2:50). Any Utah address is measured live in the browser in seconds.
+- **Slide 21: Neighborhood view for districts** (backup). What a district sees: lawn, need, likely overwatering and savings for a whole neighborhood.
+- **Slide 22: Utah-scale numbers: overwater.ing/impact** (backup). Utah-scale numbers, live on the site.
+- **Slide 23: Sources** (reference). Sources for every number in the deck. Saved water can increase potential flows to the lake; it may be reused upstream.
