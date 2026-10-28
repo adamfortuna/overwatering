@@ -407,6 +407,11 @@ month-by-month schedule for this county.
 2:20 Subscribe to it as a calendar, or send it to the controller. This is OpenSprinkler's real
 firmware: when the state says skip, it switches itself off. In July: Monday, Wednesday, Friday at
 5 a.m., four short cycles a zone.
+Hard tech, here: each county's daily weather (gridMET reference evapotranspiration) runs through
+the FAO-56 turf method to get minutes per zone, cycle-and-soak so it doesn't run off. Every week
+it's checked against the state's watering guide, which a GitHub Action pushes to our edge
+database. It's one open JSON API, and the connectors write it to OpenSprinkler's local API,
+Rachio's seasonal adjustment, or Home Assistant, which reaches Rain Bird, Hydrawise and B-hyve.
 2:50 (Only if the warm-up worked.) Any address in Utah is measured live, like this one in St. George.
 """)
 

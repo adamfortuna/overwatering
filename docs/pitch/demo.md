@@ -49,6 +49,26 @@ click through them.
 | 2:50 | *(Optional, only if the warm-up worked.)* On the lot, click **← another address** and type `67 W 200 N`. Pick the **St. George** result. | "None of that was precomputed for St. George. The browser just measured it: 10,834 square feet, needing 42 inches a season." | Skip it, or use slide 19. |
 | 3:10 | Switch back to Slides, slide 6. | | |
 
+## Hard tech talking points (at the controller step)
+
+Pick two or three; the demo has about 25 seconds of slack.
+
+- **Where the minutes come from:** each county's daily weather (gridMET reference
+  evapotranspiration, 2023–25) × the FAO-56 cool-season turf coefficient, minus half the rain.
+  That's turned into days a week and cycle-and-soak minutes for your sprinkler type's
+  precipitation rate and evenness.
+- **The state's guide, every week:** Utah's Weekly Lawn Watering Guide, parsed per county. Cloudflare
+  can't reach utah.gov, so a GitHub Action pushes the guide to our edge database (D1), signed with
+  GitHub's OIDC token.
+- **One open API, three connectors:** `/api/schedule/<county>-<sprinklers>` is plain JSON with no
+  key and no address. OpenSprinkler gets one program over its local HTTP API (tested on the real
+  firmware). Rachio gets a seasonal adjustment plus a rain delay on skip weeks. Home Assistant
+  runs zones on Rain Bird, Hydrawise, B-hyve, Rachio, OpenSprinkler or ESPHome.
+- **Finding the lawn (if asked):** USDA's 2024 aerial imagery at 60 cm with near-infrared,
+  haze-corrected NDVI, Meta's LiDAR-derived tree heights read from cloud-optimized GeoTIFFs, and
+  building footprints, all computed in the browser. On 3,104 lots it agrees with the state's
+  Greenspace model at r = 0.77.
+
 ## Watch out
 
 - **Corrections on the mansion lot are saved for everyone.** If you tap a shape, tap until it's
