@@ -52,6 +52,8 @@ describe('this week', () => {
 	it('falls back to the monthly plan without a guide', () => {
 		const w = week(p, '2026-07-15', null);
 		expect(w).toMatchObject({ source: 'plan', month: 7, waterLevelPct: 100, paused: false });
+		expect(w.peakPct).toBe(100); // July is the peak month in Salt Lake City
+		expect(week(p, '2027-04-14', null).peakPct).toBeLessThan(50);
 		expect(w.days.length).toBe(w.waterings);
 	});
 	it('is off season in winter', () => expect(week(p, '2027-01-10', null)).toMatchObject({ source: 'off-season', paused: true }));

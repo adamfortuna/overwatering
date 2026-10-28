@@ -4,10 +4,11 @@ declare module 'cloudflare:workers' {
 	interface D1Statement {
 		bind(...values: unknown[]): D1Statement;
 		run(): Promise<unknown>;
+		first<T = Record<string, unknown>>(): Promise<T | null>;
 		all<T = Record<string, unknown>>(): Promise<{ results: T[] }>;
 	}
 	export interface D1Database {
 		prepare(query: string): D1Statement;
 	}
-	export const env: { DB?: D1Database; EXTERNAL_ANTHROPIC_API_KEY?: string };
+	export const env: { DB?: D1Database; EXTERNAL_ANTHROPIC_API_KEY?: string; GUIDE_PUSH_SECRET?: string };
 }

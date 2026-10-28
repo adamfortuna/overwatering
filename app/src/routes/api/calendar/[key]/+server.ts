@@ -8,7 +8,7 @@ export const GET: RequestHandler = async ({ params, url, request }) => {
 	if (!params.key.endsWith('.ics')) error(404, 'calendar URLs end in .ics');
 	const p = parseKey(params.key);
 	if (!p) error(404, 'unknown county or sprinkler type (try salt-lake-spray.ics)');
-	const { guide } = await currentGuide(request);
+	const { guide } = await currentGuide();
 	return new Response(ics(p, utahToday(), guide, url.origin), {
 		headers: {
 			'content-type': 'text/calendar; charset=utf-8',

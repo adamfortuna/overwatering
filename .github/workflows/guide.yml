@@ -1,0 +1,18 @@
+# Utah publishes the Weekly Lawn Watering Guide on Fridays in season. Cloudflare's network often
+# can't reach wateringindex.utah.gov, so this posts the page to overwater.ing, which parses it.
+name: Sync the weekly watering guide
+on:
+  schedule:
+    - cron: "15 20 * * 5"   # Friday afternoon, Utah time
+    - cron: "15 14 * * *"   # and every morning, in case of a late or corrected guide
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write   # GitHub's OIDC token is how overwater.ing knows the request is from this repo
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: scripts/push-guide.sh

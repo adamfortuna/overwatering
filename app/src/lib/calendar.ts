@@ -57,6 +57,10 @@ export type Week = {
 	minutesPerCycle: number;
 	/** This week vs. the month's plan: what a controller's seasonal adjust / water level should be. */
 	waterLevelPct: number;
+	/** Inches this week, and as a share of the peak (July) week: for controllers whose own schedule
+	 * is set for midsummer and can only be scaled (Rachio's seasonal adjustment). */
+	weeklyIn: number;
+	peakPct: number;
 	paused: boolean;
 	note: string;
 };
@@ -82,7 +86,10 @@ function dayRule(p: PlanKey, rows: ScheduleRow[], date: string, guide: Guide | n
 export function week(p: PlanKey, date: string, guide: Guide | null): Week {
 	const start = addDays(date, -((dow(date) + 2) % 7));
 	const end = addDays(start, 6);
-	const r = dayRule(p, schedule(p.eto, p.system), date, guide);
+	const rows = schedule(p.eto, p.system);
+	const r = dayRule(p, rows, date, guide);
+	const weeklyIn = r.source === 'guide' ? r.waterings * GUIDE_IN_PER_WATERING : r.source === 'plan' ? r.row!.weeklyIn : 0;
+	const peakIn = Math.max(...rows.map((x) => x.weeklyIn));
 	const paused = r.waterings === 0;
 	const sys = SYSTEMS[p.system].short;
 	const note =
@@ -105,6 +112,8 @@ export function week(p: PlanKey, date: string, guide: Guide | null): Week {
 		cycles: r.cycles,
 		minutesPerCycle: Math.round(r.minutesPerCycle),
 		waterLevelPct: r.pct,
+		weeklyIn: Math.round(weeklyIn * 100) / 100,
+		peakPct: Math.min(100, Math.round((weeklyIn / peakIn) * 20) * 5),
 		paused,
 		note
 	};
