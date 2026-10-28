@@ -59,20 +59,42 @@ const SHOTS = {
 		await shot('08-rebate');
 	},
 	async watering() {
-		await go(`/watering?lawn=11141&eto=slc&back=${encodeURIComponent(LOT)}`);
+		// Through the bill, the way the demo goes: lot -> bill -> "Build my watering plan".
+		await go(LOT); await page.waitForTimeout(1500);
+		await page.click('summary:has-text("Add your water bill")');
+		await page.setInputFiles('input[type=file]', BILL);
+		await page.waitForFunction(() => /Read \d+ months/.test(document.body.innerText), null, { timeout: 60000 });
+		await page.click('a:has-text("Build my watering plan")');
+		await page.waitForLoadState('networkidle');
 		await page.click('button:has-text("Pop-up spray heads")');
 		await page.click('button:has-text("A basic timer")');
-		await page.waitForTimeout(500);
+		await page.waitForTimeout(800);
 		await shot('05-watering');
 		await scrollToText('Your one thing', 80);
 		await shot('05-watering-plan');
 		await scrollToText('Your schedule', 60);
 		await shot('05-watering-schedule');
+		await scrollTo('#calendar', 60);
+		await shot('06-calendar');
 	},
+	async calendar() {
+		await go(`/watering?lawn=11141&eto=slc&back=${encodeURIComponent(LOT)}`);
+		await page.click('button:has-text("Pop-up spray heads")');
+		await page.click('button:has-text("A basic timer")');
+		await page.waitForTimeout(1500);
+		await scrollTo('#calendar', 60);
+		await shot('06-calendar-nobill');
+	},
+	async connect() { await go('/connect'); await shot('06-connect'); },
 	async native() {
 		await go(`/native?lawn=11141&eto=slc&city=Salt+Lake+City&county=Salt+Lake&back=${encodeURIComponent(LOT)}`);
 		await page.waitForTimeout(1000);
 		await shot('07-native');
+	},
+	async impact() {
+		await go('/impact'); await page.waitForTimeout(1500);
+		await shot('12-impact');
+		await shot('12-impact-full', { fullPage: true });
 	},
 	async how() { await go('/how'); await shot('10-how'); },
 	async district() { await go('/district/avenues'); await page.waitForTimeout(4000); await shot('11-district-avenues'); },

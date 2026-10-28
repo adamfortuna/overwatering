@@ -125,13 +125,16 @@ def box(s, x, y, w, h, fill=WHITE, line=None, radius=0.08, shape=MSO_SHAPE.ROUND
     return b
 
 
-def shot(s, name, x, y, w=None, h=None):
-    """Screenshots go in as JPEG (they're photos of a page; keeps the deck small). Framed in white."""
+def shot(s, name, x, y, w=None, h=None, crop=None, tag=""):
+    """Screenshots go in as JPEG (they're photos of a page; keeps the deck small). Framed in white.
+    crop = (left, top, right, bottom) in source pixels."""
     src = SHOTS / f"{name}.png"
     if not src.exists():
         return None
-    out = BUILD / f"{name}.jpg"
+    out = BUILD / f"{name}{tag}.jpg"
     im = Image.open(src).convert("RGB")
+    if crop:
+        im = im.crop(crop)
     im.thumbnail((2400, 2400))
     im.save(out, quality=86)
     ar = im.width / im.height
@@ -324,16 +327,18 @@ notes(s, "1:10–3:00", """
 square feet of lawn, confidence high. If we got a shape wrong, you tap it, and that correction
 trains the model.
 1:35 What it needs: about 29 inches a season in Salt Lake's weather, 200,000 gallons a year.
-1:45 Add the bill: upload the photo. Claude reads twelve months of usage in a few seconds and
-we compare outdoor use to what the lawn needs.
+1:45 Add the bill: upload the photo. Claude reads twelve months in about five seconds:
+119,000 gallons a year more than this lawn needs.
 2:00 Build my watering plan: pick spray heads and a basic timer. One thing to do, gallons saved,
 and a month-by-month schedule.
-2:15 Subscribe to the watering calendar, and the controller picks it up. This week the state
-guide says no watering, so the controller pauses itself.
-2:35 Go native: the before and after, the plants, the designers to call.
-2:45 The rebate: up to $33,000 here, from Central Utah Water Conservancy District, with the city
+2:10 Subscribe to the calendar, or let the controller follow it. This week the state guide says
+no watering, so our connector switched the OpenSprinkler program off. In July, it's Monday,
+Wednesday, Friday at 5 a.m., four short cycles per zone.
+2:40 Go native: the before and after, the plants, the designers to call.
+2:48 The rebate: up to $33,000 here, from Central Utah Water Conservancy District, with the city
 and water district this lot is in.
-2:55 And it isn't just these neighborhoods: any address in Utah gets measured live.
+2:55 (Only if the warm-up worked.) And any address in Utah gets measured live, like this one in
+St. George.
 """)
 
 # 7. Built, live, checked
@@ -399,22 +404,22 @@ named("Water, energy, AI")
 kicker(s, "Why it's an energy and AI story")
 title(s, "Saved water is saved power, and AI headroom.")
 tiles = [
-    ("650 kWh", "to treat and deliver one acre-foot of water.", WATER),
-    ("~390 kg", "of CO₂ per acre-foot on Utah's grid (0.60 kg/kWh).", CORAL),
-    ("0.2%", "of Utah's residential outdoor water equals one ~987 AF/yr data-center campus.", LAWN),
+    ("650 kWh", "to pump and treat every acre-foot. Small per home, big at state scale.", WATER),
+    ("~372 AF", "a year the grass in our measured neighborhoods never needed: 242 MWh, ~38% of one data-center campus.", CORAL),
+    ("~100×", "a large AI data center's water, if a fifth of Utah's yard water is waste: ~100,000 AF and 65 GWh a year.", LAWN),
 ]
 for i, (n, label, c) in enumerate(tiles):
     x = 0.75 + i * 4.05
-    box(s, x, 2.3, 3.75, 2.9, fill=WHITE, line="cfe6f5", radius=0.08)
+    box(s, x, 2.3, 3.75, 3.2, fill=WHITE, line="cfe6f5", radius=0.08)
     text(s, x + 0.3, 2.55, 3.2, 1.1, n, size=54, font=HEAD, bold=True, color=c, line=0.9)
     text(s, x + 0.3, 3.7, 3.2, 1.4, label, size=17, line=1.15)
-text(s, 0.75, 5.5, 11.8, 0.9, [[("Per home it's small (~30 kWh a year). ", {"bold": True}),
-                               ("At district and state scale, verified yard savings are how Utah grows AI without draining the lake.", {})]],
+text(s, 0.75, 5.8, 11.8, 0.9, [[("Verified yard savings are how Utah grows AI without draining the lake. ", {"bold": True}),
+                               ("Live at overwater.ing/impact.", {})]],
      size=18, line=1.15)
-source(s, "Sources: EPRI via ACEEE 2009 (650 kWh/AF, range 260–880); EIA Utah profile 2024 (1,322 lb CO₂/MWh); USU Extension citing DWR (500,993 AF/yr); SL Tribune Oct 20 2026 (Stratos estimate). Saved water can increase potential flows to the lake; it may be reused upstream.")
+source(s, "Our neighborhoods: 12,791 lots, grass needs ~775 AF/yr; assumes half of homes overwater (BYU) on a July schedule all season. State: a fifth of 500,993 AF/yr (USU/DWR). EPRI via ACEEE (650 kWh/AF); EIA 2024 (0.60 kg CO₂/kWh); SL Tribune Oct 20 2026 (Stratos ~987 AF/yr estimate). Saved water can increase potential flows to the lake; it may be reused upstream.")
 notes(s, "3:40–3:52", """
-Water is energy: about 650 kilowatt-hours per acre-foot. And two tenths of a percent of Utah's
-yard water equals one entire data-center campus.
+Water is energy: 650 kilowatt-hours an acre-foot. Just the neighborhoods we've measured waste
+about a third of a data-center campus's water. Statewide, it's about a hundred of them.
 """)
 
 # 10. Who pays
@@ -525,29 +530,45 @@ backup("02-search", "1 · Any Utah address", "Search covers parcels in all 29 co
        "Type 603 E South Temple and pick the first result.")
 backup("03-lot", "2 · The lawn, from the air", "2024 USDA imagery at 0.6 m. Green = lawn, dark green = trees, red = buildings. Tap a shape to correct it.",
        "demo 1:20", "11,141 sq ft of lawn on the Governor's Mansion lot, confidence high, about 29 inches and 200,000 gallons a year.")
-backup("04-bill-read", "3 · Claude reads the bill", "Twelve months of usage from a photo of the bill, in a few seconds.", "demo 1:45",
-       "Upload scripts/fixtures/sample_slc_bill.png. Claude reads twelve months; the page compares outdoor use to the lawn's need.")
+backup("04-bill", "3 · Claude reads the bill: 119,272 gallons over", "320,914 gallons a year outdoors against the 201,642 this lawn needs. Read from a photo of the bill in about 5 seconds.", "demo 1:45",
+       "Upload the sample bill. Claude reads twelve months; the page shows the overwatering gap and the one change to make.")
 backup("05-watering-plan", "4 · One thing to do, and how much it saves", "Spray heads + a basic timer, Salt Lake City weather.", "demo 2:00",
        "The single change with the most gallons saved, then the month-by-month schedule.")
 backup("05-watering-schedule", "4 · The schedule", "Days a week and cycle-and-soak minutes per zone, from local reference ET.", "demo 2:05",
        "Deep and infrequent, split into short cycles so it soaks in.")
-backup(None, "5 · Subscribe to the watering calendar", None, "demo 2:15",
-       "PLACEHOLDER until the calendar ships: subscribe from the watering plan; the calendar follows the state's Weekly Lawn Watering Guide.",
-       ph=("Watering calendar", "Screenshot of the subscribe button and a week in Google Calendar, once the calendar feature lands."))
-backup(None, "6 · The controller follows the state guide", None, "demo 2:25",
-       "PLACEHOLDER until the OpenSprinkler connector ships: the guide says No Watering this week, so the controller pauses itself; switch to a July week and the minutes change.",
-       ph=("OpenSprinkler, demo firmware", "Before/after: 'No Watering' week paused, July week with minutes per zone. Lands with connect/."))
-backup("07-native", "7 · Go native", "Before and after for this lot, then the plants and designers.", "demo 2:35",
+backup("06-calendar", "5 · Subscribe to the watering calendar", "Follows Utah's Weekly Lawn Watering Guide. This week: no watering in Salt Lake County.", "demo 2:10",
+       "Subscribe once; each watering day shows up at 5 a.m. with run times, and skip weeks clear themselves.")
+
+# 6 · the controller, before and after (OpenSprinkler firmware in demo mode, set by our connector)
+s = slide()
+named("6 · The controller follows the state guide")
+text(s, 0.75, 0.4, 11.8, 0.7, "6 · The controller follows the state guide", size=30, font=HEAD, bold=True)
+text(s, 0.75, 1.25, 5.7, 0.6, "This week: off", size=26, font=HEAD, bold=True, color=CORAL)
+text(s, 6.9, 1.25, 5.7, 0.6, "A July week: on", size=26, font=HEAD, bold=True, color=LAWN)
+shot(s, "06-os-paused-full", 0.75, 1.95, w=5.6, crop=(300, 320, 1500, 710), tag="-enabled")
+shot(s, "06-os-july-full", 6.9, 1.95, w=5.6, crop=(300, 410, 1500, 800), tag="-enabled")
+text(s, 0.75, 4.05, 5.6, 1.5, "Utah's Weekly Lawn Watering Guide says no watering in Salt Lake County, so the connector switched the program off. Other programs are untouched.",
+     size=17, line=1.15)
+shot(s, "06-os-july-full", 6.9, 4.05, w=3.5, crop=(300, 1500, 1500, 2430), tag="-stations")
+text(s, 10.6, 4.05, 2.1, 2.7, "Mon, Wed, Fri at 5:00 AM. 4 × 7 min per zone, an hour apart, so it soaks in.", size=15, line=1.15)
+text(s, 0.75, 6.2, 5.6, 0.8, "OpenSprinkler's own firmware, in demo mode, set by overwater.ing/connect. One program, rewritten each morning.", size=13, color=MUTED, line=1.1)
+notes(s, "demo 2:20", """
+OpenSprinkler firmware in demo mode, set by our connector. This week the guide says no watering, so the program
+is switched off. Preview a July week and it's Monday, Wednesday, Friday at 5 a.m., four 7-minute cycles per zone.
+""")
+backup("06-connect", "6 · Any controller: the open schedule API", "/connect: the OpenSprinkler connector is one file. Rachio and Hydrawise are next.", "demo 2:30",
+       "Same schedule as plain JSON, no key, no address in the URL.")
+backup("07-native", "7 · Go native", "Before and after for this lot, then the plants and designers.", "demo 2:40",
        "About 145,000 gallons a year saved if this lawn becomes water-wise landscape.")
-backup("08-rebate", "8 · The rebate, and who's in charge here", "City, water provider, wholesale districts and program for this exact lot.", "demo 2:45",
+backup("08-rebate", "8 · The rebate, and who's in charge here", "City, water provider, wholesale districts and program for this exact lot.", "demo 2:48",
        "Up to $33,423 from Central Utah Water Conservancy District, Salt Lake City, plus the $100 smart controller rebate.")
-backup("09-live", "9 · Any address, measured live", "Outside Salt Lake County, computed in the browser.", "demo 2:55",
+backup("09-live", "9 · Any address, measured live", "67 W 200 N, St. George: 10,834 sq ft of lawn needing 42 inches a season. Measured in the browser, nothing precomputed.", "demo 2:55",
        "Any Utah address is measured live in the browser in seconds.",
        ph=None if (SHOTS / "09-live.png").exists() else ("Live lot outside Salt Lake County", "Screenshot pending: the statewide imagery proxy was failing when this deck was built."))
 backup("11-district-avenues", "Neighborhood view for districts", "Totals only, never household rankings.", "backup",
        "What a district sees: lawn, need, likely overwatering and savings for a whole neighborhood.")
-backup(None, "/impact: statewide, energy and data centers", None, "backup",
-       "PLACEHOLDER until /impact ships.", ph=("/impact page", "Statewide totals, energy and data-center framing. Lands with /impact."))
+backup("12-impact", "Why it matters: overwater.ing/impact", "Our measured neighborhoods, the state-scale scenario, and the data-center framing.", "backup",
+       "The same numbers as slide 9, live on the site.")
 
 # Sources
 s = slide()

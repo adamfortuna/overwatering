@@ -53,16 +53,18 @@ by lot, how much lawn there is. So I built it.
 square feet of lawn, confidence high. If we got a shape wrong, you tap it, and that correction
 trains the model.
 1:35 What it needs: about 29 inches a season in Salt Lake's weather, 200,000 gallons a year.
-1:45 Add the bill: upload the photo. Claude reads twelve months of usage in a few seconds and
-we compare outdoor use to what the lawn needs.
+1:45 Add the bill: upload the photo. Claude reads twelve months in about five seconds:
+119,000 gallons a year more than this lawn needs.
 2:00 Build my watering plan: pick spray heads and a basic timer. One thing to do, gallons saved,
 and a month-by-month schedule.
-2:15 Subscribe to the watering calendar, and the controller picks it up. This week the state
-guide says no watering, so the controller pauses itself.
-2:35 Go native: the before and after, the plants, the designers to call.
-2:45 The rebate: up to $33,000 here, from Central Utah Water Conservancy District, with the city
+2:10 Subscribe to the calendar, or let the controller follow it. This week the state guide says
+no watering, so our connector switched the OpenSprinkler program off. In July, it's Monday,
+Wednesday, Friday at 5 a.m., four short cycles per zone.
+2:40 Go native: the before and after, the plants, the designers to call.
+2:48 The rebate: up to $33,000 here, from Central Utah Water Conservancy District, with the city
 and water district this lot is in.
-2:55 And it isn't just these neighborhoods: any address in Utah gets measured live.
+2:55 (Only if the warm-up worked.) And any address in Utah gets measured live, like this one in
+St. George.
 
 ## 3:00–3:10 · Slide 7: Built, live, checked
 
@@ -79,8 +81,8 @@ follows. Claude reads bills to measure the result, and every correction trains o
 
 ## 3:40–3:52 · Slide 9: Water, energy, AI
 
-Water is energy: about 650 kilowatt-hours per acre-foot. And two tenths of a percent of Utah's
-yard water equals one entire data-center campus.
+Water is energy: 650 kilowatt-hours an acre-foot. Just the neighborhoods we've measured waste
+about a third of a data-center campus's water. Statewide, it's about a hundred of them.
 
 ## 3:52–4:15 · Slide 10: Who pays
 
@@ -109,14 +111,16 @@ Only if the live demo fails. They follow the demo order.
 - **Slide 13: Backup** (backup). Only if the live demo fails. Each following slide matches one demo step in demo.md.
 - **Slide 14: 1 · Any Utah address** (demo 1:10). Type 603 E South Temple and pick the first result.
 - **Slide 15: 2 · The lawn, from the air** (demo 1:20). 11,141 sq ft of lawn on the Governor's Mansion lot, confidence high, about 29 inches and 200,000 gallons a year.
-- **Slide 16: 3 · Claude reads the bill** (demo 1:45). Upload scripts/fixtures/sample_slc_bill.png. Claude reads twelve months; the page compares outdoor use to the lawn's need.
+- **Slide 16: 3 · Claude reads the bill: 119,272 gallons over** (demo 1:45). Upload the sample bill. Claude reads twelve months; the page shows the overwatering gap and the one change to make.
 - **Slide 17: 4 · One thing to do, and how much it saves** (demo 2:00). The single change with the most gallons saved, then the month-by-month schedule.
 - **Slide 18: 4 · The schedule** (demo 2:05). Deep and infrequent, split into short cycles so it soaks in.
-- **Slide 19: 5 · Subscribe to the watering calendar** (demo 2:15). PLACEHOLDER until the calendar ships: subscribe from the watering plan; the calendar follows the state's Weekly Lawn Watering Guide.
-- **Slide 20: 6 · The controller follows the state guide** (demo 2:25). PLACEHOLDER until the OpenSprinkler connector ships: the guide says No Watering this week, so the controller pauses itself; switch to a July week and the minutes change.
-- **Slide 21: 7 · Go native** (demo 2:35). About 145,000 gallons a year saved if this lawn becomes water-wise landscape.
-- **Slide 22: 8 · The rebate, and who's in charge here** (demo 2:45). Up to $33,423 from Central Utah Water Conservancy District, Salt Lake City, plus the $100 smart controller rebate.
-- **Slide 23: 9 · Any address, measured live** (demo 2:55). Any Utah address is measured live in the browser in seconds.
-- **Slide 24: Neighborhood view for districts** (backup). What a district sees: lawn, need, likely overwatering and savings for a whole neighborhood.
-- **Slide 25: /impact: statewide, energy and data centers** (backup). PLACEHOLDER until /impact ships.
-- **Slide 26: Sources** (reference). Sources for every number in the deck. Saved water can increase potential flows to the lake; it may be reused upstream.
+- **Slide 19: 5 · Subscribe to the watering calendar** (demo 2:10). Subscribe once; each watering day shows up at 5 a.m. with run times, and skip weeks clear themselves.
+- **Slide 20: 6 · The controller follows the state guide** (demo 2:20). OpenSprinkler firmware in demo mode, set by our connector. This week the guide says no watering, so the program
+is switched off. Preview a July week and it's Monday, Wednesday, Friday at 5 a.m., four 7-minute cycles per zone.
+- **Slide 21: 6 · Any controller: the open schedule API** (demo 2:30). Same schedule as plain JSON, no key, no address in the URL.
+- **Slide 22: 7 · Go native** (demo 2:40). About 145,000 gallons a year saved if this lawn becomes water-wise landscape.
+- **Slide 23: 8 · The rebate, and who's in charge here** (demo 2:48). Up to $33,423 from Central Utah Water Conservancy District, Salt Lake City, plus the $100 smart controller rebate.
+- **Slide 24: 9 · Any address, measured live** (demo 2:55). Any Utah address is measured live in the browser in seconds.
+- **Slide 25: Neighborhood view for districts** (backup). What a district sees: lawn, need, likely overwatering and savings for a whole neighborhood.
+- **Slide 26: Why it matters: overwater.ing/impact** (backup). The same numbers as slide 9, live on the site.
+- **Slide 27: Sources** (reference). Sources for every number in the deck. Saved water can increase potential flows to the lake; it may be reused upstream.
