@@ -116,7 +116,9 @@ GET {origin}/api/schedule/{key}?date=2027-07-14   # preview a week</code></pre>
 	@media (max-width: 760px) { .flow { grid-template-columns: 1fr; } .flow ol { grid-template-columns: 1fr 1fr; } .mascot { max-width: 160px; } }
 	.row { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: flex-end; }
 	.row label, .row .lbl { display: flex; flex-direction: column; gap: 4px; font-family: var(--display); font-weight: 600; }
-	.key { font-size: 1rem; background: var(--aqua); border-radius: 10px; padding: 10px 12px; }
+	/* Controls use the body font (labels are display bold), and the plan name matches their height. */
+	.row select { font: 400 1rem/1.4 var(--body); min-height: 48px; }
+	.key { display: flex; align-items: center; box-sizing: border-box; min-height: 48px; font-size: 0.95rem; font-weight: 400; background: var(--aqua); border: 2px solid transparent; border-radius: 14px; padding: 0 14px; }
 	.week { background: var(--aqua); border-radius: 14px; padding: 10px 14px; margin: 14px 0 0; }
 	.week.paused { background: #fff4d6; }
 	.choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 14px; }

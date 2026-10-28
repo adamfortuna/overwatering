@@ -228,6 +228,7 @@
 	.setup h2 { font-size: 1.25rem; margin-top: 18px; }
 	.row { display: flex; flex-wrap: wrap; gap: 14px 24px; }
 	.row label { display: flex; flex-direction: column; gap: 4px; font-family: var(--display); font-weight: 600; }
+	.row select, .row input { font: 400 1rem/1.4 var(--body); min-height: 48px; box-sizing: border-box; }
 	.unit-in { display: flex; align-items: center; gap: 6px; font-family: var(--body); font-weight: 400; }
 	.unit-in input { width: 110px; }
 	.choices { display: grid; gap: 10px; }
