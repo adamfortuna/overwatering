@@ -154,11 +154,23 @@ Already in motion: the DWRe contact. Outreach to districts and controller makers
 - **Logo.** `app/src/lib/Logo.svelte`.
 - **Tone.** Friendly, plain words, a little wry. Utah first. Never say "free" as a selling point.
 
+## Demo notes (Oct 28)
+
+- **Sample bill re-sized for the demo lot.** `scripts/fixtures/sample_slc_bill.png` is now sized for the Governor's Mansion (~11k sq ft lawn): about 321k gal outdoors against ~202k needed, so the page shows a gap of ~119k gal and "do X and save Y". Verified on prod: Claude reads all 12 months.
+- **Live statewide measurement depends on USDA, and usda.gov's DNSSEC is broken right now.** Validating resolvers can't look up the imagery host. That includes Cloudflare (so our Worker can't reach it), Google 8.8.8.8 and Comcast.
+  - The app now falls back to fetching USDA directly from the browser. That works only if the laptop's DNS doesn't validate DNSSEC.
+  - **Lead the demo with a precomputed lot (any address in 84102, Avenues, Liberty Wells, Central City, Downtown or Sandy).**
+  - Show "any Utah address" second, with a screenshot or recorded fallback ready. If USDA fixes their DNS, it just works again.
+
 ## Status of features (update as they land)
 
 - [x] Live site, statewide address search, live measurement, bill reading, watering plan, native page, rebates + jurisdictions
 - [x] Greenspace cross-check (RESULTS Run 7)
-- [ ] Watering calendar you can subscribe to + schedule API driven by the state's Weekly Lawn Watering Guide
-- [ ] OpenSprinkler connector + demo-firmware walkthrough (`connect/`)
+- [x] Watering calendar you can subscribe to (live). It's on `/watering`, in the card titled "Get this schedule as a calendar". The feed is `webcal://overwater.ing/api/calendar/salt-lake-spray.ics`. It's driven by the state's Weekly Lawn Watering Guide, which is parsed per county.
+- [x] Open schedule API (live): `https://overwater.ing/api/schedule/salt-lake-spray`. Add `?date=2027-07-14` to preview a summer week.
+- [x] OpenSprinkler connector (live at `/connect`). It's one file, `overwater.ing/connect/opensprinkler.mjs`, tested against OpenSprinkler's real firmware (2.2.1) built in demo mode:
+  - Demo: `scripts/opensprinkler-demo.sh` starts the controller at http://localhost:8080 (password `opendoor`; needs Docker on a Mac).
+  - Then `scripts/opensprinkler-demo.sh sync` runs this week. The state says no watering in late October, so the program switches off.
+  - Then `scripts/opensprinkler-demo.sh sync --date 2027-07-14` previews July: Mon/Wed/Fri at 5:00, 4 × 7 min, 60 min apart, on zones 1–4. The program appears in the OpenSprinkler UI.
 - [ ] `/impact` page: statewide, energy and data-center framing
 - [ ] Usage analytics
