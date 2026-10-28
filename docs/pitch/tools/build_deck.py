@@ -260,7 +260,7 @@ kicker(s, "How I got here")
 title(s, "It started over a pint.")
 steps = [
     ("July", "Perspectives Over Pints, Fisher Brewing.", "The Yard Farmer gave the talk."),
-    ("That night", "Most of our water goes on grass.", "And Utah will pay you to replace it."),
+    ("What I learned", "Utah pays you to replace your grass.", "Utah Water Savers: $1.50–$3 per square foot."),
     ("November", "Our own yard consult is booked.", "So: how much lawn do I actually have?"),
 ]
 for i, (when, a, b) in enumerate(steps):
@@ -275,9 +275,9 @@ png(s, ART / "grass.png", 10.9, 4.95, w=1.6)
 png(s, ART / "drop.png", 10.2, 5.65, w=0.62)
 notes(s, "0:05–0:30", """
 In July I went to Perspectives Over Pints at Fisher Brewing, and The Yard Farmer gave the talk.
-Most of Utah's water goes on grass, and the state will pay you to replace it. We booked our own
-yard consult for November. But my first question was: how much lawn do I have, and what does it
-really need? Nobody could tell me.
+That's where I learned about Utah Water Savers: the state will pay you up to three dollars a
+square foot to replace your grass. We booked our own yard consult for November. But my first
+question was: how much lawn do I have, and what does it really need? Nobody could tell me.
 """)
 
 # 3. Where Utah's water goes (two stacked bars: all water, then cities' water)
@@ -383,8 +383,8 @@ text(s, 1.05, 5.3, 11.3, 1.15, "But nobody knows, lot by lot, how much lawn ther
      size=24, font=HEAD, bold=True, anchor=MSO_ANCHOR.MIDDLE, line=1.0)
 source(s, "Sources: Utah Water Savers rates (checked Oct 27 2026); Utah DWR turf buyback results 2024; state fact sheet \"Utah's Big Water Win\", Oct 2022–Dec 2025 (Slow the Flow); Sowby et al., BYU 2022.")
 notes(s, "1:00–1:10", """
-The state pays up to three dollars a square foot to replace grass. But nobody knows, lot by lot,
-how much lawn there is. So I built it.
+That rebate program has replaced 7.3 million square feet of grass since 2022. But nobody knows,
+lot by lot, how much lawn there is. So I built it.
 """)
 
 # 6. Demo: the homeowner's flow

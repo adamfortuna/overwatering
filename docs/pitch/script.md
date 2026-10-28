@@ -24,9 +24,9 @@ Hi, I'm Adam Fortuna. This is Overwater.ing. Question mark.
 ## 0:05–0:30 · Slide 2: How I got here
 
 In July I went to Perspectives Over Pints at Fisher Brewing, and The Yard Farmer gave the talk.
-Most of Utah's water goes on grass, and the state will pay you to replace it. We booked our own
-yard consult for November. But my first question was: how much lawn do I have, and what does it
-really need? Nobody could tell me.
+That's where I learned about Utah Water Savers: the state will pay you up to three dollars a
+square foot to replace your grass. We booked our own yard consult for November. But my first
+question was: how much lawn do I have, and what does it really need? Nobody could tell me.
 
 ## 0:30–0:45 · Slide 3: Where Utah's water goes
 
@@ -41,8 +41,8 @@ since May, new data centers can't add to its depletion, so the AI build-out can'
 
 ## 1:00–1:10 · Slide 5: Utah pays, but can't see the yards
 
-The state pays up to three dollars a square foot to replace grass. But nobody knows, lot by lot,
-how much lawn there is. So I built it.
+That rebate program has replaced 7.3 million square feet of grass since 2022. But nobody knows,
+lot by lot, how much lawn there is. So I built it.
 
 ## 1:10–3:00 · Slide 6: Live demo
 
