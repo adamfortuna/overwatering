@@ -249,8 +249,10 @@ text(s, 0.75, 4.55, 6.0, 1.2, "Every lawn in Utah, measured from the air. What i
      size=20, color=MUTED, line=1.15)
 text(s, 0.75, 6.25, 6.4, 0.5, [[("Adam Fortuna", {"bold": True}), ("  ·  overwater.ing  ·  Nucleus × Startup State", {})]],
      size=16, color=INK)
+gh = text(s, 0.75, 6.68, 6.4, 0.4, [[("Open source: ", {"bold": True, "color": MUTED}), ("github.com/adamfortuna/overwatering", {"color": WATER})]], size=15)
+gh.text_frame.paragraphs[0].runs[1].hyperlink.address = "https://github.com/adamfortuna/overwatering"
 notes(s, "0:00–0:05", """
-Hi, I'm Adam Fortuna. This is Overwater.ing. Question mark.
+Hi, I'm Adam Fortuna. This is Overwater.ing. Question mark. And it's all open source.
 """)
 
 # 2. The story
@@ -470,6 +472,9 @@ text(s, 0.75, 3.05, 8.4, 1.9, [
 ], size=20, line=1.15, after=8)
 png(s, qr("https://overwater.ing"), 9.75, 0.85, w=2.6)
 text(s, 9.75, 3.5, 2.6, 0.4, "overwater.ing", size=18, font=HEAD, bold=True, align=PP_ALIGN.CENTER)
+gh = text(s, 9.05, 3.95, 4.0, 0.7, [[("Open source", {"bold": True, "color": MUTED})], [("github.com/adamfortuna/overwatering", {"color": WATER})]],
+          size=13, align=PP_ALIGN.CENTER, line=1.1)
+gh.text_frame.paragraphs[1].runs[0].hyperlink.address = "https://github.com/adamfortuna/overwatering"
 notes(s, "3:45–4:05", """
 So here's the ask: ten thousand dollars for phase two, a pilot that runs real sprinklers. And
 introductions: to Utah's water-wise partners, to a district's conservation team, and to drone

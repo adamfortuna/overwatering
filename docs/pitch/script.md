@@ -15,7 +15,7 @@ lot's numbers as read from the live site on 2026-10-28 (`shots/facts.json`). Tar
 
 ## 0:00–0:05 · Slide 1: Title
 
-Hi, I'm Adam Fortuna. This is Overwater.ing. Question mark.
+Hi, I'm Adam Fortuna. This is Overwater.ing. Question mark. And it's all open source.
 
 ## 0:05–0:30 · Slide 2: How I got here
 
