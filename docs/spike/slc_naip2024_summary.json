@@ -1,9 +1,9 @@
 {
   "bbox": [
-    -111.87902325246132,
-    40.747836755300035,
-    -111.86953674753867,
-    40.75502324469996
+    -111.88,
+    40.75,
+    -111.87,
+    40.76
   ],
   "area_crs": "EPSG:26912",
   "parcels": 547,
@@ -20,10 +20,7 @@
       "m_4011110_sw_12_060_20240707",
       "m_4011118_nw_12_060_20240707"
     ],
-    "center": [
-      -111.87428,
-      40.75143
-    ]
+    "center": null
   },
   "ndvi_threshold": 0.3,
   "canopy_used": true,
@@ -40,35 +37,5 @@
   },
   "overlays_written": 547,
   "runtime_s": 36.7,
-  "address_match": [
-    {
-      "parcel_id": "16072770170000",
-      "address": "816 S 600 E",
-      "prop_type": "Residential",
-      "parcel_sqft": 6997.0,
-      "pixels": 1816,
-      "lawn_frac": 0.18997797356828194,
-      "green_frac": 0.3683920704845815,
-      "canopy_frac": 0.2511013215859031,
-      "building_frac": 0.2830396475770925,
-      "lawn_lo_frac": 0.14647577092511013,
-      "lawn_hi_frac": 0.22797356828193832,
-      "ambiguous_frac": 0.08149779735682819,
-      "mean_ndvi_nonbldg": 0.3173513939436425,
-      "edge_clipped": false,
-      "nodata_frac": 0.0,
-      "lawn_sqft": 1329.0,
-      "green_sqft": 2578.0,
-      "canopy_sqft": 1757.0,
-      "building_sqft": 1980.0,
-      "lawn_lo_sqft": 1025.0,
-      "lawn_hi_sqft": 1595.0,
-      "hardscape_other_sqft": 1931.0,
-      "confidence": "medium",
-      "ndvi_threshold": 0.3,
-      "imagery_source": "naip-usda",
-      "imagery_date": "2024-07-07",
-      "gsd_m": 0.6
-    }
-  ]
+  "address_match": "(removed: a private test lot)"
 }

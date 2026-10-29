@@ -19,9 +19,9 @@ Conductor cloud workspace with open network.
   415 parcels (39.8 for all 497 incl. edge parcels); at 60 cm it is clear
   that many Sandy back yards are dry, native scrub, or xeriscape, and that 10 m pixels mixed
   lawn with trees and dirt. Treat Run 2 as superseded.
-* **Adam's block (800 m box around his lot, Run 4) at 60 cm: 7.6 lawn acres** across 547 UGRC parcels, 35% of
-  pixels under ≥2.5 m canopy. **816 S 600 E: 1,329 sq ft lawn** (range 1,025–1,595) plus
-  **1,757 sq ft under trees**, on a 6,997 sq ft lot. Park strip is outside the parcel.
+* **An 84102 test block (800 m box, Run 4) at 60 cm: 7.6 lawn acres** across 547 UGRC parcels, 35% of
+  pixels under ≥2.5 m canopy. **Test lot: 1,329 sq ft lawn** (range 1,025–1,595) plus
+  **1,757 sq ft under trees**, on a ~7,000 sq ft lot. Park strip is outside the parcel.
 * **Salt Lake City neighborhoods** (Run 5): 84102, Central City, Liberty Wells, Downtown and the
   Avenues: 12.4k residential parcels and ~308 lawn acres summed across the five (84102 overlaps
   Central City, so that double-counts some); tree canopy covers more ground
@@ -106,9 +106,9 @@ yards in July 2024, and 10 m pixels blended lawn with canopy.
 
 ![Sandy at 60 cm](docs/spike/sandy_naip2024_neighborhood.jpg)
 
-## Run 4: Salt Lake City 84102 (Adam's block), 2024 NAIP 60 cm, UGRC parcels
+## Run 4: Salt Lake City 84102 (a test block), 2024 NAIP 60 cm, UGRC parcels
 
-`scripts/build-data.sh home` (= `run_spike --center -111.87428 40.75143 --radius-m 400 --parcels ugrc --imagery usda --address "816 S 600 E"`)
+`run_spike --center <lon> <lat> --radius-m 400 --parcels ugrc --imagery usda --address "<test lot>"` (a private home volunteered for validation; its address is kept out of the repo)
 
 | Metric | Value |
 |---|---|
@@ -120,7 +120,7 @@ yards in July 2024, and 10 m pixels blended lawn with canopy.
 | Total lawn | 7.6 acres (range 6.8–8.6); lawn + canopy 26.1 acres |
 | Water | 20 af/yr turf need, ~6 af/yr overwatering, 14 af/yr if all converted |
 
-**816 S 600 E** (parcel 16072770170000, 6,997 sq ft, built 1898):
+**Test lot** (~7,000 sq ft, built before 1900):
 
 | Class | sq ft |
 |---|---|
@@ -131,10 +131,9 @@ yards in July 2024, and 10 m pixels blended lawn with canopy.
 | Other (paving, beds, dry) | 1,931 |
 
 Numbers to compare to the tape: `lawn_sqft` 1,329, `green_sqft` 2,578, `lawn + canopy` 3,086.
-The park strip on 600 E is public right-of-way and is **not** in the parcel; it is visibly
+The park strip is public right-of-way and is **not** in the parcel; it is visibly
 irrigated turf in the imagery and would need a separate right-of-way polygon to be counted.
 
-![816 S 600 E](docs/spike/slc_816_s_600_e.png)
 ![84102 at 60 cm](docs/spike/slc_naip2024_neighborhood.jpg)
 
 ## Run 5: Salt Lake City neighborhoods (polygon AOIs), 2024 NAIP 60 cm
@@ -142,7 +141,7 @@ irrigated turf in the imagery and would need a separate right-of-way polygon to 
 `scripts/build-data.sh` (= `run_spike --aoi <id> --parcels ugrc --imagery usda` per neighborhood).
 AOIs are SLC community council polygons (maps.slc.gov) and the UGRC 84102 ZIP polygon, clipped
 to the extent of their residential parcels (`pipeline/aoi.py`). A parcel belongs to an AOI if
-its interior point does. Reference ET for SLC: 50.4 in/yr (gridMET 2023–25 at 816 S 600 E,
+its interior point does. Reference ET for SLC: 50.4 in/yr (gridMET 2023–25 for the H3 cell over central Salt Lake City,
 `pipeline/data/eto_slc_ut.json`) vs 54.0 for Sandy.
 
 | Dataset | Parcels | Lawn acres (NDVI ±0.05) | Median lawn sq ft | Canopy acres | Turf need af/yr | Saved if all converted af/yr | Runtime |
@@ -156,7 +155,7 @@ its interior point does. Reference ET for SLC: 50.4 in/yr (gridMET 2023–25 at 
 
 Confidence is high or medium for all but 1–7 parcels per neighborhood.
 
-* **816 S 600 E** in the 84102 run: 1,355 sq ft lawn (1,073–1,588), 1,739 sq ft under canopy,
+* **The Run 4 test lot** in the 84102 run: 1,355 sq ft lawn (1,073–1,588), 1,739 sq ft under canopy,
   green upper bound 2,660. Within 2% of Run 4 (different imagery tile grid).
 * **Downtown** is only 36 parcels: condo units are tiny stacked polygons that fall under the
   800 sq ft floor, and apartment buildings aren't classed Residential. Honest, but thin.
@@ -247,8 +246,8 @@ green vs our 13,270 lawn + 7,803 under trees (big mature trees and planted beds)
 
 ```
 scripts/setup.sh                       # venv + npm ci + datasets if missing
-scripts/build-data.sh [sandy|home]     # rerun a neighborhood and copy it into the app
-TRUTH_SQFT=<tape> scripts/build-data.sh home   # adds a validation block for 816 S 600 E
+scripts/build-data.sh [<dataset>]     # rerun a neighborhood and copy it into the app
+ADDRESS="<house number + street>" TRUTH_SQFT=<tape> scripts/build-data.sh 84102   # adds a validation block for that lot
 ```
 
 Any other address: `python -m pipeline.run_spike --center <lon> <lat> --radius-m 400 --parcels ugrc
@@ -288,7 +287,7 @@ the same UGRC ArcGIS org (not wired up).
 
 ## Next
 
-See `HANDOFF.md`. Main open item: Adam's tape measurement for 816 S 600 E.
+See `HANDOFF.md`. Main open item: a tape measurement of the test lot.
 
 ## Phase 2: demo app (SvelteKit on Cloudflare Workers)
 

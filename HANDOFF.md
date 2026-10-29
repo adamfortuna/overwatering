@@ -100,7 +100,7 @@ logo, and **any address in Utah**. All committed and deployed to https://overwat
 
 ## 2026-10-27 (day 2): state Greenspace model
 
-DWRe (Jack Hinzman, jackhinzman@utah.gov) replied with the public Greenspace data. Compared
+DWRe (Jack Hinzman, Senior GIS Analyst) replied with the public Greenspace data. Compared
 in RESULTS Run 7 (`pipeline/greenspace.py`): totals agree with our lawn + canopy, but
 Greenspace doesn't separate turf from trees. Not yet shown in the app. Options: show "state
 Greenspace model: X sq ft green on this lot" as a cross-check on prebuilt datasets (cheap: add
@@ -130,8 +130,8 @@ read D1/R2, then installs deps and builds any missing datasets (~10 min). Then:
 3. **Deploy**: done, live at https://overwater.ing (Step 2). The old token could list Workers scripts
    but got "Authentication error" on D1, R2 and billing; `resume.sh` reports what the new one
    can do. overwater.ing is an active zone on the same account (Free Website plan).
-4. **Validation** when Adam has the tape numbers: `docs/validation/worksheet_816_s_600_e.png`
-   (regenerate: `python -m pipeline.worksheet --parcel 16072770170000 --out ...`; the default parcel is now the Governor's Mansion) letters each detected patch with our L x W, so
+4. **Validation** when there are tape numbers for a test lot: `python -m pipeline.worksheet --parcel <parcel id> --out ...`
+   (the default parcel is the Governor's Mansion; keep private homes' worksheets out of the repo) letters each detected patch with our L x W, so
    he only measures two sides per patch. Then Step 1 below.
 
 Run-button gotcha: Conductor's Mac app runs a *cloud* workspace's dev action in the synced
@@ -154,7 +154,7 @@ Env gotchas learned 2026-10-27:
 09314870040000; Adam doesn't want the app built around his own address). It's
 "Tax Exempt - Government", so `scripts/build-data.sh` keeps it via `--keep-parcels` in the 84102
 and Avenues runs; it's the search placeholder, the 84102 `--address` report, the worksheet
-default and the sample bill's service address. Adam's lot only appears in the validation
+default and the sample bill's service address. Private homes only appear in validation
 material (opt-in via `ADDRESS=`).
 
 ## State in one table
@@ -166,7 +166,7 @@ material (opt-in via `ADDRESS=`).
 | Pipeline | `--aoi <id>` polygon runs; USDA imagery in 2048 px tiles (bigger tiles 500) | `pipeline/run_spike.py`, `imagery.py` |
 | Imagery | NAIP 2024 (2024-07-07) via USDA `conus_naip`, haze-corrected NDVI | see `RESULTS.md` |
 | Reference ET | SLC table added (50.4 in/yr, gridMET 2023–25); Sandy stays 54.0 | `pipeline/data/eto_slc_ut.json`, app `etoFor()` |
-| 816 S 600 E | 1,355 sq ft lawn + 1,739 under trees (84102 run) | `RESULTS.md` Run 5 |
+| Test lot (84102) | 1,355 sq ft lawn + 1,739 under trees | `RESULTS.md` Runs 4–5 |
 | Validation vs Adam's tape | **Not done: waiting on the measurement** | Step 1 |
 | Rebate table | Verified 2026-10-27 | Step 3 |
 | App | Rebranded; cross-neighborhood search; `/how`; check clean; build OK | `app/` |
@@ -174,13 +174,13 @@ material (opt-in via `ADDRESS=`).
 | Bill reading tested? | **Yes** with the real key (cloud): all 12 months + unit from the sample bill in 6.5 s | `scripts/fixtures/sample_slc_bill.png` |
 | Cloudflare deploy | **Live at https://overwater.ing** | Step 2, `scripts/deploy.sh` |
 
-## Step 1: Adam's lot validation (the number the pitch needs)
+## Step 1: test-lot validation (the number the pitch needs)
 
-Waiting on Adam's tape measure for **816 S 600 E** (parcel 16072770170000, 6,997 sq ft). Ask
+Waiting on a tape measure of the **84102 test lot** (a private home; its address stays out of the repo). Ask
 for: total grass, **grass under trees separately**, and whether the park strip was included.
 
 ```bash
-ADDRESS="816 S 600 E" TRUTH_SQFT=<tape> scripts/build-data.sh 84102
+ADDRESS="<house number + street>" TRUTH_SQFT=<tape> scripts/build-data.sh 84102
 ```
 
 That adds `validation.error_pct` to `data/out/84102/summary.json` (compares `lawn_sqft`).
@@ -312,7 +312,7 @@ Work directly on `main`, small commits (Adam asked for no PRs). `data/`, `.venv/
 
 ## Open questions for Adam
 
-1. Tape-measured lawn sq ft for 816 S 600 E, with under-tree grass separately, and whether the
+1. Tape-measured lawn sq ft for the test lot, with under-tree grass separately, and whether the
    park strip was included.
 2. `EXTERNAL_ANTHROPIC_API_KEY` is empty in the cloud workspace: re-set it in Conductor (and
    for the local run, make sure the dev server's environment has it).

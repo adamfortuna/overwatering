@@ -599,8 +599,8 @@
   {
    "county": "Salt Lake",
    "place": "Salt Lake City",
-   "lat": 40.751,
-   "lon": -111.874,
+   "lat": 40.758,
+   "lon": -111.868,
    "annual_eto_in": 50.4,
    "eto_in": {
     "1": 1.09,

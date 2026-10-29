@@ -47,8 +47,8 @@
     2025
   ],
   "u2_ms_assumed": 2.0,
-  "lat": 40.751,
-  "lon": -111.874,
+  "lat": 40.758,
+  "lon": -111.868,
   "elev_m": 1310.0,
   "h3_r7": "872696ab0ffffff",
   "source": "gridMET daily (Abatzoglou 2013) via source.coop fused/gridmet-hex; ETo = FAO-56 Penman-Monteith, short reference",
